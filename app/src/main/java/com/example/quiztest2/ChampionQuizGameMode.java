@@ -120,6 +120,7 @@ public class ChampionQuizGameMode extends AppCompatActivity {
                 intent.putExtra(KEY_GAME_MODE,MODE_ENDLESS);
                 startActivity(intent);
                 finish();
+                //
             }
         });
 

@@ -1,4 +1,4 @@
-package com.example.quiztest2;
+package com.example.quiztest2.json;
 
 public class Skin {
     private String id;

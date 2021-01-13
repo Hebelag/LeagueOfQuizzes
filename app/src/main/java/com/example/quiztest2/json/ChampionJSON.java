@@ -1,4 +1,11 @@
-package com.example.quiztest2;
+package com.example.quiztest2.json;
+
+import com.example.quiztest2.json.Image;
+import com.example.quiztest2.json.Info;
+import com.example.quiztest2.json.Passive;
+import com.example.quiztest2.json.Recommended;
+import com.example.quiztest2.json.Skins;
+import com.example.quiztest2.json.Spell;
 
 import java.util.HashMap;
 

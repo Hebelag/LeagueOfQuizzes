@@ -1,4 +1,4 @@
-package com.example.quiztest2;
+package com.example.quiztest2.dbstuff;
 
 import android.provider.BaseColumns;
 public final class QuizContract {

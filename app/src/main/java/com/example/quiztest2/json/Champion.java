@@ -1,4 +1,4 @@
-package com.example.quiztest2;
+package com.example.quiztest2.json;
 
 import android.os.Parcel;
 import android.os.Parcelable;

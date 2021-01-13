@@ -1,4 +1,4 @@
-package com.example.quiztest2;
+package com.example.quiztest2.dbstuff;
 // Für den Fall dass ich das ins Internet auslagern will: https://stackoverflow.com/questions/11299208/how-to-synchronize-android-database-with-an-online-sql-server
 // Spart wahrscheinlich mega Platz ein (aber erhöht Internet-Traffic ungemein)
 /*
@@ -28,9 +28,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.quiztest2.QuizContract.*;
+import com.example.quiztest2.dbstuff.QuizContract.*;
+import com.example.quiztest2.json.ChampionJSON;
+import com.example.quiztest2.json.ChampionJSONRoot;
+import com.example.quiztest2.json.Info;
+import com.example.quiztest2.json.Spell;
 import com.google.gson.Gson;
 
 import java.io.InputStream;
@@ -41,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DBHelper extends SQLiteOpenHelper {
+
     private static final String databaseName = "league_of_quizzes.db";
     private static final int databaseVersion = 1;
     HashMap<String,String> champOrigin = new HashMap<>();
@@ -52,7 +55,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
     private DBHelper (Context context) {
-        super(context, databaseName, null, 1);
+        super(context, databaseName, null, databaseVersion);
         this.context = context;
     }
 
@@ -319,7 +322,7 @@ public class DBHelper extends SQLiteOpenHelper {
         } catch (Exception e) { throw new RuntimeException(e); }
 
         ChampionJSONRoot allChampsJSON = gson.fromJson(jsonFormatted,ChampionJSONRoot.class);
-        HashMap<String,ChampionJSON> allChamps = allChampsJSON.getData();
+        HashMap<String, ChampionJSON> allChamps = allChampsJSON.getData();
 
         Iterator<Map.Entry<String, ChampionJSON>> it = allChamps.entrySet().iterator();
         while (it.hasNext()) {
@@ -449,6 +452,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if (c.moveToPosition(index)){
             champKey = c.getString(c.getColumnIndex(ChampionsTable.COLUMN_KEY));
         }
+        db.close();
         c.close();
         return champKey;
     }
@@ -470,6 +474,7 @@ public class DBHelper extends SQLiteOpenHelper {
             champInfo[0] = c.getString(c.getColumnIndex(ChampionsTable.COLUMN_NAME));
             champInfo[1] = c.getString(c.getColumnIndex(ChampionsTable.COLUMN_ID));
         }
+        db.close();
         c.close();
         return champInfo;
     }

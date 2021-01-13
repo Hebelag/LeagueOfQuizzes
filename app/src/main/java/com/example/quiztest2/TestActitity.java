@@ -7,6 +7,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.quiztest2.dbstuff.DBHelper;
+import com.example.quiztest2.json.ChampionJSON;
+
 import java.util.ArrayList;
 import java.util.List;
 

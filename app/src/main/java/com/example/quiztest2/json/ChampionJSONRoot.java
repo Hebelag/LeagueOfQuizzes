@@ -1,4 +1,6 @@
-package com.example.quiztest2;
+package com.example.quiztest2.json;
+
+import com.example.quiztest2.json.ChampionJSON;
 
 import java.util.HashMap;
 
@@ -6,7 +8,7 @@ public class ChampionJSONRoot {
     private String type;
     private String format;
     private String version;
-    private HashMap<String,ChampionJSON> data;
+    private HashMap<String, ChampionJSON> data;
     private HashMap<String,String> keys;
 
     public String getType() {

@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 
 public class DBHelper extends SQLiteOpenHelper {
-
     private static final String databaseName = "league_of_quizzes.db";
     private static final int databaseVersion = 1;
     HashMap<String,String> champOrigin = new HashMap<>();

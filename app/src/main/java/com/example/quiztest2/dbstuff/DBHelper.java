@@ -307,6 +307,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }*/
 
     private void fillChampionTable(){
+        System.out.println("fillChampionTable");
         Gson gson = new Gson();
         String jsonFormatted = "";
 

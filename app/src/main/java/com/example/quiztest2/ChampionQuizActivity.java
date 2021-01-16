@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.quiztest2.dbstuff.DBHelper;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Random;
@@ -403,57 +405,37 @@ public class ChampionQuizActivity extends AppCompatActivity {
 
         // When maxLevel is not reached yet, enter conditional
         if (currentLevel <= maxLevel) {
-            //local championID for the generation of the 4 champions to choose from
+            //OLD: local championID for the generation of the 4 champions to choose from
             //can this be done in a loop?
             //this one especially generates the "true" champion
             //I wonder if I can't do this the other way around. First generate 4 random champions
             //and then decide which one is the true one and append that somehow
-            int championID;
-            do {
-                championID = (int) (Math.random() * CHAMPION_COUNT);
-            } while (champGameMode.equals(ChampionQuizGameMode.MODE_MARATHON) && championsAnswered.contains(championID));
-            String championKey = db.getChampKeyForChampQuiz(championID);
-            String[] champion = db.getChampNameFromKey(championKey);
+            //NEW: deleted whole "repeated" code to do all four champs at once and decide later
+            //which champion is the "right" one
 
-            champID = championID;
+            // OLD: Get the other 3 champions, LOGIC
+            // NEW: Get all 4 champions and care about which is the right champion later!
+            fillChampionArray();
 
-            championName = champion[0];
-            imagePath = champion[1];
+            selectRightChampion();
+
+            // Set UI up (way better!)
+            setChampionImages();
 
             // UI, has nothing to do here per se. Maybe do it in loadLevelUI and pass the QuizMode?
             championText.setText(championName);
             gameLayout.setVisibility(View.VISIBLE);
             postGameLayout.setVisibility(View.INVISIBLE);
 
-            // Get the other 3 champions, LOGIC
-            getChampions(champID);
 
-            // Set UI up (way better!)
-            setChampionImages();
+
+
         } else {
+            loadFinishScreen();
             // What did I think while doing this. This looks exactly like it should be done in separate classes?
             // The big question is: how?
             // In the end there are the same 3 things done over again
-            if (champGameMode.equals(ChampionQuizGameMode.MODE_TIME_ATTACK)) {
-                finalTimerView.setVisibility(View.GONE);
-                String finalScoreText = "Score: " + score;
-                finalScore.setText(finalScoreText);
 
-            } else if(champGameMode.equals(ChampionQuizGameMode.MODE_ENDLESS)){
-                finalTimerView.setVisibility(View.VISIBLE);
-                finalScore.setVisibility(View.VISIBLE);
-                String finalScoreText = "Score: " + score;
-                finalScore.setText(finalScoreText);
-                timerHandler.removeCallbacks(timerRunnable);
-                String finalTimeText = String.format(Locale.getDefault(), "Done in: %s", timeString);
-                finalTimerView.setText(finalTimeText);
-            } else {
-                finalTimerView.setVisibility(View.VISIBLE);
-                finalScore.setVisibility(View.GONE);
-                timerHandler.removeCallbacks(timerRunnable);
-                String finalTimeText = String.format(Locale.getDefault(), "Done in: %s", timeString);
-                finalTimerView.setText(finalTimeText);
-            }
 
             // Maybe put everything in doAllAccuracy() method?
             accuracy = (float) score / ((float) score + (float) wrongs) * 100;
@@ -467,31 +449,71 @@ public class ChampionQuizActivity extends AppCompatActivity {
 
     }
 
-    public void getChampions(int selectedChampID) {
+    private void loadFinishScreen() {
+        if (champGameMode.equals(ChampionQuizGameMode.MODE_TIME_ATTACK)) {
+            finalTimerView.setVisibility(View.GONE);
+            showFinalScore();
+        } else if(champGameMode.equals(ChampionQuizGameMode.MODE_ENDLESS)){
+            stopTimer();
+            showFinishTime();
+        } else {
+            finalScore.setVisibility(View.GONE);
+            stopTimer();
+            showFinishTime();
+        }
+    }
+
+    private void showFinalScore() {
+        finalScore.setVisibility(View.VISIBLE);
+        String finalScoreText = "Score: " + score;
+        finalScore.setText(finalScoreText);
+    }
+
+    private void showFinishTime() {
+        finalTimerView.setVisibility(View.VISIBLE);
+        String finalTimeText = String.format(Locale.getDefault(), "Done in %s", timeString);
+        finalTimerView.setText(finalTimeText);
+    }
+
+    private void stopTimer() {
+        timerHandler.removeCallbacks(timerRunnable);
+    }
+
+    private void selectRightChampion() {
+        int rightChampionPosition = (int) (Math.random() * 4);
+        championName = buttonChampions[rightChampionPosition];
+        imagePath = buttonChampionImages[rightChampionPosition];
+    }
+
+    public void fillChampionArray() {
         //Very good example for only having logic
         DBHelper db = DBHelper.getInstance(this);
-        for (int i = 0; i < 3; i++) {
-            int championID;
+        int[] uniqueChampionArray = new int[4];
+        int championID = 0;
+        for (int i = 0; i < 4; i++) {
             do {
                 championID = (int) (Math.random() * CHAMPION_COUNT);
-            } while (championID == selectedChampID || (championID < 1 || championID > CHAMPION_COUNT));
-            if (championID != 0) {
-                String championKey = db.getChampKeyForChampQuiz(championID);
-                buttonChampionsKey[i] = championKey;
-            }
+            } while (contains(uniqueChampionArray,championID) || championID >= CHAMPION_COUNT);
+            System.out.println(championID);
+            String championKey = db.getChampKeyForChampQuiz(championID);
+            buttonChampionsKey[i] = championKey;
+            uniqueChampionArray[i] = championID;
         }
-
-        String championRightKey = db.getChampKeyForChampQuiz(champID);
-
-        buttonChampionsKey[3] = championRightKey;
-
-        shuffleArray(buttonChampionsKey);
         for (int i = 0; i < buttonChampionsKey.length; i++) {
             String[] championArray = db.getChampNameFromKey(buttonChampionsKey[i]);
             buttonChampions[i] = championArray[0];
             buttonChampionImages[i] = championArray[1];
         }
 
+    }
+
+    private boolean contains(int[] uniqueChampionArray, int championID) {
+        for (int i : uniqueChampionArray){
+            if (championID == i) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setChampionImages() {
@@ -542,7 +564,8 @@ public class ChampionQuizActivity extends AppCompatActivity {
         lives = 0;
         wrongs = 0;
         buttonStartQuiz.setClickable(true);
-
+        String defaultChampionText = "Champion";
+        championText.setText(defaultChampionText);
         int imageID = getResources().getIdentifier("defaultchampion", "drawable", getPackageName());
         btnAns1.setImageResource(imageID);
         btnAns2.setImageResource(imageID);

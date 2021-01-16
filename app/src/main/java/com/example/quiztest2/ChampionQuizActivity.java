@@ -78,6 +78,8 @@ public class ChampionQuizActivity extends AppCompatActivity {
 
     final String prefLevel = "currentLevel";
 
+    // Not good habit to keep everything in the heap here, just use it where it needs to be used.
+    // Instance variables are on the... stack? Need to read the book again
     TextView championText, scoreView;
     ImageButton btnAns1, btnAns2, btnAns3, btnAns4;
     TextView finalScore, finalAccuracy;
@@ -86,6 +88,8 @@ public class ChampionQuizActivity extends AppCompatActivity {
     ImageView timerImage;
     LinearLayout gameLayout, postGameLayout, timeAttackLayout;
 
+    //Android Intent is the message that is passed between components such as activities, content providers, broadcast receivers, services etc.
+    //It is generally used with startActivity() method to invoke activity, broadcast receivers etc.
     private Intent championQuizIntent;
 
     private long gameTime = 0;
@@ -124,6 +128,8 @@ public class ChampionQuizActivity extends AppCompatActivity {
         }
     };
 
+
+    //Shuffles the array which in which the championNames and ids are being held.
     public static void shuffleArray(String[] ar) {
         // If running on Java 6 or older, use `new Random()` on RHS here
         Random rnd = ThreadLocalRandom.current();
@@ -136,17 +142,30 @@ public class ChampionQuizActivity extends AppCompatActivity {
         }
     }
 
+
+    //onCreate is called when the activity starts up. So in my opinion way too much logic here.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Get the intent to get the data passed from the ChampionQuizGameMode activity into here.
         championQuizIntent = this.getIntent();
         champGameMode = championQuizIntent.getStringExtra(ChampionQuizGameMode.KEY_GAME_MODE);
 
+        //UI-method which shows inside the ChampionQuizActivity screen the default helm champions
         initializeEmptyChampions();
+
+        //UI-method which loads the whole UI, or rather connects the instance variables of different
+        //UI types to the Views
         loadLayout();
 
+
+        //Conditional shit but I try to explain it.
+        // The conditional is here because depending on the game mode you either need the timer or
+        // Not. So to code it fast I just copypasted the code and asked whats stored inside the intent.
+        // I think it can be done super clean somehow
         if (champGameMode.equals(ChampionQuizGameMode.MODE_TIME_ATTACK)) {
             timerView.setVisibility(View.INVISIBLE);
             timerImage.setVisibility(View.INVISIBLE);
@@ -159,27 +178,65 @@ public class ChampionQuizActivity extends AppCompatActivity {
             maxLevel = 1000;
 
         } else {
+            //is the same
             timerView.setVisibility(View.VISIBLE);
+
+            //is the same
             timerImage.setVisibility(View.VISIBLE);
+
+            //is still the same
             timeAttackLayout.setVisibility(View.GONE);
+
+            //even more ugly conditionals
             if (champGameMode.equals(ChampionQuizGameMode.MODE_MARATHON)) {
                 maxLevel = CHAMPION_COUNT;
             } else {
                 maxLevel = championQuizIntent.getIntExtra(ChampionQuizGameMode.KEY_TRAIN, 20);
             }
         }
+        //Conclusion of the ugly conditional section: instead of declaring it in a repetitive way,
+        //I should consider maybe doing different classes like the dev did it in PixelDungeon with
+        //the levels? Link: https://github.com/watabou/pixel-dungeon
+        // What is even the final logic of this conditional?
+        // Everything is about a TIMER.
+        // Final conditional loop again does adjust the maximum level, so a GAME SETUP
 
+        // Seems kinda hard coded?
         btnAns1.setOnClickListener(createChampionOnClickListener(0));
         btnAns2.setOnClickListener(createChampionOnClickListener(1));
         btnAns3.setOnClickListener(createChampionOnClickListener(2));
         btnAns4.setOnClickListener(createChampionOnClickListener(3));
 
+        // Most fucked up thing in the entire code. :: like why
+        // So I try to explain it to myself:
+        //
+        // public void setOnClickListener(@Nullable OnClickListener l) {
+        //        if (!isClickable()) {
+        //            setClickable(true);
+        //        }
+        //        getListenerInfo().mOnClickListener = l;
+        //    }
+        //
+        // so setOnClickListener needs an OnClickListener
+        // goToMainMenu takes a View and does things
+        //
+        // public interface OnClickListener {
+        //        /**
+        //         * Called when a view has been clicked.
+        //         *
+        //         * @param v The view that was clicked.
+        //         */
+        //        void onClick(View v);
+        //    }
+        //
+        // So OnClickListener is an interface which has a method that takes a View?!?!?
+        // It's called method reference. So 'this' is this class which
         returnButton.setOnClickListener(this::goToMainMenu);
         retryButton.setOnClickListener(this::handleRetryButtonClick);
         buttonStartQuiz.setOnClickListener(this::startQuiz);
 
 
-
+        // Conditional for phone flipping
         if (savedInstanceState == null) {
             currentLevel = 1;
             score = 0;
@@ -205,6 +262,9 @@ public class ChampionQuizActivity extends AppCompatActivity {
         }
     }
 
+
+    // Finally a small method, initializes some logic of the game, in this case the "empty"
+    // champion images
     private void initializeEmptyChampions() {
         buttonChampions[0] = "defaultchampion";
         buttonChampions[1] = "defaultchampion";
@@ -212,6 +272,7 @@ public class ChampionQuizActivity extends AppCompatActivity {
         buttonChampions[3] = "defaultchampion";
     }
 
+    // Method to get the 4 Images to listen to being clicked, returning an onclicklistener
     private View.OnClickListener createChampionOnClickListener(int champion) {
 
         return (View v) -> {
@@ -231,6 +292,8 @@ public class ChampionQuizActivity extends AppCompatActivity {
 
     }
 
+    //startQuiz sounds very general, what does it actually do?
+    // again ugly conditional statements.
     private void startQuiz(View v) {
         if (buttonStartQuiz.getText().toString().equals("STOP")) {
             currentLevel = maxLevel + 1;
@@ -275,6 +338,9 @@ public class ChampionQuizActivity extends AppCompatActivity {
         countDownTimerView = findViewById(R.id.countdownView);
     }
 
+
+    // pretty clear what it does
+    // starts the countdown which takes countDownMillis
     private void startCountDown() {
         CountDownTimer countDownTimer = new CountDownTimer(countDownMillis, 100) {
             @Override
@@ -293,6 +359,8 @@ public class ChampionQuizActivity extends AppCompatActivity {
         }.start();
     }
 
+
+    // Connected to startCountDown()
     private void updateCountDownText() {
         int minutes = (int) (countDownMillis / 1000) / 60;
         int seconds = (int) (countDownMillis / 1000) % 60;
@@ -305,6 +373,8 @@ public class ChampionQuizActivity extends AppCompatActivity {
         }
     }
 
+    // Get the championImage according to the argument number provided.
+    // Used in onSaveInstanceState
     public void retrieveChampionImage(String chmpImg, int x) {
         int imageID = getResources().getIdentifier(chmpImg.toLowerCase(), "drawable", getPackageName());
         switch (x) {
@@ -323,15 +393,25 @@ public class ChampionQuizActivity extends AppCompatActivity {
         }
     }
 
-    public void loadLevel() {
 
+    // Very Broad Meaning, should be only LOGIC, but also cares about some UI elements
+    // Bad manner
+    public void loadLevel() {
+        // getInstance because Singleton Pattern, which doesn't allow you to have multiple instances
+        // of the class
         DBHelper db = DBHelper.getInstance(this);
+
+        // When maxLevel is not reached yet, enter conditional
         if (currentLevel <= maxLevel) {
+            //local championID for the generation of the 4 champions to choose from
+            //can this be done in a loop?
+            //this one especially generates the "true" champion
+            //I wonder if I can't do this the other way around. First generate 4 random champions
+            //and then decide which one is the true one and append that somehow
             int championID;
             do {
                 championID = (int) (Math.random() * CHAMPION_COUNT);
             } while (champGameMode.equals(ChampionQuizGameMode.MODE_MARATHON) && championsAnswered.contains(championID));
-            System.out.println(championID);
             String championKey = db.getChampKeyForChampQuiz(championID);
             String[] champion = db.getChampNameFromKey(championKey);
 
@@ -340,37 +420,47 @@ public class ChampionQuizActivity extends AppCompatActivity {
             championName = champion[0];
             imagePath = champion[1];
 
+            // UI, has nothing to do here per se. Maybe do it in loadLevelUI and pass the QuizMode?
             championText.setText(championName);
-
             gameLayout.setVisibility(View.VISIBLE);
             postGameLayout.setVisibility(View.INVISIBLE);
 
+            // Get the other 3 champions, LOGIC
             getChampions(champID);
+
+            // Set UI up (way better!)
             setChampionImages();
         } else {
+            // What did I think while doing this. This looks exactly like it should be done in separate classes?
+            // The big question is: how?
+            // In the end there are the same 3 things done over again
             if (champGameMode.equals(ChampionQuizGameMode.MODE_TIME_ATTACK)) {
                 finalTimerView.setVisibility(View.GONE);
                 String finalScoreText = "Score: " + score;
                 finalScore.setText(finalScoreText);
 
+            } else if(champGameMode.equals(ChampionQuizGameMode.MODE_ENDLESS)){
+                finalTimerView.setVisibility(View.VISIBLE);
+                finalScore.setVisibility(View.VISIBLE);
+                String finalScoreText = "Score: " + score;
+                finalScore.setText(finalScoreText);
+                timerHandler.removeCallbacks(timerRunnable);
+                String finalTimeText = String.format(Locale.getDefault(), "Done in: %s", timeString);
+                finalTimerView.setText(finalTimeText);
             } else {
                 finalTimerView.setVisibility(View.VISIBLE);
-                if (champGameMode.equals(ChampionQuizGameMode.MODE_ENDLESS)) {
-                    finalScore.setVisibility(View.VISIBLE);
-                    String finalScoreText = "Score: " + score;
-                    finalScore.setText(finalScoreText);
-                } else {
-                    finalScore.setVisibility(View.GONE);
-                }
+                finalScore.setVisibility(View.GONE);
                 timerHandler.removeCallbacks(timerRunnable);
                 String finalTimeText = String.format(Locale.getDefault(), "Done in: %s", timeString);
                 finalTimerView.setText(finalTimeText);
             }
+
+            // Maybe put everything in doAllAccuracy() method?
             accuracy = (float) score / ((float) score + (float) wrongs) * 100;
             String finalAccuracyText = String.format(Locale.getDefault(), "Accuracy: %.1f %%", accuracy);
             finalAccuracy.setText(finalAccuracyText);
 
-
+            // UI? SO much UI!?!
             gameLayout.setVisibility(View.INVISIBLE);
             postGameLayout.setVisibility(View.VISIBLE);
         }
@@ -378,7 +468,7 @@ public class ChampionQuizActivity extends AppCompatActivity {
     }
 
     public void getChampions(int selectedChampID) {
-
+        //Very good example for only having logic
         DBHelper db = DBHelper.getInstance(this);
         for (int i = 0; i < 3; i++) {
             int championID;

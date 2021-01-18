@@ -71,6 +71,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_CHAMPION_TABLE = "CREATE TABLE IF NOT EXISTS " +
                 ChampionsTable.TABLE_NAME + " ( " +
+                ChampionsTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ChampionsTable.COLUMN_ID + " TINYTEXT, " +
                 ChampionsTable.COLUMN_NAME + " TINYTEXT, " +
                 ChampionsTable.COLUMN_KEY + " TINYTEXT, " +
@@ -84,13 +85,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 ChampionsTable.COLUMN_ATTACK + " TINYINT, " +
                 ChampionsTable.COLUMN_DEFENSE + " TINYINT, " +
                 ChampionsTable.COLUMN_MAGIC + " TINYINT, " +
-                ChampionsTable.COLUMN_DIFFICULTY + " TINYINT, " +
-                " PRIMARY KEY (" + ChampionsTable.COLUMN_ID + ") " +
+                ChampionsTable.COLUMN_DIFFICULTY + " TINYINT " +
                 ")";
 
         final String SQL_CREATE_CHAMPION_STATS_TABLE = "CREATE TABLE IF NOT EXISTS " +
                 ChampionStatsTable.TABLE_NAME + " ( " +
-                ChampionsTable.COLUMN_ID + " TINYTEXT, " +
+                ChampionsTable.COLUMN_NAME + " INTEGER, " +
                 ChampionStatsTable.COLUMN_STAT_AD + " DOUBLE, " +
                 ChampionStatsTable.COLUMN_STAT_ADL + " DOUBLE, " +
                 ChampionStatsTable.COLUMN_STAT_ARMOR + " DOUBLE, " +
@@ -111,14 +111,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 ChampionStatsTable.COLUMN_STAT_MRL + " DOUBLE, " +
                 ChampionStatsTable.COLUMN_STAT_RANGE + " DOUBLE, " +
                 ChampionStatsTable.COLUMN_STAT_MS + " DOUBLE, " +
-                " FOREIGN KEY (" + ChampionsTable.COLUMN_ID + ") REFERENCES " +
+                " FOREIGN KEY (" + ChampionsTable.COLUMN_NAME + ") REFERENCES " +
                 ChampionsTable.TABLE_NAME + "(" +
-                ChampionsTable.COLUMN_ID + ")" +
+                ChampionsTable.COLUMN_NAME + ")" +
                 ")";
 
         final String SQL_CREATE_CHAMPION_ABILITY_TABLE = "CREATE TABLE IF NOT EXISTS " +
                 ChampionAbilityTable.TABLE_NAME + " ( " +
-                ChampionsTable.COLUMN_ID + " TINYTEXT, " +
+                ChampionsTable.COLUMN_NAME + " TINYTEXT, " +
                 ChampionAbilityTable.COLUMN_Q_NAME + " TINYTEXT, " +
                 ChampionAbilityTable.COLUMN_Q_DESCRIPTION + " TEXT, " +
                 ChampionAbilityTable.COLUMN_Q_IMAGE_PATH + " TINYTEXT, " +
@@ -139,9 +139,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 ChampionAbilityTable.COLUMN_R_IMAGE_PATH + " TINYTEXT, " +
                 ChampionAbilityTable.COLUMN_R_COOLDOWN_BURN + " TINYTEXT, " +
                 ChampionAbilityTable.COLUMN_R_COST_BURN + " TINYTEXT, " +
-                " FOREIGN KEY (" + ChampionsTable.COLUMN_ID + ") REFERENCES " +
+                " FOREIGN KEY (" + ChampionsTable.COLUMN_NAME + ") REFERENCES " +
                 ChampionsTable.TABLE_NAME + "(" +
-                ChampionsTable.COLUMN_ID + ")" +
+                ChampionsTable.COLUMN_NAME + ")" +
                 ")";
 
 
@@ -162,9 +162,9 @@ public class DBHelper extends SQLiteOpenHelper {
         //https://stackoverflow.com/questions/19268811/set-default-value-in-query-when-value-is-null/19268839
 
         db.execSQL(SQL_CREATE_CHAMPION_TABLE);
-        db.execSQL(SQL_CREATE_CHAMPION_STATS_TABLE);
-        db.execSQL(SQL_CREATE_CHAMPION_ABILITY_TABLE);
-        db.execSQL(SQL_CREATE_ITEM_TABLE);
+        //db.execSQL(SQL_CREATE_CHAMPION_STATS_TABLE);
+        //db.execSQL(SQL_CREATE_CHAMPION_ABILITY_TABLE);
+        //db.execSQL(SQL_CREATE_ITEM_TABLE);
         fillChampionTable();
         //fillItemTable();
     }
@@ -336,6 +336,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(ChampionsTable.COLUMN_ID, champion.getId());
         cv.put(ChampionsTable.COLUMN_NAME, champion.getName());
         cv.put(ChampionsTable.COLUMN_KEY, champion.getKey());
+        System.out.println(champion.getKey());
         cv.put(ChampionsTable.COLUMN_TITLE, champion.getTitle());
         cv.put(ChampionsTable.COLUMN_LORE, champion.getLore());
         // cv.put(ChampionsTable.COLUMN_PRIM_ROLE, champion.getTags()[0]);
@@ -374,7 +375,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv2.put(ChampionStatsTable.COLUMN_STAT_MRL, champion.getStats().get("spellblockperlevel"));
         cv2.put(ChampionStatsTable.COLUMN_STAT_MS, champion.getStats().get("movespeed"));
         cv2.put(ChampionStatsTable.COLUMN_STAT_RANGE, champion.getStats().get("attackrange"));
-        db.insert(ChampionStatsTable.TABLE_NAME, null, cv2);
+        //db.insert(ChampionStatsTable.TABLE_NAME, null, cv2);
 
         ContentValues cv3 = new ContentValues();
         Spell[] championSpell = champion.getSpells();
@@ -395,7 +396,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv3.put(ChampionAbilityTable.COLUMN_R_DESCRIPTION, championSpell[3].getDescription());
         cv3.put(ChampionAbilityTable.COLUMN_R_COOLDOWN_BURN, championSpell[3].getCooldownBurn());
         cv3.put(ChampionAbilityTable.COLUMN_R_COST_BURN, championSpell[3].getCostBurn());
-        db.insert(ChampionAbilityTable.TABLE_NAME, null, cv3);
+        //db.insert(ChampionAbilityTable.TABLE_NAME, null, cv3);
 
     }
 
@@ -446,35 +447,54 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT " +
                 ChampionsTable.COLUMN_KEY +
                 " FROM " +
-                ChampionsTable.TABLE_NAME, null);
-        if (c.moveToPosition(index)){
+                ChampionsTable.TABLE_NAME +
+                " WHERE " +
+                ChampionsTable._ID +
+                " = " +
+                (index+1), null);
+        if (c.moveToFirst()){
             champKey = c.getString(c.getColumnIndex(ChampionsTable.COLUMN_KEY));
         }
-        db.close();
         c.close();
+        db.close();
         return champKey;
     }
 
-    public String[] getChampNameFromKey(String key) {
-        String[] champInfo = new String[2];
+    public String getChampNameFromKey(String key) {
+        String champName = null;
         db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT " +
                 ChampionsTable.COLUMN_NAME +
-                ", " +
+                " FROM " +
+                ChampionsTable.TABLE_NAME +
+                " WHERE " +
+                ChampionsTable.COLUMN_KEY +
+                " = " +
+                key + ";", null);
+        if (c.moveToFirst()){
+            champName = c.getString(c.getColumnIndex(ChampionsTable.COLUMN_NAME));
+        }
+        c.close();
+        db.close();
+        return champName;
+    }
+    public String getChampIDFromKey(String key) {
+        String champKey = null;
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " +
                 ChampionsTable.COLUMN_ID +
                 " FROM " +
                 ChampionsTable.TABLE_NAME +
                 " WHERE " +
                 ChampionsTable.COLUMN_KEY +
-                " == " +
+                " = " +
                 key, null);
         if (c.moveToFirst()){
-            champInfo[0] = c.getString(c.getColumnIndex(ChampionsTable.COLUMN_NAME));
-            champInfo[1] = c.getString(c.getColumnIndex(ChampionsTable.COLUMN_ID));
+            champKey = c.getString(c.getColumnIndex(ChampionsTable.COLUMN_ID));
         }
         db.close();
         c.close();
-        return champInfo;
+        return champKey;
     }
 
     @Override

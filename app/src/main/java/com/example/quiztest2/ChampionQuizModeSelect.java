@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class ChampionQuizGameMode extends AppCompatActivity {
+import com.example.quiztest2.championQuizActivities.ChampionQuizActivity;
+import com.example.quiztest2.championQuizActivities.ChampionQuizTraining;
+
+public class ChampionQuizModeSelect extends AppCompatActivity {
     Button trainingFirst, trainingSecond, trainingThird, timeFirst, timeSecond, timeThird;
     Button endlessButton, marathonButton;
 
@@ -49,7 +52,7 @@ public class ChampionQuizGameMode extends AppCompatActivity {
         trainingFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizGameMode.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this, ChampionQuizTraining.class);
                 intent.putExtra(KEY_TRAIN,TRAIN_ONE_CHAMP_COUNT);
                 intent.putExtra(KEY_GAME_MODE,MODE_TRAINING);
                 startActivity(intent);
@@ -60,7 +63,7 @@ public class ChampionQuizGameMode extends AppCompatActivity {
         trainingSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizGameMode.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizTraining.class);
                 intent.putExtra(KEY_TRAIN,TRAIN_TWO_CHAMP_COUNT);
                 intent.putExtra(KEY_GAME_MODE,MODE_TRAINING);
                 startActivity(intent);
@@ -71,7 +74,7 @@ public class ChampionQuizGameMode extends AppCompatActivity {
         trainingThird.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizGameMode.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizTraining.class);
                 intent.putExtra(KEY_TRAIN,TRAIN_THREE_CHAMP_COUNT);
                 intent.putExtra(KEY_GAME_MODE,MODE_TRAINING);
                 startActivity(intent);
@@ -82,7 +85,7 @@ public class ChampionQuizGameMode extends AppCompatActivity {
         timeFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizGameMode.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizActivity.class);
                 intent.putExtra(KEY_TIME,TIME_ONE_MILLIS);
                 intent.putExtra(KEY_GAME_MODE,MODE_TIME_ATTACK);
                 startActivity(intent);
@@ -93,7 +96,7 @@ public class ChampionQuizGameMode extends AppCompatActivity {
         timeSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizGameMode.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizActivity.class);
                 intent.putExtra(KEY_TIME,TIME_TWO_MILLIS);
                 intent.putExtra(KEY_GAME_MODE,MODE_TIME_ATTACK);
                 startActivity(intent);
@@ -104,7 +107,7 @@ public class ChampionQuizGameMode extends AppCompatActivity {
         timeThird.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizGameMode.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizActivity.class);
                 intent.putExtra(KEY_TIME,TIME_THREE_MILLIS);
                 intent.putExtra(KEY_GAME_MODE,MODE_TIME_ATTACK);
                 startActivity(intent);
@@ -115,7 +118,7 @@ public class ChampionQuizGameMode extends AppCompatActivity {
         endlessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizGameMode.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizActivity.class);
                 intent.putExtra(KEY_TRAIN,ENDLESS_CHAMP_COUNT);
                 intent.putExtra(KEY_GAME_MODE,MODE_ENDLESS);
                 startActivity(intent);
@@ -127,7 +130,7 @@ public class ChampionQuizGameMode extends AppCompatActivity {
         marathonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizGameMode.this, ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this, ChampionQuizActivity.class);
                 intent.putExtra(KEY_GAME_MODE, MODE_MARATHON);
                 startActivity(intent);
                 finish();

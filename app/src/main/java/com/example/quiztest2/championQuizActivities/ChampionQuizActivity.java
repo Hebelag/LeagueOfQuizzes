@@ -1,4 +1,4 @@
-package com.example.quiztest2;
+package com.example.quiztest2.championQuizActivities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.quiztest2.ChampionQuizModeSelect;
+import com.example.quiztest2.R;
 import com.example.quiztest2.dbstuff.DBHelper;
 
 import java.util.HashSet;
@@ -30,7 +32,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 
 /*
-So heute ist der 10.01 nur kurz schreiben was ich vor habe.
+ So heute ist der 10.01 nur kurz schreiben was ich vor habe.
 Umschreiben von allen Quizactivities. Alle QuizActivities haben etwas gemeinsam.
 Beispielsweise haben alle QuizActivities
 ->die Möglichkeit, vier Bilder zu haben und ein Ziel. Sei es Champion/Item/Ability.
@@ -85,6 +87,8 @@ public class ChampionQuizActivity extends AppCompatActivity {
     private static final int CHAMPION_COUNT = 152;
 
     final String prefLevel = "currentLevel";
+    
+    ChampionQuizLogic logicHandler = new ChampionQuizLogic();
 
     // Not good habit to keep everything in the heap here, just use it where it needs to be used.
     // Instance variables are on the... stack? Need to read the book again
@@ -100,7 +104,6 @@ public class ChampionQuizActivity extends AppCompatActivity {
     //It is generally used with startActivity() method to invoke activity, broadcast receivers etc.
     private Intent championQuizIntent;
 
-    private long gameTime = 0;
     private int currentLevel = 1;
     private int score, wrongs, lives = 3;
     private long countDownMillis;
@@ -122,14 +125,13 @@ public class ChampionQuizActivity extends AppCompatActivity {
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            gameTime = System.currentTimeMillis() - startTime;
+            long gameTime = System.currentTimeMillis() - startTime;
             int seconds = (int) (gameTime / 1000);
             int minutes = seconds / 60;
             seconds = seconds % 60;
+
             timeString = String.format(Locale.getDefault(), "%d:%02d", minutes, seconds);
-
             timerView.setText(timeString);
-
             timerHandler.postDelayed(this, 500);
 
         }
@@ -172,18 +174,18 @@ public class ChampionQuizActivity extends AppCompatActivity {
         // The conditional is here because depending on the game mode you either need the timer or
         // Not. So to code it fast I just copypasted the code and asked whats stored inside the intent.
         // I think it can be done super clean somehow
-        if (champGameMode.equals(ChampionQuizGameMode.MODE_TIME_ATTACK)) {
+        if (champGameMode.equals(ChampionQuizModeSelect.MODE_TIME_ATTACK)) {
             timerView.setVisibility(View.INVISIBLE);
             timerImage.setVisibility(View.INVISIBLE);
             timeAttackLayout.setVisibility(View.VISIBLE);
-            countDownMillis = championQuizIntent.getLongExtra(ChampionQuizGameMode.KEY_TIME, 60000);
+            countDownMillis = championQuizIntent.getLongExtra(ChampionQuizModeSelect.KEY_TIME, 60000);
             int minutes = (int) (countDownMillis / 1000) / 60;
             int seconds = (int) (countDownMillis / 1000) % 60;
             String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
             countDownTimerView.setText(timeFormatted);
             maxLevel = 1000;
 
-        } else if (champGameMode.equals(ChampionQuizGameMode.MODE_MARATHON)){
+        } else if (champGameMode.equals(ChampionQuizModeSelect.MODE_MARATHON)) {
             maxLevel = CHAMPION_COUNT;
             //is the same
             timerView.setVisibility(View.VISIBLE);
@@ -194,7 +196,7 @@ public class ChampionQuizActivity extends AppCompatActivity {
             //is still the same
             timeAttackLayout.setVisibility(View.GONE);
         } else {
-            maxLevel = championQuizIntent.getIntExtra(ChampionQuizGameMode.KEY_TRAIN, 20);
+            maxLevel = championQuizIntent.getIntExtra(ChampionQuizModeSelect.KEY_TRAIN, 20);
             //is the same
             timerView.setVisibility(View.VISIBLE);
 
@@ -275,7 +277,7 @@ public class ChampionQuizActivity extends AppCompatActivity {
 
     private void getGameMode() {
         championQuizIntent = this.getIntent();
-        champGameMode = championQuizIntent.getStringExtra(ChampionQuizGameMode.KEY_GAME_MODE);
+        champGameMode = championQuizIntent.getStringExtra(ChampionQuizModeSelect.KEY_GAME_MODE);
     }
 
 
@@ -318,14 +320,14 @@ public class ChampionQuizActivity extends AppCompatActivity {
             currentLevel = maxLevel + 1;
             loadLevel();
         }
-        if (champGameMode.equals(ChampionQuizGameMode.MODE_ENDLESS)) {
+        if (champGameMode.equals(ChampionQuizModeSelect.MODE_ENDLESS)) {
             buttonStartQuiz.setClickable(true);
             String stopQuiz = "STOP";
             buttonStartQuiz.setText(stopQuiz);
         } else {
             buttonStartQuiz.setClickable(false);
         }
-        if (champGameMode.equals(ChampionQuizGameMode.MODE_TIME_ATTACK)) {
+        if (champGameMode.equals(ChampionQuizModeSelect.MODE_TIME_ATTACK)) {
             startCountDown();
         } else {
             startTime = System.currentTimeMillis();
@@ -448,10 +450,10 @@ public class ChampionQuizActivity extends AppCompatActivity {
         String finalAccuracyText = String.format(Locale.getDefault(), "Accuracy: %.1f %%", accuracy);
         finalAccuracy.setText(finalAccuracyText);
 
-        if (champGameMode.equals(ChampionQuizGameMode.MODE_TIME_ATTACK)) {
+        if (champGameMode.equals(ChampionQuizModeSelect.MODE_TIME_ATTACK)) {
             finalTimerView.setVisibility(View.GONE);
             showFinalScore();
-        } else if(champGameMode.equals(ChampionQuizGameMode.MODE_ENDLESS)){
+        } else if (champGameMode.equals(ChampionQuizModeSelect.MODE_ENDLESS)) {
             stopTimer();
             showFinishTime();
         } else {
@@ -502,17 +504,16 @@ public class ChampionQuizActivity extends AppCompatActivity {
         for (int i = 0; i < 4; i++) {
             do {
                 championIndex = (int) (Math.random() * CHAMPION_COUNT);
-            } while (contains(uniqueChampionArray,championIndex) || championIndex >= CHAMPION_COUNT);
+            } while (contains(uniqueChampionArray, championIndex) || championIndex >= CHAMPION_COUNT);
             String championKey = db.getChampKeyForChampQuiz(championIndex);
             uniqueChampionArray[i] = championIndex;
-            String[] championArray = db.getChampNameFromKey(championKey);
-            buttonChampions[i] = championArray[0];
-            buttonChampionImages[i] = championArray[1];
+            buttonChampions[i] = db.getChampNameFromKey(championKey);
+            buttonChampionImages[i] = db.getChampIDFromKey(championKey);
         }
     }
 
     private boolean contains(int[] uniqueChampionArray, int championID) {
-        for (int i : uniqueChampionArray){
+        for (int i : uniqueChampionArray) {
             if (championID == i) {
                 return true;
             }
@@ -559,7 +560,7 @@ public class ChampionQuizActivity extends AppCompatActivity {
         editor.apply();
         String scoreText = "Score: 0";
         scoreView.setText(scoreText);
-        countDownMillis = championQuizIntent.getLongExtra(ChampionQuizGameMode.KEY_TIME, 60000);
+        countDownMillis = championQuizIntent.getLongExtra(ChampionQuizModeSelect.KEY_TIME, 60000);
         String timerText = "0:00";
         timerView.setText(timerText);
         score = 0;

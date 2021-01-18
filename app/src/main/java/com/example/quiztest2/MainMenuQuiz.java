@@ -4,16 +4,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-import com.google.gson.Gson;
-
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.HashMap;
 
 public class MainMenuQuiz extends AppCompatActivity {
     private static final int REQUEST_CODE_CHAMPION_QUIZ = 1;
@@ -65,7 +58,7 @@ public class MainMenuQuiz extends AppCompatActivity {
     }
 
     private void startChampQuiz(){
-        Intent intent = new Intent(MainMenuQuiz.this, ChampionQuizGameMode.class);
+        Intent intent = new Intent(MainMenuQuiz.this, ChampionQuizModeSelect.class);
         startActivityForResult(intent, REQUEST_CODE_CHAMPION_QUIZ);
     }
     private void startItemQuiz(){

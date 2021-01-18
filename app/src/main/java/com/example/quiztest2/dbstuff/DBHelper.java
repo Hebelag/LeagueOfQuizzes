@@ -18,8 +18,6 @@ TODO 29.11.2020:
         eName, eDescription, eCostBurn, eCooldownBurn, eType,
         rName, rDescription, rCostBurn, rCooldownBurn, rType.
 
-        Was brauche ich für die Item-SQL?
-TODO nach den ChampionSQL
 */
 
 import android.content.Context;

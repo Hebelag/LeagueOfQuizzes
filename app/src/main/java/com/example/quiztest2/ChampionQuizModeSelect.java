@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.quiztest2.championQuizActivities.ChampionQuizActivity;
+import com.example.quiztest2.championQuizActivities.ChampionQuizEndless;
+import com.example.quiztest2.championQuizActivities.ChampionQuizTimeAttack;
 import com.example.quiztest2.championQuizActivities.ChampionQuizTraining;
 
 public class ChampionQuizModeSelect extends AppCompatActivity {
@@ -85,7 +87,7 @@ public class ChampionQuizModeSelect extends AppCompatActivity {
         timeFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this, ChampionQuizTimeAttack.class);
                 intent.putExtra(KEY_TIME,TIME_ONE_MILLIS);
                 intent.putExtra(KEY_GAME_MODE,MODE_TIME_ATTACK);
                 startActivity(intent);
@@ -96,7 +98,7 @@ public class ChampionQuizModeSelect extends AppCompatActivity {
         timeSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizTimeAttack.class);
                 intent.putExtra(KEY_TIME,TIME_TWO_MILLIS);
                 intent.putExtra(KEY_GAME_MODE,MODE_TIME_ATTACK);
                 startActivity(intent);
@@ -107,7 +109,7 @@ public class ChampionQuizModeSelect extends AppCompatActivity {
         timeThird.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizTimeAttack.class);
                 intent.putExtra(KEY_TIME,TIME_THREE_MILLIS);
                 intent.putExtra(KEY_GAME_MODE,MODE_TIME_ATTACK);
                 startActivity(intent);
@@ -118,7 +120,7 @@ public class ChampionQuizModeSelect extends AppCompatActivity {
         endlessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChampionQuizModeSelect.this,ChampionQuizActivity.class);
+                Intent intent = new Intent(ChampionQuizModeSelect.this, ChampionQuizEndless.class);
                 intent.putExtra(KEY_TRAIN,ENDLESS_CHAMP_COUNT);
                 intent.putExtra(KEY_GAME_MODE,MODE_ENDLESS);
                 startActivity(intent);

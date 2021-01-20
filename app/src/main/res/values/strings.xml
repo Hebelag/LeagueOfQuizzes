@@ -22,4 +22,6 @@
     <string name="time_two_default">1:00</string>
     <string name="time_three_default">2:00</string>
     <string name="defaultID">defaultchampion</string>
+    <string name="wrongs_default">Wrong: 0</string>
+    <string name="button_start_default">START</string>
 </resources>

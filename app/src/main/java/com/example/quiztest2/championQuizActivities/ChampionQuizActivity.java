@@ -349,7 +349,7 @@ public class ChampionQuizActivity extends AppCompatActivity {
         finalScore = findViewById(R.id.tvFinalScore);
         returnButton = findViewById(R.id.returnButton);
         retryButton = findViewById(R.id.retryButton);
-        timerView = findViewById(R.id.timerView);
+        timerView = findViewById(R.id.wrongsView);
         timerImage = findViewById(R.id.timerImageView);
         gameLayout = findViewById(R.id.gameLayout);
         postGameLayout = findViewById(R.id.postGameLayout);

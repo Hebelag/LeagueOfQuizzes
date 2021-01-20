@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizTest2">
-        <activity android:name=".TestAllValuesFromJSON"></activity>
+        <activity android:name=".championQuizActivities.ChampionQuizEndless"></activity>
+        <activity android:name=".championQuizActivities.ChampionQuizTimeAttack" />
+        <activity android:name=".TestAllValuesFromJSON" />
         <activity android:name=".championQuizActivities.ChampionQuizTraining" />
         <activity android:name=".ChampionQuizModeSelect" />
         <activity android:name=".TestActitity" />

@@ -1,16 +1,11 @@
 package com.example.quiztest2.championQuizActivities;
-/*TODO: 20.01.2021: Nebst ChampionQuizTraining noch ChampionQuizTimeAttack
-    was theoretisch alles aus dem ChampionQuizTraining aufgreift außer Feinheiten die ich noch
-    deutlich hervorheben werde, bspw. der Timer ist bei TimeAttack nicht da aber bei den anderen
-    zwei Spielmodi wieder schon. Also könnte man überlegen ob man das nicht irgendwie overridet
-    von einer Mutterklasse?
-    Problem mit der Mutterklasse: Es gibt bereits AppCompatActivity von dem extended wird.
-    Vielleicht dann die Mutterklasse von AppCompatActivity extenden.
- */
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +22,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-public class ChampionQuizTraining extends AppCompatActivity {
+public class ChampionQuizTimeAttack extends AppCompatActivity {
     // Every Activity needs his own Intent
     private Intent championQuizIntent;
     private ChampionQuizLogic logicHandler;
@@ -37,8 +32,7 @@ public class ChampionQuizTraining extends AppCompatActivity {
     private Button returnButton, retryButton, buttonStartQuiz;
     private TextView championText, scoreView;
     private TextView finalScore, finalAccuracy;
-    private TextView timerView, finalTimerView;
-    private ImageView timerImage;
+    private TextView wrongsView, countDownView;
     private LinearLayout gameLayout, postGameLayout;
 
     private String[] buttonChampionsImages = new String[4];
@@ -47,53 +41,61 @@ public class ChampionQuizTraining extends AppCompatActivity {
 
     private String rightChampionName;
 
-    private String timeString;
-    private static final String championDefaultText = "Champion";
-
-    private int currentLevel;
     private int score;
     private int wrongs;
-    private int maxLevel;
-    private long startTime;
-    private float accuracy;
+    private long countDownMillis;
 
-    Handler timerHandler = new Handler();
-    Runnable timerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            long gameTime = System.currentTimeMillis() - startTime;
-            int seconds = (int) (gameTime / 1000);
-            int minutes = seconds / 60;
-            seconds = seconds % 60;
-
-            timeString = String.format(Locale.getDefault(), "%d:%02d", minutes, seconds);
-            timerView.setText(timeString);
-            timerHandler.postDelayed(this, 500);
-
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_champion_quiz_training);
+        setContentView(R.layout.activity_champion_quiz_time_attack);
+        championQuizIntent = this.getIntent();
         loadLayout();
         bindOnClickListeners();
-
-        championText.setText(championDefaultText);
-
-        championQuizIntent = this.getIntent();
+        championText.setText(R.string.default_champpick);
+        resetCountDownText();
         logicHandler = new ChampionQuizLogic();
         championArray = logicHandler.initializeEmptyChampions();
-        maxLevel = championQuizIntent.getIntExtra(ChampionQuizModeSelect.KEY_TRAIN, 20);
-
-
     }
+
     private void startQuiz(View v) {
         buttonStartQuiz = (Button) v;
         buttonStartQuiz.setClickable(false);
-        startTimer();
+        startCountDown();
         loadNewLevel();
+    }
+
+    private void startCountDown() {
+        countDownMillis = championQuizIntent.getLongExtra(ChampionQuizModeSelect.KEY_TIME, 60000);
+        countDownView.setTextColor(Color.BLACK);
+        CountDownTimer countDownTimer = new CountDownTimer(countDownMillis, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                countDownMillis = Math.round((float) millisUntilFinished / 1000.0f) * 1000;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+                countDownMillis = 0;
+                updateCountDownText();
+                loadFinishScreen();
+            }
+        }.start();
+    }
+
+    // Connected to startCountDown()
+    private void updateCountDownText() {
+        int minutes = (int) (countDownMillis / 1000) / 60;
+        int seconds = (int) (countDownMillis / 1000) % 60;
+        String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        countDownView.setText(timeFormatted);
+        if (countDownMillis < 10000) {
+            countDownView.setTextColor(Color.RED);
+        } else {
+            countDownView.setTextColor(Color.BLACK);
+        }
     }
 
 
@@ -127,24 +129,31 @@ public class ChampionQuizTraining extends AppCompatActivity {
     }
 
     private void resetGameValues() {
-        String scoreText = "Score: 0";
-        scoreView.setText(scoreText);
-
-        String timerText = "0:00";
-        timerView.setText(timerText);
+        scoreView.setText(R.string.score_default);
+        countDownView.setText(R.string.countdown_default);
+        wrongsView.setText(R.string.wrongs_default);
 
         score = 0;
-        currentLevel = 1;
-        accuracy = 0;
         wrongs = 0;
 
-        championText.setText(championDefaultText);
+        championText.setText(R.string.default_champpick);
 
         buttonStartQuiz.setClickable(true);
 
         championArray = logicHandler.initializeEmptyChampions();
 
+        resetCountDownText();
+
         setChampionImageResources(championArray);
+    }
+
+    private void resetCountDownText() {
+        countDownMillis = championQuizIntent.getLongExtra(ChampionQuizModeSelect.KEY_TIME, 60000);
+        int minutes = (int) (countDownMillis / 1000) / 60;
+        int seconds = (int) (countDownMillis / 1000) % 60;
+        String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        countDownView.setText(timeFormatted);
+        countDownView.setTextColor(Color.BLACK);
     }
 
     private void setChampionImageResources(String[] championIDArray) {
@@ -170,6 +179,8 @@ public class ChampionQuizTraining extends AppCompatActivity {
                 loadNewLevel();
             } else {
                 wrongs++;
+                String wrongsViewText = "Wrongs: " + wrongs;
+                wrongsView.setText(wrongsViewText);
                 Toast.makeText(getApplicationContext(), "WRONG!", Toast.LENGTH_SHORT).show();
             }
         };
@@ -181,61 +192,41 @@ public class ChampionQuizTraining extends AppCompatActivity {
     // What I really like about this is that championArray can be locally defined in theory!
 
     private void loadNewLevel() {
-        if (currentLevel <= maxLevel) {
+        buttonChampionsKey = logicHandler.getChampionKeyArray(this, championsAnswered);
+        championArray = logicHandler.getChampionNameArray(this, buttonChampionsKey);
+        buttonChampionsImages = logicHandler.getChampionIDArray(this, buttonChampionsKey);
+        rightChampionName = logicHandler.selectRightChampion(championArray);
+        setChampionImageResources(buttonChampionsImages);
 
-            buttonChampionsKey = logicHandler.getChampionKeyArray(this, championsAnswered);
-            championArray = logicHandler.getChampionNameArray(this, buttonChampionsKey);
-            buttonChampionsImages = logicHandler.getChampionIDArray(this, buttonChampionsKey);
-
-            rightChampionName = logicHandler.selectRightChampion(championArray);
-            setChampionImageResources(buttonChampionsImages);
-
-            championText.setText(rightChampionName);
-            gameLayout.setVisibility(View.VISIBLE);
-            postGameLayout.setVisibility(View.INVISIBLE);
-        } else {
-            loadFinishScreen();
-        }
+        championText.setText(rightChampionName);
+        gameLayout.setVisibility(View.VISIBLE);
+        postGameLayout.setVisibility(View.INVISIBLE);
     }
 
     private void loadFinishScreen() {
         // Maybe put everything in doAllAccuracy() method?
-        accuracy = (float) score / ((float) score + (float) wrongs) * 100;
+        float accuracy = (float) score / ((float) score + (float) wrongs) * 100;
         String finalAccuracyText = String.format(Locale.getDefault(), "Accuracy: %.1f %%", accuracy);
         finalAccuracy.setText(finalAccuracyText);
-        finalScore.setVisibility(View.GONE);
-        stopTimer();
-        showFinishTime();
+        String finalScoreText = "Score: " + score;
+        finalScore.setText(finalScoreText);
+        finalScore.setVisibility(View.VISIBLE);
 
         // UI? SO much UI!?!
         gameLayout.setVisibility(View.INVISIBLE);
         postGameLayout.setVisibility(View.VISIBLE);
     }
 
-    private void startTimer() {
-        startTime = System.currentTimeMillis();
-        timerHandler.postDelayed(timerRunnable, 0);
-    }
-
-    private void stopTimer() {
-        timerHandler.removeCallbacks(timerRunnable);
-    }
-
-    private void showFinishTime() {
-        finalTimerView.setVisibility(View.VISIBLE);
-        String finalTimeText = String.format(Locale.getDefault(), "Done in %s", timeString);
-        finalTimerView.setText(finalTimeText);
-    }
 
     private void rightAnswer() {
         championsAnswered.add(rightChampionName);
-        currentLevel++;
         score++;
         String scoreViewText = "Score: " + score;
         scoreView.setText(scoreViewText);
     }
 
     private void loadLayout() {
+        //Needs to be in every ChampionQuiz
         btnAns1 = findViewById(R.id.btnAns1);
         btnAns2 = findViewById(R.id.btnAns2);
         btnAns3 = findViewById(R.id.btnAns3);
@@ -244,14 +235,17 @@ public class ChampionQuizTraining extends AppCompatActivity {
         championText = findViewById(R.id.championText);
         scoreView = findViewById(R.id.scoreView);
         finalAccuracy = findViewById(R.id.tvFinalAccuracy);
-        finalScore = findViewById(R.id.tvFinalScore);
         returnButton = findViewById(R.id.returnButton);
         retryButton = findViewById(R.id.retryButton);
-        timerView = findViewById(R.id.wrongsView);
-        timerImage = findViewById(R.id.timerImageView);
         gameLayout = findViewById(R.id.gameLayout);
         postGameLayout = findViewById(R.id.postGameLayout);
-        finalTimerView = findViewById(R.id.tvFinalTime);
+
+        finalScore = findViewById(R.id.tvFinalScore);
+
+        wrongsView = findViewById(R.id.wrongsView);
+        countDownView = findViewById(R.id.countdownView);
+
+        ImageView countDownTimerView = findViewById(R.id.countdownTimerView);
 
     }
 }

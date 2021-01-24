@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LEAGUE OF QUIZZES</string>
+    <string name="app_name">LoQuiz</string>
     <string name="default_champpick">Champion</string>
     <string name="start_champ_quiz">Start Champion Quiz</string>
     <string name="score_default">Score: 0</string>
@@ -24,4 +24,5 @@
     <string name="defaultID">defaultchampion</string>
     <string name="wrongs_default">Wrong: 0</string>
     <string name="button_start_default">START</string>
+    <string name="app_name_old">LoQ Old</string>
 </resources>

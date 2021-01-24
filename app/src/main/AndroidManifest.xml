@@ -9,7 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizTest2">
-        <activity android:name=".championQuizActivities.ChampionQuizEndless"></activity>
+        <activity android:name="com.scp.leagueofquiz.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".championQuizActivities.ChampionQuizEndless" />
         <activity android:name=".championQuizActivities.ChampionQuizTimeAttack" />
         <activity android:name=".TestAllValuesFromJSON" />
         <activity android:name=".championQuizActivities.ChampionQuizTraining" />
@@ -17,7 +23,8 @@
         <activity android:name=".TestActitity" />
         <activity android:name=".AbilityQuizActivity" />
         <activity android:name=".ItemQuizActivity" />
-        <activity android:name=".MainMenuQuiz">
+        <activity android:name=".MainMenuQuiz"
+            android:label="@string/app_name_old">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.quiztest2.ChampionQuizModeSelect;
-import com.example.quiztest2.R;
+import com.scp.leagueofquiz.R;
 import com.example.quiztest2.dbstuff.DBHelper;
 
 import java.util.HashSet;
@@ -157,7 +157,7 @@ public class ChampionQuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_championquiz);
 
         //Get the intent to get the data passed from the ChampionQuizGameMode activity into here.
         getGameMode();

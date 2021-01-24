@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.scp.leagueofquiz.R;
+
 public class MainMenuQuiz extends AppCompatActivity {
     private static final int REQUEST_CODE_CHAMPION_QUIZ = 1;
     private static final int REQUEST_CODE_ITEM_QUIZ = 2;

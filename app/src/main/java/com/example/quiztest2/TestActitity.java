@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.quiztest2.dbstuff.DBHelper;
 import com.example.quiztest2.json.ChampionJSON;
+import com.scp.leagueofquiz.R;
 
 import java.util.ArrayList;
 import java.util.List;

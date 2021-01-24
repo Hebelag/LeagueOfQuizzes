@@ -11,6 +11,7 @@ import com.example.quiztest2.championQuizActivities.ChampionQuizActivity;
 import com.example.quiztest2.championQuizActivities.ChampionQuizEndless;
 import com.example.quiztest2.championQuizActivities.ChampionQuizTimeAttack;
 import com.example.quiztest2.championQuizActivities.ChampionQuizTraining;
+import com.scp.leagueofquiz.R;
 
 public class ChampionQuizModeSelect extends AppCompatActivity {
     Button trainingFirst, trainingSecond, trainingThird, timeFirst, timeSecond, timeThird;

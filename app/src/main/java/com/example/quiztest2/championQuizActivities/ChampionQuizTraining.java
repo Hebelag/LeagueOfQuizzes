@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quiztest2.ChampionQuizModeSelect;
-import com.example.quiztest2.R;
+import com.scp.leagueofquiz.R;
 
 import java.util.HashSet;
 import java.util.Locale;

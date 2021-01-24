@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.scp.leagueofquiz.R;
+
 public class TestAllValuesFromJSON extends AppCompatActivity {
     private TextView tv1, tv2, tv3, tv4, tv5, tv6, tv7, tv8;
 

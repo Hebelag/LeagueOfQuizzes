@@ -1,10 +1,11 @@
-package com.scp.leagueofquiz;
+package com.scp.leagueofquiz.entrypoint;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.example.quiztest2.R;
+import com.scp.leagueofquiz.R;
+
 
 public class MainActivity extends AppCompatActivity {
 

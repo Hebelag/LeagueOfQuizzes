@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.quiztest2.ChampionQuizModeSelect;
-import com.example.quiztest2.R;
+import com.scp.leagueofquiz.R;
 import com.example.quiztest2.dbstuff.DBHelper;
 
 import java.util.HashSet;

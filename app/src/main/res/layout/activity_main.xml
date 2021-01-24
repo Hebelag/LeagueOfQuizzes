@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.scp.leagueofquiz.MainActivity">
+    tools:context="com.scp.leagueofquiz.entrypoint.MainActivity">
+
+    <FrameLayout
+        android:id="@+id/main_content"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/mainMenuFragment">
+
+    <fragment
+        android:id="@+id/mainMenuFragment"
+        android:name="com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuFragment"
+        android:label="main_menu_fragment"
+        tools:layout="@layout/main_menu_fragment" >
+        <action
+            android:id="@+id/actionQuizMode"
+            app:destination="@id/quizModeFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/abilityQuizFragment"
+        android:name="com.scp.leagueofquiz.entrypoint.abilityquiz.AbilityQuizFragment"
+        android:label="ability_quiz_fragment"
+        tools:layout="@layout/ability_quiz_fragment" />
+    <fragment
+        android:id="@+id/championQuizFragment"
+        android:name="com.scp.leagueofquiz.entrypoint.championquiz.ChampionQuizFragment"
+        android:label="activity_champion_quiz_game_mode"
+        tools:layout="@layout/activity_champion_quiz_game_mode" >
+        <argument
+            android:name="mode"
+            app:argType="com.scp.leagueofquiz.entrypoint.shared.QuizMode" />
+        <argument
+            android:name="champCount"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="time"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemQuizFragment"
+        android:name="com.scp.leagueofquiz.entrypoint.itemquiz.ItemQuizFragment"
+        android:label="item_quiz_fragment"
+        tools:layout="@layout/item_quiz_fragment" />
+    <fragment
+        android:id="@+id/quizModeFragment"
+        android:name="com.scp.leagueofquiz.entrypoint.quizmode.QuizModeFragment"
+        android:label="quiz_mode_fragment"
+        tools:layout="@layout/quiz_mode_fragment" >
+        <action
+            android:id="@+id/startChampQuiz"
+            app:destination="@id/championQuizFragment" />
+        <action
+            android:id="@+id/startAbilityQuiz"
+            app:destination="@id/abilityQuizFragment" />
+        <action
+            android:id="@+id/startItemQuiz"
+            app:destination="@id/itemQuizFragment" />
+        <argument
+            android:name="quizType"
+            app:argType="com.scp.leagueofquiz.entrypoint.shared.QuizType" />
+    </fragment>
+</navigation>

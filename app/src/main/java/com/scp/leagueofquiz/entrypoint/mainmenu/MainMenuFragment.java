@@ -23,27 +23,28 @@ import com.example.quiztest2.ItemQuizActivity;
 import com.example.quiztest2.MainMenuQuiz;
 import com.example.quiztest2.TestActitity;
 import com.scp.leagueofquiz.R;
+import com.scp.leagueofquiz.databinding.MainMenuFragmentBinding;
 import com.scp.leagueofquiz.entrypoint.MainActivity;
 import com.scp.leagueofquiz.entrypoint.shared.QuizType;
 
 public class MainMenuFragment extends Fragment {
+    private MainMenuFragmentBinding binding;
     private MainMenuViewModel mViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.main_menu_fragment, container, false);
+        binding = MainMenuFragmentBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.buttonChampQuiz).setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.CHAMPION)));
-
-        view.findViewById(R.id.buttonItemQuiz).setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ITEM)));
-
-        view.findViewById(R.id.buttonAbilityQuiz).setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ABILITY)));
+        binding.buttonChampQuiz.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.CHAMPION)));
+        binding.buttonItemQuiz.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ITEM)));
+        binding.buttonAbilityQuiz.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ABILITY)));
     }
 
     @Override

@@ -26,21 +26,4 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
-    public void startChampQuiz(){
-        Intent intent = new Intent(this, ChampionQuizModeSelect.class);
-        startActivityForResult(intent, REQUEST_CODE_CHAMPION_QUIZ);
-    }
-    public void startItemQuiz(){
-        Intent intent = new Intent(this,ItemQuizActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_ITEM_QUIZ);
-    }
-    public void startAbilityQuiz(){
-        Intent intent = new Intent(this,AbilityQuizActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_ABILITY_QUIZ);
-    }
-    public void startTest(){
-        Intent intent = new Intent(this, TestActitity.class);
-        startActivityForResult(intent, REQUEST_CODE_TEST);
-    }
 }

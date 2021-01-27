@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AbilityQuizActivity">
+    tools:context=".AbilityQuizActivity"
+    tools:viewBindingIgnore="true">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

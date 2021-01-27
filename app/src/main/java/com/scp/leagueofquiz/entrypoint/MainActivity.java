@@ -25,14 +25,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (savedInstanceState == null) {
-            MainMenuFragment fragment = new MainMenuFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.main_content, fragment)
-                    .commit();
-        }
     }
 
     public void startChampQuiz(){

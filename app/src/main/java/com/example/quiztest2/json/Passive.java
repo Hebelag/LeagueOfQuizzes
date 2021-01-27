@@ -1,31 +1,31 @@
 package com.example.quiztest2.json;
 
 public class Passive {
-    private String name;
-    private String description;
-    private Image image;
+  private String name;
+  private String description;
+  private Image image;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public Image getImage() {
-        return image;
-    }
+  public Image getImage() {
+    return image;
+  }
 
-    public void setImage(Image image) {
-        this.image = image;
-    }
+  public void setImage(Image image) {
+    this.image = image;
+  }
 }

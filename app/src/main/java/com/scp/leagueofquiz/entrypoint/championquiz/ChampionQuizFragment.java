@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import com.scp.leagueofquiz.R;
 import com.scp.leagueofquiz.databinding.ChampionQuizFragmentBinding;
 import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
@@ -33,10 +35,9 @@ public class ChampionQuizFragment extends Fragment {
     if (argsBundle != null) {
       ChampionQuizFragmentArgs args = ChampionQuizFragmentArgs.fromBundle(argsBundle);
       viewModel.setQuizMode(args.getMode());
-      viewModel.getChampionCount().setValue(args.getChampCount());
+      viewModel.setChampionCount(args.getChampCount());
       viewModel.getTimer().setValue(Duration.ofMillis(args.getTime()));
     }
-    viewModel.getScore().setValue(0);
     viewModel.getTimer().setValue(Duration.ZERO);
   }
 
@@ -61,9 +62,26 @@ public class ChampionQuizFragment extends Fragment {
     // Setup observers
     viewModel.getChampionGrid().observe(getViewLifecycleOwner(), this::setChampionsGrid);
     viewModel.getScore().observe(getViewLifecycleOwner(), this::setScore);
+    viewModel.getFailedAttempts().observe(getViewLifecycleOwner(), this::failedAttempt);
     viewModel.getStartTime().observe(getViewLifecycleOwner(), this::setupStartButton);
     viewModel.getTimer().observe(getViewLifecycleOwner(), this::setTimer);
     viewModel.getRightChampion().observe(getViewLifecycleOwner(), this::setRightChampionName);
+    viewModel.getQuizFinished().observe(getViewLifecycleOwner(), this::checkQuizFinished);
+  }
+
+  private void failedAttempt(Integer integer) {
+    if (integer != null && integer > 0) {
+      Toast.makeText(requireContext(), "WRONG!", Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  private void checkQuizFinished(Boolean isQuizFinished) {
+    if (Boolean.TRUE.equals(isQuizFinished)) {
+      NavHostFragment.findNavController(this)
+          .navigate(
+              ChampionQuizFragmentDirections.goToResult(
+                  viewModel.getScore().getValue(), viewModel.getTimer().getValue().toMillis()));
+    }
   }
 
   private void setRightChampionName(QuizChampion quizChampion) {

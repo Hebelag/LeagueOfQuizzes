@@ -2,7 +2,7 @@
     <string name="app_name">LoQuiz</string>
     <string name="default_champpick">Champion</string>
     <string name="start_champ_quiz">Start Champion Quiz</string>
-    <string name="score_default">Score: 0</string>
+    <string name="score_text">Score:</string>
     <string name="final_score_default">Final Score: 0</string>
     <string name="final_accuracy_default">Accuracy : 0%</string>
     <string name="final_return_menu">Return To Main Menu</string>
@@ -25,4 +25,9 @@
     <string name="wrongs_default">Wrong: 0</string>
     <string name="button_start_default">START</string>
     <string name="app_name_old">LoQ Old</string>
+    <string name="score_default">0</string>
+    <string name="btn_ans_1_tag">1</string>
+    <string name="btn_ans_2_tag">2</string>
+    <string name="btn_ans_3_tag">3</string>
+    <string name="btn_ans_4_tag">4</string>
 </resources>

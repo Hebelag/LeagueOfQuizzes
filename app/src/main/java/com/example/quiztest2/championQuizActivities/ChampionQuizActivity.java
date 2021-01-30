@@ -331,7 +331,7 @@ public class ChampionQuizActivity extends AppCompatActivity {
     btnAns2 = findViewById(R.id.btnAns2);
     btnAns3 = findViewById(R.id.btnAns3);
     btnAns4 = findViewById(R.id.btnAns4);
-    buttonStartQuiz = findViewById(R.id.startCountdownButton);
+    buttonStartQuiz = findViewById(R.id.startQuizButton);
     championText = findViewById(R.id.championText);
     scoreView = findViewById(R.id.scoreView);
     finalAccuracy = findViewById(R.id.tvFinalAccuracy);

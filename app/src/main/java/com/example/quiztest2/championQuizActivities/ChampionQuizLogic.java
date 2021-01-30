@@ -2,10 +2,29 @@ package com.example.quiztest2.championQuizActivities;
 
 import android.content.Context;
 import com.example.quiztest2.dbstuff.DBHelper;
+import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class ChampionQuizLogic {
   private static final int CHAMPION_COUNT = 152;
+
+  public List<QuizChampion> getRandomChampions(
+      Context context, Set<QuizChampion> championsAnswered) {
+    String[] buttonChampionsKey = getChampionKeyArray(context, championsAnswered);
+    String[] championArray = getChampionNameArray(context, buttonChampionsKey);
+    String[] buttonChampionsImages = getChampionIDArray(context, buttonChampionsKey);
+
+    List<QuizChampion> result = new ArrayList<>();
+    for (int i = 0; i < buttonChampionsKey.length; i++) {
+      QuizChampion champion =
+          new QuizChampion(buttonChampionsImages[i], buttonChampionsKey[i], championArray[i]);
+      result.add(champion);
+    }
+
+    return result;
+  }
 
   public String[] initializeEmptyChampions() {
     String[] buttonChampions = new String[4];
@@ -16,7 +35,7 @@ public class ChampionQuizLogic {
     return buttonChampions;
   }
 
-  public String[] getChampionKeyArray(Context context, Set<String> answeredChampions) {
+  public String[] getChampionKeyArray(Context context, Set<QuizChampion> answeredChampions) {
     DBHelper db = DBHelper.getInstance(context);
     String[] championKeys = new String[4];
     int[] uniqueChampionArray = new int[4];
@@ -61,5 +80,10 @@ public class ChampionQuizLogic {
   public String selectRightChampion(String[] buttonChampions) {
     int rightChampionPosition = (int) (Math.random() * 4);
     return buttonChampions[rightChampionPosition];
+  }
+
+  public QuizChampion selectRightChampion(List<QuizChampion> buttonChampions) {
+    int rightChampionPosition = (int) (Math.random() * 4);
+    return buttonChampions.get(rightChampionPosition);
   }
 }

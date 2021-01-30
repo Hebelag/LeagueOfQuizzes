@@ -182,7 +182,7 @@ public class ChampionQuizTraining extends AppCompatActivity {
   private void loadNewLevel() {
     if (currentLevel <= maxLevel) {
 
-      buttonChampionsKey = logicHandler.getChampionKeyArray(this, championsAnswered);
+      buttonChampionsKey = logicHandler.getChampionKeyArray(this, new HashSet<>());
       championArray = logicHandler.getChampionNameArray(this, buttonChampionsKey);
       buttonChampionsImages = logicHandler.getChampionIDArray(this, buttonChampionsKey);
 
@@ -239,7 +239,7 @@ public class ChampionQuizTraining extends AppCompatActivity {
     btnAns2 = findViewById(R.id.btnAns2);
     btnAns3 = findViewById(R.id.btnAns3);
     btnAns4 = findViewById(R.id.btnAns4);
-    buttonStartQuiz = findViewById(R.id.startCountdownButton);
+    buttonStartQuiz = findViewById(R.id.startQuizButton);
     championText = findViewById(R.id.championText);
     scoreView = findViewById(R.id.scoreView);
     finalAccuracy = findViewById(R.id.tvFinalAccuracy);

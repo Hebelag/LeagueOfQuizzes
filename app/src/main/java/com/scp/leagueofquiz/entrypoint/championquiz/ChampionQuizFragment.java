@@ -31,6 +31,7 @@ public class ChampionQuizFragment extends Fragment {
     super.onCreate(savedInstanceState);
     viewModel = new ViewModelProvider(this).get(ChampionQuizViewModel.class);
 
+    viewModel.getTimer().setValue(Duration.ZERO);
     Bundle argsBundle = getArguments();
     if (argsBundle != null) {
       ChampionQuizFragmentArgs args = ChampionQuizFragmentArgs.fromBundle(argsBundle);
@@ -38,7 +39,6 @@ public class ChampionQuizFragment extends Fragment {
       viewModel.setChampionCount(args.getChampCount());
       viewModel.getTimer().setValue(Duration.ofMillis(args.getTime()));
     }
-    viewModel.getTimer().setValue(Duration.ZERO);
   }
 
   @Override
@@ -57,7 +57,6 @@ public class ChampionQuizFragment extends Fragment {
     // Setup UI
     setScoreLineVisibility(viewModel.getQuizMode());
     binding.startQuizButton.setOnClickListener(this::startQuiz);
-    setTimer(Duration.ZERO);
 
     // Setup observers
     viewModel.getChampionGrid().observe(getViewLifecycleOwner(), this::setChampionsGrid);
@@ -77,11 +76,15 @@ public class ChampionQuizFragment extends Fragment {
 
   private void checkQuizFinished(Boolean isQuizFinished) {
     if (Boolean.TRUE.equals(isQuizFinished)) {
-      NavHostFragment.findNavController(this)
-          .navigate(
-              ChampionQuizFragmentDirections.goToResult(
-                  viewModel.getScore().getValue(), viewModel.getTimer().getValue().toMillis()));
+      navigateToResult();
     }
+  }
+
+  private void navigateToResult() {
+    NavHostFragment.findNavController(this)
+            .navigate(
+                    ChampionQuizFragmentDirections.goToResult(
+                            viewModel.getScore().getValue(), viewModel.getTimer().getValue().toMillis()));
   }
 
   private void setRightChampionName(QuizChampion quizChampion) {
@@ -97,6 +100,11 @@ public class ChampionQuizFragment extends Fragment {
     String timeString =
         String.format(Locale.getDefault(), "%d:%02d", timer.toMinutes(), timer.getSeconds() % 60);
     binding.timer.setText(timeString);
+    if (viewModel.getQuizMode() == QuizMode.TIME) {
+      if (timer.isZero()) {
+        navigateToResult();
+      }
+    }
   }
 
   private void setupStartButton(Instant startTime) {

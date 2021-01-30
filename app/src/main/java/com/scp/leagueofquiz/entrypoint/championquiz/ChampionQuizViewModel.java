@@ -44,11 +44,20 @@ public class ChampionQuizViewModel extends AndroidViewModel {
 
   // Other
   private final Handler timerHandler = new Handler();
-  private final Runnable timerRunnable =
+  private final Runnable timerRunnableTraining =
       new Runnable() {
         @Override
         public void run() {
-          timer.setValue(Duration.between(startTime.getValue(), Instant.now()));
+          switch (quizMode) {
+            case TRAINING:
+            case ENDLESS:
+            case MARATHON:
+              timer.setValue(Duration.between(startTime.getValue(), Instant.now()));
+              break;
+            case TIME:
+              timer.setValue(timer.getValue().minus(TIMER_REFRESH_DELAY));
+              break;
+          }
           timerHandler.postDelayed(this, TIMER_REFRESH_DELAY.toMillis());
         }
       };
@@ -67,7 +76,7 @@ public class ChampionQuizViewModel extends AndroidViewModel {
                 QuizChampion.DEFAULT,
                 QuizChampion.DEFAULT,
                 QuizChampion.DEFAULT));
-    timer = new MutableLiveData<>();
+    timer = new MutableLiveData<>(Duration.ZERO);
     championsAnswered = new HashSet<>();
     score = new MutableLiveData<>(0);
     failedAttempts = new MutableLiveData<>(0);
@@ -80,7 +89,7 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     championsAnswered.clear();
     score.setValue(0);
     loadChampionGrid();
-    timerHandler.postDelayed(timerRunnable, 0);
+    timerHandler.postDelayed(timerRunnableTraining, 0);
   }
 
   public void pickAnswer(int champIndex) {
@@ -88,11 +97,22 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     if (championChosen.equals(rightChampion.getValue())) {
       championsAnswered.add(championChosen);
       score.setValue(score.getValue() + 1);
-      if (championsAnswered.size() == championCount) {
-        quizFinished.setValue(true);
-      } else {
-        loadChampionGrid();
+
+      switch (quizMode) {
+        case TRAINING:
+        case ENDLESS:
+        case MARATHON:
+          if (championsAnswered.size() == championCount) {
+            quizFinished.setValue(true);
+          } else {
+            loadChampionGrid();
+          }
+          break;
+        case TIME:
+          loadChampionGrid();
+          break;
       }
+
     } else {
       failedAttempts.setValue(failedAttempts.getValue() + 1);
     }

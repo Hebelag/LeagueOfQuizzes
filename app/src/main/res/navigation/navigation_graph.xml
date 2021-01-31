@@ -38,6 +38,9 @@
             android:name="time"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/goToResult"
+            app:destination="@id/quizResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/itemQuizFragment"
@@ -61,5 +64,17 @@
         <argument
             android:name="quizType"
             app:argType="com.scp.leagueofquiz.entrypoint.shared.QuizType" />
+    </fragment>
+    <fragment
+        android:id="@+id/quizResultFragment"
+        android:name="com.scp.leagueofquiz.entrypoint.quizresult.QuizResultFragment"
+        android:label="quiz_result_fragment"
+        tools:layout="@layout/quiz_result_fragment" >
+        <argument
+            android:name="score"
+            app:argType="integer" />
+        <argument
+            android:name="timer"
+            app:argType="long" />
     </fragment>
 </navigation>

@@ -112,7 +112,7 @@ public class ChampionQuizEndless extends AppCompatActivity {
   }
 
   private void resetGameValues() {
-    scoreView.setText(R.string.score_default);
+    scoreView.setText(R.string.score_text);
     timerView.setText(R.string.timer_default);
     championText.setText(R.string.default_champpick);
     buttonStartQuiz.setText(R.string.button_start_default);
@@ -167,7 +167,7 @@ public class ChampionQuizEndless extends AppCompatActivity {
   // What I really like about this is that championArray can be locally defined in theory!
 
   private void loadNewLevel() {
-    buttonChampionsKey = logicHandler.getChampionKeyArray(this, championsAnswered);
+    buttonChampionsKey = logicHandler.getChampionKeyArray(this, new HashSet<>());
     championArray = logicHandler.getChampionNameArray(this, buttonChampionsKey);
     buttonChampionsImages = logicHandler.getChampionIDArray(this, buttonChampionsKey);
 
@@ -223,7 +223,7 @@ public class ChampionQuizEndless extends AppCompatActivity {
     btnAns3 = findViewById(R.id.btnAns3);
     btnAns4 = findViewById(R.id.btnAns4);
 
-    buttonStartQuiz = findViewById(R.id.startCountdownButton);
+    buttonStartQuiz = findViewById(R.id.startQuizButton);
 
     championText = findViewById(R.id.championText);
 

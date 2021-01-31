@@ -122,7 +122,7 @@ public class ChampionQuizTimeAttack extends AppCompatActivity {
   }
 
   private void resetGameValues() {
-    scoreView.setText(R.string.score_default);
+    scoreView.setText(R.string.score_text);
     countDownView.setText(R.string.countdown_default);
     wrongsView.setText(R.string.wrongs_default);
 
@@ -191,7 +191,7 @@ public class ChampionQuizTimeAttack extends AppCompatActivity {
   // What I really like about this is that championArray can be locally defined in theory!
 
   private void loadNewLevel() {
-    buttonChampionsKey = logicHandler.getChampionKeyArray(this, championsAnswered);
+    buttonChampionsKey = logicHandler.getChampionKeyArray(this, new HashSet<>());
     championArray = logicHandler.getChampionNameArray(this, buttonChampionsKey);
     buttonChampionsImages = logicHandler.getChampionIDArray(this, buttonChampionsKey);
     rightChampionName = logicHandler.selectRightChampion(championArray);
@@ -229,7 +229,7 @@ public class ChampionQuizTimeAttack extends AppCompatActivity {
     btnAns2 = findViewById(R.id.btnAns2);
     btnAns3 = findViewById(R.id.btnAns3);
     btnAns4 = findViewById(R.id.btnAns4);
-    buttonStartQuiz = findViewById(R.id.startCountdownButton);
+    buttonStartQuiz = findViewById(R.id.startQuizButton);
     championText = findViewById(R.id.championText);
     scoreView = findViewById(R.id.scoreView);
     finalAccuracy = findViewById(R.id.tvFinalAccuracy);

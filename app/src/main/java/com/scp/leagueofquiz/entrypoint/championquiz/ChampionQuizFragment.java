@@ -80,11 +80,12 @@ public class ChampionQuizFragment extends Fragment {
     }
   }
 
+  @SuppressWarnings("ConstantConditions")
   private void navigateToResult() {
     NavHostFragment.findNavController(this)
-            .navigate(
-                    ChampionQuizFragmentDirections.goToResult(
-                            viewModel.getScore().getValue(), viewModel.getTimer().getValue().toMillis()));
+        .navigate(
+            ChampionQuizFragmentDirections.goToResult(
+                viewModel.getScore().getValue(), viewModel.getTimer().getValue().toMillis()));
   }
 
   private void setRightChampionName(QuizChampion quizChampion) {
@@ -112,7 +113,7 @@ public class ChampionQuizFragment extends Fragment {
     if (startTime == null) {
       // No quiz running
       binding.startQuizButton.setBackgroundColor(
-          ContextCompat.getColor(getContext(), R.color.purple_500));
+          ContextCompat.getColor(requireContext(), R.color.purple_500));
 
       binding.btnAns1.setOnClickListener(null);
       binding.btnAns2.setOnClickListener(null);
@@ -121,7 +122,7 @@ public class ChampionQuizFragment extends Fragment {
     } else {
       // Quiz is running
       binding.startQuizButton.setBackgroundColor(
-          ContextCompat.getColor(getContext(), R.color.grey));
+          ContextCompat.getColor(requireContext(), R.color.grey));
 
       binding.btnAns1.setOnClickListener(this::pickAnswer);
       binding.btnAns2.setOnClickListener(this::pickAnswer);

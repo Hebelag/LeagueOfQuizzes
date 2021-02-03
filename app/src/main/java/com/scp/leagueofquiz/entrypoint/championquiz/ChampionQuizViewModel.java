@@ -1,29 +1,24 @@
 package com.scp.leagueofquiz.entrypoint.championquiz;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
-import android.content.Context;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
+import android.os.Looper;
 import androidx.lifecycle.MutableLiveData;
-import com.example.quiztest2.championQuizActivities.ChampionQuizLogic;
+import androidx.lifecycle.ViewModel;
 import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
+import com.scp.leagueofquiz.repository.ChampionRepository;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
 
-public class ChampionQuizViewModel extends AndroidViewModel {
+@HiltViewModel
+public class ChampionQuizViewModel extends ViewModel {
   private static final Duration TIMER_REFRESH_DELAY = Duration.ofMillis(500);
-
-  // We should not be doing this, we'll fix it with Dependency Injection and/or adding more layers
-  // to the code
-  @SuppressLint("StaticFieldLeak")
-  private final Context applicationContext;
 
   // Static data
   private QuizMode quizMode;
@@ -40,10 +35,10 @@ public class ChampionQuizViewModel extends AndroidViewModel {
   private final MutableLiveData<Boolean> quizFinished;
 
   // Dependencies
-  private final ChampionQuizLogic logicHandler;
+  private final ChampionRepository championRepository;
 
   // Other
-  private final Handler timerHandler = new Handler();
+  private final Handler timerHandler = new Handler(Looper.getMainLooper());
   private final Runnable timerRunnableTraining =
       new Runnable() {
         @Override
@@ -62,11 +57,10 @@ public class ChampionQuizViewModel extends AndroidViewModel {
         }
       };
 
-  public ChampionQuizViewModel(@NonNull Application application) {
-    super(application);
-
-    applicationContext = application.getApplicationContext();
-    logicHandler = new ChampionQuizLogic();
+  @Inject
+  public ChampionQuizViewModel(ChampionRepository championRepository) {
+    // Initialisations to be removed with dependency injection
+    this.championRepository = championRepository;
 
     startTime = new MutableLiveData<>();
     championGrid =
@@ -119,10 +113,14 @@ public class ChampionQuizViewModel extends AndroidViewModel {
   }
 
   private void loadChampionGrid() {
-    List<QuizChampion> randomChampions =
-        logicHandler.getRandomChampions(applicationContext, championsAnswered);
-    rightChampion.setValue(logicHandler.selectRightChampion(randomChampions));
+    List<QuizChampion> randomChampions = championRepository.getRandomChampions(championsAnswered);
+    rightChampion.setValue(selectRightChampion(randomChampions));
     championGrid.setValue(randomChampions);
+  }
+
+  private QuizChampion selectRightChampion(List<QuizChampion> buttonChampions) {
+    int rightChampionPosition = (int) (Math.random() * 4);
+    return buttonChampions.get(rightChampionPosition);
   }
 
   // Accessors

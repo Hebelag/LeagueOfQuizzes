@@ -16,11 +16,13 @@ import com.scp.leagueofquiz.R;
 import com.scp.leagueofquiz.databinding.ChampionQuizFragmentBinding;
 import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
+import dagger.hilt.android.AndroidEntryPoint;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 
+@AndroidEntryPoint
 public class ChampionQuizFragment extends Fragment {
 
   private ChampionQuizFragmentBinding binding;
@@ -82,9 +84,9 @@ public class ChampionQuizFragment extends Fragment {
 
   private void navigateToResult() {
     NavHostFragment.findNavController(this)
-            .navigate(
-                    ChampionQuizFragmentDirections.goToResult(
-                            viewModel.getScore().getValue(), viewModel.getTimer().getValue().toMillis()));
+        .navigate(
+            ChampionQuizFragmentDirections.goToResult(
+                viewModel.getScore().getValue(), viewModel.getTimer().getValue().toMillis()));
   }
 
   private void setRightChampionName(QuizChampion quizChampion) {
@@ -112,7 +114,7 @@ public class ChampionQuizFragment extends Fragment {
     if (startTime == null) {
       // No quiz running
       binding.startQuizButton.setBackgroundColor(
-          ContextCompat.getColor(getContext(), R.color.purple_500));
+          ContextCompat.getColor(requireContext(), R.color.purple_500));
 
       binding.btnAns1.setOnClickListener(null);
       binding.btnAns2.setOnClickListener(null);
@@ -121,7 +123,7 @@ public class ChampionQuizFragment extends Fragment {
     } else {
       // Quiz is running
       binding.startQuizButton.setBackgroundColor(
-          ContextCompat.getColor(getContext(), R.color.grey));
+          ContextCompat.getColor(requireContext(), R.color.grey));
 
       binding.btnAns1.setOnClickListener(this::pickAnswer);
       binding.btnAns2.setOnClickListener(this::pickAnswer);

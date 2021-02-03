@@ -3,7 +3,9 @@ package com.scp.leagueofquiz.entrypoint;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.scp.leagueofquiz.R;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
   private static final int REQUEST_CODE_CHAMPION_QUIZ = 1;
   private static final int REQUEST_CODE_ITEM_QUIZ = 2;

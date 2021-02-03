@@ -21,6 +21,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ChampionQuizFragment extends Fragment {
 
   private ChampionQuizFragmentBinding binding;
@@ -80,7 +83,6 @@ public class ChampionQuizFragment extends Fragment {
     }
   }
 
-  @SuppressWarnings("ConstantConditions")
   private void navigateToResult() {
     NavHostFragment.findNavController(this)
         .navigate(

@@ -9,6 +9,8 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
 import com.example.quiztest2.championQuizActivities.ChampionQuizLogic;
 import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
@@ -22,13 +24,14 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class ChampionQuizViewModel extends AndroidViewModel {
-  private static final Duration TIMER_REFRESH_DELAY = Duration.ofMillis(500);
+import javax.inject.Inject;
 
-  // We should not be doing this, we'll fix it with Dependency Injection and/or adding more layers
-  // to the code
-  @SuppressLint("StaticFieldLeak")
-  private final Context applicationContext;
+import dagger.hilt.android.lifecycle.HiltViewModel;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
+@HiltViewModel
+public class ChampionQuizViewModel extends ViewModel {
+  private static final Duration TIMER_REFRESH_DELAY = Duration.ofMillis(500);
 
   // Static data
   private QuizMode quizMode;
@@ -51,7 +54,6 @@ public class ChampionQuizViewModel extends AndroidViewModel {
   private final Handler timerHandler = new Handler(Looper.getMainLooper());
   private final Runnable timerRunnableTraining =
       new Runnable() {
-        @SuppressWarnings("ConstantConditions")
         @Override
         public void run() {
           switch (quizMode) {
@@ -68,12 +70,10 @@ public class ChampionQuizViewModel extends AndroidViewModel {
         }
       };
 
-  public ChampionQuizViewModel(@NonNull Application application) {
-    super(application);
-
+  @Inject
+  public ChampionQuizViewModel(ChampionRepository championRepository) {
     // Initialisations to be removed with dependency injection
-    applicationContext = application.getApplicationContext();
-    championRepository = new ChampionRepository(new ChampionQuizLogic());
+    this.championRepository = championRepository;
 
     startTime = new MutableLiveData<>();
     championGrid =
@@ -99,7 +99,6 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     timerHandler.postDelayed(timerRunnableTraining, 0);
   }
 
-  @SuppressWarnings("ConstantConditions")
   public void pickAnswer(int champIndex) {
     QuizChampion championChosen = championGrid.getValue().get(champIndex - 1);
     if (championChosen.equals(rightChampion.getValue())) {
@@ -128,7 +127,7 @@ public class ChampionQuizViewModel extends AndroidViewModel {
 
   private void loadChampionGrid() {
     List<QuizChampion> randomChampions =
-        championRepository.getRandomChampions(applicationContext, championsAnswered);
+        championRepository.getRandomChampions(championsAnswered);
     rightChampion.setValue(selectRightChampion(randomChampions));
     championGrid.setValue(randomChampions);
   }

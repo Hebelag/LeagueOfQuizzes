@@ -3,6 +3,7 @@ plugins {
 }
 apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'com.diffplug.gradle.spotless'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion 30
@@ -58,6 +59,10 @@ dependencies {
     implementation "androidx.navigation:navigation-ui:$nav_version"
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+
+    // Hilt
+    annotationProcessor "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
 }
 
 spotless {

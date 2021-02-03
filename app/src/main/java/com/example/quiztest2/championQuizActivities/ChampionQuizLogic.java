@@ -4,15 +4,13 @@ import android.content.Context;
 import com.example.quiztest2.dbstuff.DBHelper;
 import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
 import java.util.Set;
-
 import javax.inject.Inject;
 
 public class ChampionQuizLogic {
   private static final int CHAMPION_COUNT = 152;
 
   @Inject
-  public ChampionQuizLogic() {
-  }
+  public ChampionQuizLogic() {}
 
   public String[] initializeEmptyChampions() {
     String[] buttonChampions = new String[4];

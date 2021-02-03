@@ -1,33 +1,20 @@
 package com.scp.leagueofquiz.entrypoint.championquiz;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.example.quiztest2.championQuizActivities.ChampionQuizLogic;
 import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
 import com.scp.leagueofquiz.repository.ChampionRepository;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import javax.inject.Inject;
-
-import dagger.hilt.android.lifecycle.HiltViewModel;
-import dagger.hilt.android.qualifiers.ApplicationContext;
 
 @HiltViewModel
 public class ChampionQuizViewModel extends ViewModel {
@@ -126,8 +113,7 @@ public class ChampionQuizViewModel extends ViewModel {
   }
 
   private void loadChampionGrid() {
-    List<QuizChampion> randomChampions =
-        championRepository.getRandomChampions(championsAnswered);
+    List<QuizChampion> randomChampions = championRepository.getRandomChampions(championsAnswered);
     rightChampion.setValue(selectRightChampion(randomChampions));
     championGrid.setValue(randomChampions);
   }

@@ -16,12 +16,11 @@ import com.scp.leagueofquiz.R;
 import com.scp.leagueofquiz.databinding.ChampionQuizFragmentBinding;
 import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
+import dagger.hilt.android.AndroidEntryPoint;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ChampionQuizFragment extends Fragment {

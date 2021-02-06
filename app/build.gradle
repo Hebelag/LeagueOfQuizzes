@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
 }
 apply plugin: "androidx.navigation.safeargs"
-apply plugin: 'com.diffplug.gradle.spotless'
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
@@ -54,7 +53,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Navigation Component
-    def nav_version = "2.3.2"
+    def nav_version = "2.3.3"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
@@ -63,11 +62,4 @@ dependencies {
     // Hilt
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "com.google.dagger:hilt-android:$hilt_version"
-}
-
-spotless {
-    java {
-        target 'src/**/*.java'
-        googleJavaFormat()
-    }
 }

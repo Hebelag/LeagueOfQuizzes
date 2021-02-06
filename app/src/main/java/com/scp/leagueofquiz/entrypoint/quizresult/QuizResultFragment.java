@@ -8,28 +8,93 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.scp.leagueofquiz.R;
+import com.scp.leagueofquiz.databinding.ChampionQuizFragmentBinding;
+import com.scp.leagueofquiz.databinding.QuizResultFragmentBinding;
+import com.scp.leagueofquiz.entrypoint.championquiz.ChampionQuizFragmentArgs;
+import com.scp.leagueofquiz.entrypoint.championquiz.ChampionQuizViewModel;
+import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuFragmentDirections;
+import com.scp.leagueofquiz.entrypoint.quizmode.QuizModeFragmentDirections;
+import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
+import com.scp.leagueofquiz.entrypoint.shared.QuizType;
+
+import java.time.Duration;
 
 public class QuizResultFragment extends Fragment {
 
-  public static QuizResultFragment newInstance() {
-    return new QuizResultFragment();
-  }
+  //public static QuizResultFragment newInstance() {
+  //  return new QuizResultFragment();
+  //}
 
-  private QuizResultViewModel mViewModel;
+  private QuizResultFragmentBinding binding;
+  private QuizResultViewModel viewModel;
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    viewModel = new ViewModelProvider(this).get(QuizResultViewModel.class);
+
+    Bundle argsBundle = getArguments();
+    if (argsBundle != null) {
+      QuizResultFragmentArgs args = QuizResultFragmentArgs.fromBundle(argsBundle);
+      viewModel.setQuizMode(args.getQuizmode());
+      viewModel.getScore().setValue(args.getScore());
+      viewModel.getTimer().setValue(Duration.ofMillis(args.getTimer()));
+      viewModel.getFailedAttempts().setValue(args.getFailedAttempts());
+    }
+  }
 
   @Override
   public View onCreateView(
       @NonNull LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.quiz_result_fragment, container, false);
+    binding = QuizResultFragmentBinding.inflate(inflater, container, false);
+    return binding.getRoot();
   }
 
   @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    mViewModel = new ViewModelProvider(this).get(QuizResultViewModel.class);
-    // TODO: Use the ViewModel
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    binding.exitButton.setOnClickListener(v -> NavHostFragment.findNavController(this)
+            .navigate(QuizResultFragmentDirections.actionQuizResultFragmentToMainMenuFragment()));
+
+    setScoreLineVisibility(viewModel.getQuizMode());
+
+    viewModel.getScore().observe(getViewLifecycleOwner(), this::setScore);
+    viewModel.getFailedAttempts().observe(getViewLifecycleOwner(), this::failedAttempt);
+    viewModel.getTimer().observe(getViewLifecycleOwner(), this::setTimer);
+  }
+
+
+  private void setTimer(Duration duration) {
+    binding.resultTime.setText(duration.toString());
+  }
+
+  private void failedAttempt(Integer failedAttempts) {
+    binding.resultWrong.setText(failedAttempts.toString());
+
+  }
+
+  private void setScore(Integer score) {
+    if (viewModel.getQuizMode() == QuizMode.TIME){
+      binding.resultScoreTimeAttack.setText(score.toString());
+    }else{
+      binding.resultScoreNonTime.setText(score.toString());
+    }
+  }
+
+  private void setScoreLineVisibility(QuizMode quizMode) {
+    if (quizMode == QuizMode.TIME) {
+      binding.resultScoreTimeAttack.setVisibility(View.VISIBLE);
+      binding.resultScoreNonTime.setVisibility(View.INVISIBLE);
+    } else {
+      binding.resultScoreTimeAttack.setVisibility(View.INVISIBLE);
+      binding.resultScoreNonTime.setVisibility(View.VISIBLE);
+    }
   }
 }

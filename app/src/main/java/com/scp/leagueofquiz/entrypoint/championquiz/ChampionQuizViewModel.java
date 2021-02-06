@@ -51,6 +51,8 @@ public class ChampionQuizViewModel extends AndroidViewModel {
           switch (quizMode) {
             case TRAINING:
             case ENDLESS:
+              timer.setValue(Duration.between(startTime.getValue(), Instant.now()));
+              break;
             case MARATHON:
               timer.setValue(Duration.between(startTime.getValue(), Instant.now()));
               break;
@@ -100,7 +102,16 @@ public class ChampionQuizViewModel extends AndroidViewModel {
 
       switch (quizMode) {
         case TRAINING:
+          if (championsAnswered.size() == championCount) {
+            quizFinished.setValue(true);
+          } else {
+            loadChampionGrid();
+          }
+          break;
         case ENDLESS:
+          //TODO: WEITER ENDLESS IMPLEMENTIEREN
+          loadChampionGrid();
+          break;
         case MARATHON:
           if (championsAnswered.size() == championCount) {
             quizFinished.setValue(true);
@@ -116,8 +127,8 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     } else {
       failedAttempts.setValue(failedAttempts.getValue() + 1);
     }
-  }
 
+  }
   private void loadChampionGrid() {
     List<QuizChampion> randomChampions =
         logicHandler.getRandomChampions(applicationContext, championsAnswered);

@@ -83,8 +83,8 @@ public class ChampionQuizFragment extends Fragment {
   private void navigateToResult() {
     NavHostFragment.findNavController(this)
             .navigate(
-                    ChampionQuizFragmentDirections.goToResult(
-                            viewModel.getScore().getValue(), viewModel.getTimer().getValue().toMillis()));
+                    ChampionQuizFragmentDirections.goToResult(viewModel.getScore().getValue(),viewModel.getTimer().getValue().toMillis(),
+                            viewModel.getQuizMode(),viewModel.getFailedAttempts().getValue()));
   }
 
   private void setRightChampionName(QuizChampion quizChampion) {
@@ -120,9 +120,15 @@ public class ChampionQuizFragment extends Fragment {
       binding.btnAns4.setOnClickListener(null);
     } else {
       // Quiz is running
-      binding.startQuizButton.setBackgroundColor(
-          ContextCompat.getColor(getContext(), R.color.grey));
 
+      if (viewModel.getQuizMode() == QuizMode.ENDLESS){
+        binding.startQuizButton.setText("STOP");
+        binding.startQuizButton.setClickable(true);
+      }
+      else{
+        binding.startQuizButton.setBackgroundColor(
+                ContextCompat.getColor(getContext(), R.color.grey));
+      }
       binding.btnAns1.setOnClickListener(this::pickAnswer);
       binding.btnAns2.setOnClickListener(this::pickAnswer);
       binding.btnAns3.setOnClickListener(this::pickAnswer);
@@ -132,7 +138,11 @@ public class ChampionQuizFragment extends Fragment {
 
   @SuppressLint("SetTextI18n")
   private void setScore(Integer score) {
-    binding.scoreViewNonTime.setText(score.toString());
+    if (viewModel.getQuizMode() == QuizMode.TIME){
+      binding.scoreViewTimeAttack.setText(score.toString());
+    }else{
+      binding.scoreViewNonTime.setText(score.toString());
+    }
   }
 
   private void startQuiz(View view) {

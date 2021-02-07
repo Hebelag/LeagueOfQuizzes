@@ -11,8 +11,18 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.2"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
-        classpath 'com.diffplug.spotless:spotless-plugin-gradle:4.0.1'
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+    }
+}
+
+plugins {
+    id "com.diffplug.spotless" version "5.9.0"
+}
+
+spotless {
+    java {
+        target '**/src/**/*.java'
+        googleJavaFormat()
     }
 }
 
@@ -21,8 +31,4 @@ allprojects {
         google()
         jcenter()
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }

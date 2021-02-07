@@ -9,9 +9,12 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.scp.leagueofquiz.api.database.LolDatabase;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,21 +39,22 @@ public class ChampionDaoTest {
   }
 
   @Test
-  public void insertAll_findAll() {
+  public void insertAll_findAll() throws ExecutionException, InterruptedException {
     // Arrange
     Champion c1 = new Champion("id1", "name1");
     Champion c2 = new Champion("id2", "name2");
 
     // Act
-    underTest.insertAll(c1, c2);
-    List<Champion> result = underTest.findAll();
+    underTest.insertAll(Arrays.asList(c1, c2));
+    ListenableFuture<List<Champion>> all = underTest.findAll();
+    List<Champion> result = all.get();
 
     // Assert
     assertThat(result, is(Arrays.asList(c1, c2)));
   }
 
   @Test
-  public void findRandomChampsExcept() {
+  public void findRandomChampsExcept() throws ExecutionException, InterruptedException {
     // Arrange
     Champion c1 = new Champion("id1", "name1");
     Champion c2 = new Champion("id2", "name2");
@@ -59,8 +63,9 @@ public class ChampionDaoTest {
     List<String> toExclude = Arrays.asList("name2", "name3");
 
     // Act
-    underTest.insertAll(c1, c2, c3, c4);
-    List<Champion> result = underTest.findRandomChampsExcept(toExclude, 2);
+    underTest.insertAll(Arrays.asList(c1, c2, c3, c4));
+    ListenableFuture<List<Champion>> future = underTest.findRandomChampsExcept(toExclude, 2);
+    List<Champion> result = future.get();
 
     // Assert
     assertThat(result, notNullValue());

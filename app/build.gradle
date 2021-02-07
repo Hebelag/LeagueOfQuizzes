@@ -64,5 +64,9 @@ dependencies {
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-guava:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }

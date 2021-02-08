@@ -80,7 +80,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/scoreView"
+                android:id="@+id/scoreViewText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -88,10 +88,34 @@
                 android:text="@string/score_text" />
 
             <TextView
-                android:id="@+id/wrongsView"
+                android:id="@+id/endlessScoreView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="1"
+                android:freezesText="true"
+                android:text="@string/score_default" />
+
+            <TextView
+                android:id="@+id/endlessWrongsViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:freezesText="true"
+                android:text="@string/wrongs_default" />
+
+            <TextView
+                android:id="@+id/endlessWrongsView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:freezesText="true"
+                android:text="@string/score_default" />
+
+            <TextView
+                android:id="@+id/wrongsViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="end"
                 android:text="@string/timer_default" />
 

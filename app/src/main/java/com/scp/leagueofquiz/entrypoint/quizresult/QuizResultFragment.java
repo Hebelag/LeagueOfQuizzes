@@ -22,6 +22,7 @@ import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
 import com.scp.leagueofquiz.entrypoint.shared.QuizType;
 
 import java.time.Duration;
+import java.util.Locale;
 
 public class QuizResultFragment extends Fragment {
 
@@ -72,19 +73,29 @@ public class QuizResultFragment extends Fragment {
 
 
   private void setTimer(Duration duration) {
-    binding.resultTime.setText(duration.toString());
+    String timeString = "";
+    if(duration.toHours() > 0){
+      timeString =
+              String.format(Locale.getDefault(), "%d:%02d:%02d", duration.toHours(), duration.toMinutes(), duration.getSeconds() % 60);
+    }
+    else{
+      if(duration.isZero()){
+      }
+      timeString =
+              String.format(Locale.getDefault(), "%d:%02d", duration.toMinutes(), duration.getSeconds() % 60);
+    }
+    binding.resultTime.setText(timeString);
   }
 
   private void failedAttempt(Integer failedAttempts) {
-    binding.resultWrong.setText(failedAttempts.toString());
-
+    binding.resultWrong.setText("Wrong champions answered: " + failedAttempts.toString());
   }
 
   private void setScore(Integer score) {
     if (viewModel.getQuizMode() == QuizMode.TIME){
-      binding.resultScoreTimeAttack.setText(score.toString());
+      binding.resultScoreTimeAttack.setText("Final Score: " + score.toString());
     }else{
-      binding.resultScoreNonTime.setText(score.toString());
+      binding.resultScoreNonTime.setText("Champions: " + score.toString());
     }
   }
 

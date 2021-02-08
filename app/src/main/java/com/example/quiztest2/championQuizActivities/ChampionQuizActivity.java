@@ -333,12 +333,12 @@ public class ChampionQuizActivity extends AppCompatActivity {
     btnAns4 = findViewById(R.id.btnAns4);
     buttonStartQuiz = findViewById(R.id.startQuizButton);
     championText = findViewById(R.id.championText);
-    scoreView = findViewById(R.id.scoreView);
+    scoreView = findViewById(R.id.scoreViewText);
     finalAccuracy = findViewById(R.id.tvFinalAccuracy);
     finalScore = findViewById(R.id.tvFinalScore);
     returnButton = findViewById(R.id.returnButton);
     retryButton = findViewById(R.id.retryButton);
-    timerView = findViewById(R.id.wrongsView);
+    timerView = findViewById(R.id.wrongsViewText);
     timerImage = findViewById(R.id.timerImageView);
     gameLayout = findViewById(R.id.gameLayout);
     postGameLayout = findViewById(R.id.postGameLayout);

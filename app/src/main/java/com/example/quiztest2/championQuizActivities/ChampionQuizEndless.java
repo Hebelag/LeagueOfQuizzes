@@ -227,8 +227,8 @@ public class ChampionQuizEndless extends AppCompatActivity {
 
     championText = findViewById(R.id.championText);
 
-    scoreView = findViewById(R.id.scoreView);
-    timerView = findViewById(R.id.wrongsView);
+    scoreView = findViewById(R.id.scoreViewText);
+    timerView = findViewById(R.id.wrongsViewText);
 
     finalAccuracy = findViewById(R.id.tvFinalAccuracy);
     finalScore = findViewById(R.id.tvFinalScore);

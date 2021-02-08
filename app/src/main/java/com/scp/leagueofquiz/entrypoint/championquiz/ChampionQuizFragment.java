@@ -31,13 +31,16 @@ public class ChampionQuizFragment extends Fragment {
     super.onCreate(savedInstanceState);
     viewModel = new ViewModelProvider(this).get(ChampionQuizViewModel.class);
 
-    viewModel.getTimer().setValue(Duration.ZERO);
+    viewModel.getTimerNonTime().setValue(Duration.ZERO);
     Bundle argsBundle = getArguments();
     if (argsBundle != null) {
       ChampionQuizFragmentArgs args = ChampionQuizFragmentArgs.fromBundle(argsBundle);
       viewModel.setQuizMode(args.getMode());
       viewModel.setChampionCount(args.getChampCount());
-      viewModel.getTimer().setValue(Duration.ofMillis(args.getTime()));
+      viewModel.getTimerNonTime().setValue(Duration.ofMillis(args.getTime()));
+      if(viewModel.getTimerNonTime().getValue().isNegative()){
+        viewModel.getTimerNonTime().setValue(Duration.ZERO);
+      }
     }
   }
 
@@ -56,6 +59,7 @@ public class ChampionQuizFragment extends Fragment {
 
     // Setup UI
     setScoreLineVisibility(viewModel.getQuizMode());
+    setTimeAttackLineVisibility(viewModel.getQuizMode());
     binding.startQuizButton.setOnClickListener(this::startQuiz);
 
     // Setup observers
@@ -63,14 +67,26 @@ public class ChampionQuizFragment extends Fragment {
     viewModel.getScore().observe(getViewLifecycleOwner(), this::setScore);
     viewModel.getFailedAttempts().observe(getViewLifecycleOwner(), this::failedAttempt);
     viewModel.getStartTime().observe(getViewLifecycleOwner(), this::setupStartButton);
-    viewModel.getTimer().observe(getViewLifecycleOwner(), this::setTimer);
+    viewModel.getTimerNonTime().observe(getViewLifecycleOwner(), this::setTimer);
     viewModel.getRightChampion().observe(getViewLifecycleOwner(), this::setRightChampionName);
     viewModel.getQuizFinished().observe(getViewLifecycleOwner(), this::checkQuizFinished);
+    viewModel.getButtonText().observe(getViewLifecycleOwner(), this::setButtonText);
+  }
+
+
+
+  private void setButtonText(String s) {
+    binding.startQuizButton.setText(s);
   }
 
   private void failedAttempt(Integer integer) {
     if (integer != null && integer > 0) {
       Toast.makeText(requireContext(), "WRONG!", Toast.LENGTH_SHORT).show();
+      if(viewModel.getQuizMode() == QuizMode.TIME){
+        binding.wrongsViewTimeAttack.setText(integer.toString());
+      } else {
+        binding.wrongViewNonTime.setText(integer.toString());
+      }
     }
   }
 
@@ -83,7 +99,7 @@ public class ChampionQuizFragment extends Fragment {
   private void navigateToResult() {
     NavHostFragment.findNavController(this)
             .navigate(
-                    ChampionQuizFragmentDirections.goToResult(viewModel.getScore().getValue(),viewModel.getTimer().getValue().toMillis(),
+                    ChampionQuizFragmentDirections.goToResult(viewModel.getScore().getValue(),viewModel.getTimerNonTime().getValue().toMillis(),
                             viewModel.getQuizMode(),viewModel.getFailedAttempts().getValue()));
   }
 
@@ -99,11 +115,14 @@ public class ChampionQuizFragment extends Fragment {
   private void setTimer(Duration timer) {
     String timeString =
         String.format(Locale.getDefault(), "%d:%02d", timer.toMinutes(), timer.getSeconds() % 60);
-    binding.timer.setText(timeString);
-    if (viewModel.getQuizMode() == QuizMode.TIME) {
+
+    if(viewModel.getQuizMode() == QuizMode.TIME){
       if (timer.isZero()) {
         navigateToResult();
       }
+       binding.countdownView.setText(timeString);
+    } else{
+      binding.timer.setText(timeString);
     }
   }
 
@@ -122,8 +141,12 @@ public class ChampionQuizFragment extends Fragment {
       // Quiz is running
 
       if (viewModel.getQuizMode() == QuizMode.ENDLESS){
-        binding.startQuizButton.setText("STOP");
-        binding.startQuizButton.setClickable(true);
+        if(binding.startQuizButton.getText().toString().equals("STOP")){
+          navigateToResult();
+        } else{
+          binding.startQuizButton.setText("STOP");
+          binding.startQuizButton.setClickable(true);
+        }
       }
       else{
         binding.startQuizButton.setBackgroundColor(
@@ -166,6 +189,14 @@ public class ChampionQuizFragment extends Fragment {
         getResources()
             .getIdentifier(
                 champions.get(3).getId(), "drawable", requireActivity().getPackageName()));
+  }
+
+  private void setTimeAttackLineVisibility(QuizMode quizMode){
+    if (quizMode == QuizMode.TIME){
+      binding.timeAttackLayout.setVisibility(View.VISIBLE);
+    } else{
+      binding.timeAttackLayout.setVisibility(View.INVISIBLE);
+    }
   }
 
   private void setScoreLineVisibility(QuizMode quizMode) {

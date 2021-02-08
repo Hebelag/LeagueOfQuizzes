@@ -35,9 +35,10 @@ public class ChampionQuizViewModel extends AndroidViewModel {
   private final MutableLiveData<Integer> score;
   private final MutableLiveData<Integer> failedAttempts;
   private final MutableLiveData<Instant> startTime;
-  private final MutableLiveData<Duration> timer;
+  private final MutableLiveData<Duration> timerNonTime;
   private final MutableLiveData<QuizChampion> rightChampion;
   private final MutableLiveData<Boolean> quizFinished;
+  private final MutableLiveData<String> buttonText;
 
   // Dependencies
   private final ChampionQuizLogic logicHandler;
@@ -51,13 +52,13 @@ public class ChampionQuizViewModel extends AndroidViewModel {
           switch (quizMode) {
             case TRAINING:
             case ENDLESS:
-              timer.setValue(Duration.between(startTime.getValue(), Instant.now()));
+              timerNonTime.setValue(Duration.between(startTime.getValue(), Instant.now()));
               break;
             case MARATHON:
-              timer.setValue(Duration.between(startTime.getValue(), Instant.now()));
+              timerNonTime.setValue(Duration.between(startTime.getValue(), Instant.now()));
               break;
             case TIME:
-              timer.setValue(timer.getValue().minus(TIMER_REFRESH_DELAY));
+              timerNonTime.setValue(timerNonTime.getValue().minus(TIMER_REFRESH_DELAY));
               break;
           }
           timerHandler.postDelayed(this, TIMER_REFRESH_DELAY.toMillis());
@@ -78,12 +79,13 @@ public class ChampionQuizViewModel extends AndroidViewModel {
                 QuizChampion.DEFAULT,
                 QuizChampion.DEFAULT,
                 QuizChampion.DEFAULT));
-    timer = new MutableLiveData<>(Duration.ZERO);
+    timerNonTime = new MutableLiveData<>(Duration.ZERO);
     championsAnswered = new HashSet<>();
     score = new MutableLiveData<>(0);
     failedAttempts = new MutableLiveData<>(0);
     rightChampion = new MutableLiveData<>();
     quizFinished = new MutableLiveData<>(false);
+    buttonText = new MutableLiveData<>();
   }
 
   public void startQuiz() {
@@ -153,8 +155,8 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     this.championCount = championCount;
   }
 
-  public MutableLiveData<Duration> getTimer() {
-    return timer;
+  public MutableLiveData<Duration> getTimerNonTime() {
+    return timerNonTime;
   }
 
   public MutableLiveData<Integer> getScore() {
@@ -175,5 +177,9 @@ public class ChampionQuizViewModel extends AndroidViewModel {
 
   public MutableLiveData<Integer> getFailedAttempts() {
     return failedAttempts;
+  }
+
+  public MutableLiveData<String> getButtonText() {
+    return buttonText;
   }
 }

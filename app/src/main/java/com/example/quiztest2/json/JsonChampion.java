@@ -3,7 +3,7 @@ package com.example.quiztest2.json;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Champion implements Parcelable {
+public class JsonChampion implements Parcelable {
   private int id;
   private String name;
   private String title;
@@ -14,9 +14,9 @@ public class Champion implements Parcelable {
   private String preferredLane;
   private String releaseDate;
 
-  public Champion() {}
+  public JsonChampion() {}
 
-  public Champion(
+  public JsonChampion(
       int id,
       String name,
       String title,
@@ -37,7 +37,7 @@ public class Champion implements Parcelable {
     this.releaseDate = releaseDate;
   }
 
-  protected Champion(Parcel in) {
+  protected JsonChampion(Parcel in) {
     id = in.readInt();
     name = in.readString();
     title = in.readString();
@@ -49,16 +49,16 @@ public class Champion implements Parcelable {
     releaseDate = in.readString();
   }
 
-  public static final Creator<Champion> CREATOR =
-      new Creator<Champion>() {
+  public static final Creator<JsonChampion> CREATOR =
+      new Creator<JsonChampion>() {
         @Override
-        public Champion createFromParcel(Parcel in) {
-          return new Champion(in);
+        public JsonChampion createFromParcel(Parcel in) {
+          return new JsonChampion(in);
         }
 
         @Override
-        public Champion[] newArray(int size) {
-          return new Champion[size];
+        public JsonChampion[] newArray(int size) {
+          return new JsonChampion[size];
         }
       };
 

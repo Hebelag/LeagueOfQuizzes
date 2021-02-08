@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import com.scp.leagueofquiz.R;
+import com.scp.leagueofquiz.api.database.champion.Champion;
 import com.scp.leagueofquiz.databinding.ChampionQuizFragmentBinding;
-import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.time.Duration;
@@ -89,8 +89,8 @@ public class ChampionQuizFragment extends Fragment {
                 viewModel.getScore().getValue(), viewModel.getTimer().getValue().toMillis()));
   }
 
-  private void setRightChampionName(QuizChampion quizChampion) {
-    binding.championText.setText(quizChampion.getName());
+  private void setRightChampionName(Champion champion) {
+    binding.championText.setText(champion.getName());
   }
 
   private void pickAnswer(View view) {
@@ -141,23 +141,23 @@ public class ChampionQuizFragment extends Fragment {
     viewModel.startQuiz();
   }
 
-  private void setChampionsGrid(List<QuizChampion> champions) {
+  private void setChampionsGrid(List<Champion> champions) {
     binding.btnAns1.setImageResource(
         getResources()
             .getIdentifier(
-                champions.get(0).getId(), "drawable", requireActivity().getPackageName()));
+                champions.get(0).getIdentifier(), "drawable", requireActivity().getPackageName()));
     binding.btnAns2.setImageResource(
         getResources()
             .getIdentifier(
-                champions.get(1).getId(), "drawable", requireActivity().getPackageName()));
+                champions.get(1).getIdentifier(), "drawable", requireActivity().getPackageName()));
     binding.btnAns3.setImageResource(
         getResources()
             .getIdentifier(
-                champions.get(2).getId(), "drawable", requireActivity().getPackageName()));
+                champions.get(2).getIdentifier(), "drawable", requireActivity().getPackageName()));
     binding.btnAns4.setImageResource(
         getResources()
             .getIdentifier(
-                champions.get(3).getId(), "drawable", requireActivity().getPackageName()));
+                champions.get(3).getIdentifier(), "drawable", requireActivity().getPackageName()));
   }
 
   private void setScoreLineVisibility(QuizMode quizMode) {

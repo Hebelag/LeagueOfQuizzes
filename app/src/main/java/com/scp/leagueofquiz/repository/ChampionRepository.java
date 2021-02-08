@@ -1,40 +1,27 @@
 package com.scp.leagueofquiz.repository;
 
-import android.content.Context;
-import com.example.quiztest2.championQuizActivities.ChampionQuizLogic;
-import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
-import dagger.hilt.android.qualifiers.ApplicationContext;
-import java.util.ArrayList;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.scp.leagueofquiz.api.database.champion.Champion;
+import com.scp.leagueofquiz.api.database.champion.ChampionDao;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class ChampionRepository {
-  private final ChampionQuizLogic championQuizLogic;
-  private final Context applicationContext;
+  private final ChampionDao championDao;
 
   @Inject
-  public ChampionRepository(
-      ChampionQuizLogic championQuizLogic, @ApplicationContext Context applicationContext) {
-    this.championQuizLogic = championQuizLogic;
-    this.applicationContext = applicationContext;
+  public ChampionRepository(ChampionDao championDao) {
+    this.championDao = championDao;
   }
 
-  public List<QuizChampion> getRandomChampions(Set<QuizChampion> championsAnswered) {
-    String[] buttonChampionsKey =
-        championQuizLogic.getChampionKeyArray(applicationContext, championsAnswered);
-    String[] championArray =
-        championQuizLogic.getChampionNameArray(applicationContext, buttonChampionsKey);
-    String[] buttonChampionsImages =
-        championQuizLogic.getChampionIDArray(applicationContext, buttonChampionsKey);
-
-    List<QuizChampion> result = new ArrayList<>();
-    for (int i = 0; i < buttonChampionsKey.length; i++) {
-      QuizChampion champion =
-          new QuizChampion(buttonChampionsImages[i], buttonChampionsKey[i], championArray[i]);
-      result.add(champion);
-    }
-
-    return result;
+  public ListenableFuture<List<Champion>> getRandomChampions(
+      Set<Champion> championsAnswered, int howMany) {
+    List<String> namesAnswered =
+        championsAnswered.stream().map(champion -> champion.name).collect(Collectors.toList());
+    return championDao.findRandomChampsExcept(namesAnswered, howMany);
   }
 }

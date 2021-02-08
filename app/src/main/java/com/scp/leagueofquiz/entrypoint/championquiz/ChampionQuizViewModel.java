@@ -4,7 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.scp.leagueofquiz.api.database.champion.Champion;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
 import com.scp.leagueofquiz.repository.ChampionRepository;
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -14,7 +15,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 @HiltViewModel
 public class ChampionQuizViewModel extends ViewModel {
@@ -23,19 +27,20 @@ public class ChampionQuizViewModel extends ViewModel {
   // Static data
   private QuizMode quizMode;
   private Integer championCount;
-  private final Set<QuizChampion> championsAnswered;
+  private final Set<Champion> championsAnswered;
 
   // Mutable data
-  private final MutableLiveData<List<QuizChampion>> championGrid;
+  private final MutableLiveData<List<Champion>> championGrid;
   private final MutableLiveData<Integer> score;
   private final MutableLiveData<Integer> failedAttempts;
   private final MutableLiveData<Instant> startTime;
   private final MutableLiveData<Duration> timer;
-  private final MutableLiveData<QuizChampion> rightChampion;
+  private final MutableLiveData<Champion> rightChampion;
   private final MutableLiveData<Boolean> quizFinished;
 
   // Dependencies
   private final ChampionRepository championRepository;
+  private final Executor executor;
 
   // Other
   private final Handler timerHandler = new Handler(Looper.getMainLooper());
@@ -58,24 +63,25 @@ public class ChampionQuizViewModel extends ViewModel {
       };
 
   @Inject
-  public ChampionQuizViewModel(ChampionRepository championRepository) {
+  public ChampionQuizViewModel(ChampionRepository championRepository, Executor executor) {
     // Initialisations to be removed with dependency injection
     this.championRepository = championRepository;
+    this.executor = executor;
 
     startTime = new MutableLiveData<>();
-    championGrid =
-        new MutableLiveData<>(
-            Arrays.asList(
-                QuizChampion.DEFAULT,
-                QuizChampion.DEFAULT,
-                QuizChampion.DEFAULT,
-                QuizChampion.DEFAULT));
+    championGrid = new MutableLiveData<>();
+    resetChampionGrid();
     timer = new MutableLiveData<>(Duration.ZERO);
     championsAnswered = new HashSet<>();
     score = new MutableLiveData<>(0);
     failedAttempts = new MutableLiveData<>(0);
     rightChampion = new MutableLiveData<>();
     quizFinished = new MutableLiveData<>(false);
+  }
+
+  private void resetChampionGrid() {
+    championGrid.setValue(
+        Arrays.asList(Champion.DEFAULT, Champion.DEFAULT, Champion.DEFAULT, Champion.DEFAULT));
   }
 
   public void startQuiz() {
@@ -87,7 +93,7 @@ public class ChampionQuizViewModel extends ViewModel {
   }
 
   public void pickAnswer(int champIndex) {
-    QuizChampion championChosen = championGrid.getValue().get(champIndex - 1);
+    Champion championChosen = championGrid.getValue().get(champIndex - 1);
     if (championChosen.equals(rightChampion.getValue())) {
       championsAnswered.add(championChosen);
       score.setValue(score.getValue() + 1);
@@ -113,12 +119,25 @@ public class ChampionQuizViewModel extends ViewModel {
   }
 
   private void loadChampionGrid() {
-    List<QuizChampion> randomChampions = championRepository.getRandomChampions(championsAnswered);
-    rightChampion.setValue(selectRightChampion(randomChampions));
-    championGrid.setValue(randomChampions);
+    ListenableFuture<List<Champion>> future =
+        championRepository.getRandomChampions(championsAnswered, 4);
+    future.addListener(
+        () -> {
+          List<Champion> randomChampions;
+          try {
+            randomChampions = future.get();
+            rightChampion.postValue(selectRightChampion(randomChampions));
+            championGrid.postValue(randomChampions);
+          } catch (ExecutionException | InterruptedException e) {
+            Timber.e(e, "Could not load champion grid");
+            resetChampionGrid();
+            rightChampion.postValue(Champion.DEFAULT);
+          }
+        },
+        executor);
   }
 
-  private QuizChampion selectRightChampion(List<QuizChampion> buttonChampions) {
+  private Champion selectRightChampion(List<Champion> buttonChampions) {
     int rightChampionPosition = (int) (Math.random() * 4);
     return buttonChampions.get(rightChampionPosition);
   }
@@ -132,7 +151,7 @@ public class ChampionQuizViewModel extends ViewModel {
     this.quizMode = quizMode;
   }
 
-  public MutableLiveData<List<QuizChampion>> getChampionGrid() {
+  public MutableLiveData<List<Champion>> getChampionGrid() {
     return championGrid;
   }
 
@@ -152,7 +171,7 @@ public class ChampionQuizViewModel extends ViewModel {
     return startTime;
   }
 
-  public MutableLiveData<QuizChampion> getRightChampion() {
+  public MutableLiveData<Champion> getRightChampion() {
     return rightChampion;
   }
 

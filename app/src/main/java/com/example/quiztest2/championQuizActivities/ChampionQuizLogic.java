@@ -2,7 +2,7 @@ package com.example.quiztest2.championQuizActivities;
 
 import android.content.Context;
 import com.example.quiztest2.dbstuff.DBHelper;
-import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
+import com.scp.leagueofquiz.api.database.champion.Champion;
 import java.util.Set;
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ public class ChampionQuizLogic {
     return buttonChampions;
   }
 
-  public String[] getChampionKeyArray(Context context, Set<QuizChampion> answeredChampions) {
+  public String[] getChampionKeyArray(Context context, Set<Champion> answeredChampions) {
     DBHelper db = DBHelper.getInstance(context);
     String[] championKeys = new String[4];
     int[] uniqueChampionArray = new int[4];

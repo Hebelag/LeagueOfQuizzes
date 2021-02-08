@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.scp.leagueofquiz.api.database.champion.Champion;
+import com.scp.leagueofquiz.entrypoint.shared.DefaultedLiveData;
+import com.scp.leagueofquiz.entrypoint.shared.IncrementableLiveData;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
 import com.scp.leagueofquiz.repository.ChampionRepository;
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -31,10 +33,10 @@ public class ChampionQuizViewModel extends ViewModel {
 
   // Mutable data
   private final MutableLiveData<List<Champion>> championGrid;
-  private final MutableLiveData<Integer> score;
-  private final MutableLiveData<Integer> failedAttempts;
+  private final IncrementableLiveData score;
+  private final IncrementableLiveData failedAttempts;
   private final MutableLiveData<Instant> startTime;
-  private final MutableLiveData<Duration> timer;
+  private final DefaultedLiveData<Duration> timer;
   private final MutableLiveData<Champion> rightChampion;
   private final MutableLiveData<Boolean> quizFinished;
 
@@ -71,10 +73,10 @@ public class ChampionQuizViewModel extends ViewModel {
     startTime = new MutableLiveData<>();
     championGrid = new MutableLiveData<>();
     resetChampionGrid();
-    timer = new MutableLiveData<>(Duration.ZERO);
+    timer = new DefaultedLiveData<>(Duration.ZERO);
     championsAnswered = new HashSet<>();
-    score = new MutableLiveData<>(0);
-    failedAttempts = new MutableLiveData<>(0);
+    score = new IncrementableLiveData(0);
+    failedAttempts = new IncrementableLiveData(0);
     rightChampion = new MutableLiveData<>();
     quizFinished = new MutableLiveData<>(false);
   }
@@ -93,10 +95,12 @@ public class ChampionQuizViewModel extends ViewModel {
   }
 
   public void pickAnswer(int champIndex) {
-    Champion championChosen = championGrid.getValue().get(champIndex - 1);
+    List<Champion> grid = championGrid.getValue();
+    if (grid == null) throw new RuntimeException("Grid is empty!");
+    Champion championChosen = grid.get(champIndex - 1);
     if (championChosen.equals(rightChampion.getValue())) {
       championsAnswered.add(championChosen);
-      score.setValue(score.getValue() + 1);
+      score.setIncrement();
 
       switch (quizMode) {
         case TRAINING:
@@ -114,7 +118,7 @@ public class ChampionQuizViewModel extends ViewModel {
       }
 
     } else {
-      failedAttempts.setValue(failedAttempts.getValue() + 1);
+      failedAttempts.setIncrement();
     }
   }
 
@@ -159,11 +163,11 @@ public class ChampionQuizViewModel extends ViewModel {
     this.championCount = championCount;
   }
 
-  public MutableLiveData<Duration> getTimer() {
+  public DefaultedLiveData<Duration> getTimer() {
     return timer;
   }
 
-  public MutableLiveData<Integer> getScore() {
+  public IncrementableLiveData getScore() {
     return score;
   }
 
@@ -179,7 +183,7 @@ public class ChampionQuizViewModel extends ViewModel {
     return quizFinished;
   }
 
-  public MutableLiveData<Integer> getFailedAttempts() {
+  public IncrementableLiveData getFailedAttempts() {
     return failedAttempts;
   }
 }

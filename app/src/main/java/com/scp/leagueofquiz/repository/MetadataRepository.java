@@ -12,7 +12,6 @@ import com.scp.leagueofquiz.api.database.metadata.MetadataDao;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +23,6 @@ import timber.log.Timber;
 @Singleton
 public class MetadataRepository {
   private static final String EMBEDDED_JSON_NAME = "championFull.json";
-  private static final Duration UPDATE_FREQUENCE = Duration.ofDays(1);
 
   private final Context applicationContext;
   private final MetadataDao metadataDao;
@@ -65,7 +63,8 @@ public class MetadataRepository {
         List<Champion> champsToSave = new ArrayList<>();
 
         for (ChampionJSON championJSON : jsonRoot.getData().values()) {
-          champsToSave.add(new Champion(championJSON.getId().toLowerCase(), championJSON.getName()));
+          champsToSave.add(
+              new Champion(championJSON.getId().toLowerCase(), championJSON.getName()));
         }
 
         championDao.insertAll(champsToSave);
@@ -81,7 +80,6 @@ public class MetadataRepository {
       int size = is.available();
       byte[] buffer = new byte[size];
       is.read(buffer);
-      is.close();
 
       String loadedJson = new String(buffer);
       return gson.fromJson(loadedJson, ChampionJSONRoot.class);

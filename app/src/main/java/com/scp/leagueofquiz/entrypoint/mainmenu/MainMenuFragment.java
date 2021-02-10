@@ -11,10 +11,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import com.scp.leagueofquiz.databinding.MainMenuFragmentBinding;
 import com.scp.leagueofquiz.entrypoint.shared.QuizType;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class MainMenuFragment extends Fragment {
   private MainMenuFragmentBinding binding;
-  private MainMenuViewModel mViewModel;
+  private MainMenuViewModel viewModel;
 
   @Override
   public View onCreateView(
@@ -46,7 +48,9 @@ public class MainMenuFragment extends Fragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = new ViewModelProvider(this).get(MainMenuViewModel.class);
-    // TODO: Use the ViewModel
+    viewModel = new ViewModelProvider(this).get(MainMenuViewModel.class);
+    // This is just a temporary place to where to initialise the database. We'll find a proper way
+    // to manage this later
+    viewModel.updateDatabase();
   }
 }

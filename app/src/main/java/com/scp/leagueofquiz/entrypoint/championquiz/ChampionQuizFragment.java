@@ -13,14 +13,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import com.scp.leagueofquiz.R;
+import com.scp.leagueofquiz.api.database.champion.Champion;
 import com.scp.leagueofquiz.databinding.ChampionQuizFragmentBinding;
-import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
+import dagger.hilt.android.AndroidEntryPoint;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 
+@AndroidEntryPoint
 public class ChampionQuizFragment extends Fragment {
 
   private ChampionQuizFragmentBinding binding;
@@ -104,8 +106,8 @@ public class ChampionQuizFragment extends Fragment {
                 viewModel.getFailedAttempts().getValue()));
   }
 
-  private void setRightChampionName(QuizChampion quizChampion) {
-    binding.championText.setText(quizChampion.getName());
+  private void setRightChampionName(Champion champion) {
+    binding.championText.setText(champion.getName());
   }
 
   private void pickAnswer(View view) {
@@ -132,7 +134,7 @@ public class ChampionQuizFragment extends Fragment {
     if (startTime == null) {
       // No quiz running
       binding.startQuizButton.setBackgroundColor(
-          ContextCompat.getColor(getContext(), R.color.purple_500));
+          ContextCompat.getColor(requireContext(), R.color.purple_500));
 
       binding.btnAns1.setOnClickListener(null);
       binding.btnAns2.setOnClickListener(null);
@@ -150,7 +152,7 @@ public class ChampionQuizFragment extends Fragment {
         }
       } else {
         binding.startQuizButton.setBackgroundColor(
-            ContextCompat.getColor(getContext(), R.color.grey));
+            ContextCompat.getColor(requireContext(), R.color.grey));
       }
       binding.btnAns1.setOnClickListener(this::pickAnswer);
       binding.btnAns2.setOnClickListener(this::pickAnswer);
@@ -172,23 +174,23 @@ public class ChampionQuizFragment extends Fragment {
     viewModel.startQuiz();
   }
 
-  private void setChampionsGrid(List<QuizChampion> champions) {
+  private void setChampionsGrid(List<Champion> champions) {
     binding.btnAns1.setImageResource(
         getResources()
             .getIdentifier(
-                champions.get(0).getId(), "drawable", requireActivity().getPackageName()));
+                champions.get(0).getIdentifier(), "drawable", requireActivity().getPackageName()));
     binding.btnAns2.setImageResource(
         getResources()
             .getIdentifier(
-                champions.get(1).getId(), "drawable", requireActivity().getPackageName()));
+                champions.get(1).getIdentifier(), "drawable", requireActivity().getPackageName()));
     binding.btnAns3.setImageResource(
         getResources()
             .getIdentifier(
-                champions.get(2).getId(), "drawable", requireActivity().getPackageName()));
+                champions.get(2).getIdentifier(), "drawable", requireActivity().getPackageName()));
     binding.btnAns4.setImageResource(
         getResources()
             .getIdentifier(
-                champions.get(3).getId(), "drawable", requireActivity().getPackageName()));
+                champions.get(3).getIdentifier(), "drawable", requireActivity().getPackageName()));
   }
 
   private void setTimeAttackLineVisibility(QuizMode quizMode) {

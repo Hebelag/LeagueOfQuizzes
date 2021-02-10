@@ -93,9 +93,8 @@ public class QuizModeFragment extends Fragment {
             });
     view.findViewById(R.id.marathonButton)
         .setOnClickListener(
-            v -> {
-              NavHostFragment.findNavController(this)
-                  .navigate(QuizModeFragmentDirections.startChampQuiz(QuizMode.MARATHON));
-            });
+            v ->
+                NavHostFragment.findNavController(this)
+                    .navigate(QuizModeFragmentDirections.startChampQuiz(QuizMode.MARATHON)));
   }
 }

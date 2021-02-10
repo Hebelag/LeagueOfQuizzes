@@ -1,50 +1,52 @@
 package com.scp.leagueofquiz.entrypoint.championquiz;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
-import android.content.Context;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
+import android.os.Looper;
 import androidx.lifecycle.MutableLiveData;
-import com.example.quiztest2.championQuizActivities.ChampionQuizLogic;
-import com.scp.leagueofquiz.entrypoint.shared.QuizChampion;
+import androidx.lifecycle.ViewModel;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.scp.leagueofquiz.api.database.champion.Champion;
+import com.scp.leagueofquiz.entrypoint.shared.DefaultedLiveData;
+import com.scp.leagueofquiz.entrypoint.shared.IncrementableLiveData;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
+import com.scp.leagueofquiz.repository.ChampionRepository;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import javax.inject.Inject;
+import timber.log.Timber;
 
-public class ChampionQuizViewModel extends AndroidViewModel {
+@HiltViewModel
+public class ChampionQuizViewModel extends ViewModel {
   private static final Duration TIMER_REFRESH_DELAY = Duration.ofMillis(500);
-
-  // We should not be doing this, we'll fix it with Dependency Injection and/or adding more layers
-  // to the code
-  @SuppressLint("StaticFieldLeak")
-  private final Context applicationContext;
 
   // Static data
   private QuizMode quizMode;
   private Integer championCount;
-  private final Set<QuizChampion> championsAnswered;
+  private final Set<Champion> championsAnswered;
 
   // Mutable data
-  private final MutableLiveData<List<QuizChampion>> championGrid;
-  private final MutableLiveData<Integer> score;
-  private final MutableLiveData<Integer> failedAttempts;
+  private final MutableLiveData<List<Champion>> championGrid;
+  private final IncrementableLiveData score;
+  private final IncrementableLiveData failedAttempts;
   private final MutableLiveData<Instant> startTime;
-  private final MutableLiveData<Duration> timerNonTime;
-  private final MutableLiveData<QuizChampion> rightChampion;
+  private final DefaultedLiveData<Duration> timerNonTime;
+  private final MutableLiveData<Champion> rightChampion;
   private final MutableLiveData<Boolean> quizFinished;
   private final MutableLiveData<String> buttonText;
 
   // Dependencies
-  private final ChampionQuizLogic logicHandler;
+  private final ChampionRepository championRepository;
+  private final Executor executor;
 
   // Other
-  private final Handler timerHandler = new Handler();
+  private final Handler timerHandler = new Handler(Looper.getMainLooper());
   private final Runnable timerRunnableTraining =
       new Runnable() {
         @Override
@@ -65,27 +67,27 @@ public class ChampionQuizViewModel extends AndroidViewModel {
         }
       };
 
-  public ChampionQuizViewModel(@NonNull Application application) {
-    super(application);
-
-    applicationContext = application.getApplicationContext();
-    logicHandler = new ChampionQuizLogic();
+  @Inject
+  public ChampionQuizViewModel(ChampionRepository championRepository, Executor executor) {
+    // Initialisations to be removed with dependency injection
+    this.championRepository = championRepository;
+    this.executor = executor;
 
     startTime = new MutableLiveData<>();
-    championGrid =
-        new MutableLiveData<>(
-            Arrays.asList(
-                QuizChampion.DEFAULT,
-                QuizChampion.DEFAULT,
-                QuizChampion.DEFAULT,
-                QuizChampion.DEFAULT));
-    timerNonTime = new MutableLiveData<>(Duration.ZERO);
+    championGrid = new MutableLiveData<>();
+    resetChampionGrid();
+    timerNonTime = new DefaultedLiveData<>(Duration.ZERO);
     championsAnswered = new HashSet<>();
-    score = new MutableLiveData<>(0);
-    failedAttempts = new MutableLiveData<>(0);
+    score = new IncrementableLiveData(0);
+    failedAttempts = new IncrementableLiveData(0);
     rightChampion = new MutableLiveData<>();
     quizFinished = new MutableLiveData<>(false);
     buttonText = new MutableLiveData<>();
+  }
+
+  private void resetChampionGrid() {
+    championGrid.setValue(
+        Arrays.asList(Champion.DEFAULT, Champion.DEFAULT, Champion.DEFAULT, Champion.DEFAULT));
   }
 
   public void startQuiz() {
@@ -97,10 +99,12 @@ public class ChampionQuizViewModel extends AndroidViewModel {
   }
 
   public void pickAnswer(int champIndex) {
-    QuizChampion championChosen = championGrid.getValue().get(champIndex - 1);
+    List<Champion> grid = championGrid.getValue();
+    if (grid == null) throw new RuntimeException("Grid is empty!");
+    Champion championChosen = grid.get(champIndex - 1);
     if (championChosen.equals(rightChampion.getValue())) {
       championsAnswered.add(championChosen);
-      score.setValue(score.getValue() + 1);
+      score.setIncrement();
 
       switch (quizMode) {
         case TRAINING:
@@ -127,15 +131,32 @@ public class ChampionQuizViewModel extends AndroidViewModel {
       }
 
     } else {
-      failedAttempts.setValue(failedAttempts.getValue() + 1);
+      failedAttempts.setIncrement();
     }
   }
 
   private void loadChampionGrid() {
-    List<QuizChampion> randomChampions =
-        logicHandler.getRandomChampions(applicationContext, championsAnswered);
-    rightChampion.setValue(logicHandler.selectRightChampion(randomChampions));
-    championGrid.setValue(randomChampions);
+    ListenableFuture<List<Champion>> future =
+        championRepository.getRandomChampions(championsAnswered, 4);
+    future.addListener(
+        () -> {
+          List<Champion> randomChampions;
+          try {
+            randomChampions = future.get();
+            rightChampion.postValue(selectRightChampion(randomChampions));
+            championGrid.postValue(randomChampions);
+          } catch (ExecutionException | InterruptedException e) {
+            Timber.e(e, "Could not load champion grid");
+            resetChampionGrid();
+            rightChampion.postValue(Champion.DEFAULT);
+          }
+        },
+        executor);
+  }
+
+  private Champion selectRightChampion(List<Champion> buttonChampions) {
+    int rightChampionPosition = (int) (Math.random() * 4);
+    return buttonChampions.get(rightChampionPosition);
   }
 
   // Accessors
@@ -147,7 +168,7 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     this.quizMode = quizMode;
   }
 
-  public MutableLiveData<List<QuizChampion>> getChampionGrid() {
+  public MutableLiveData<List<Champion>> getChampionGrid() {
     return championGrid;
   }
 
@@ -155,11 +176,11 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     this.championCount = championCount;
   }
 
-  public MutableLiveData<Duration> getTimerNonTime() {
+  public DefaultedLiveData<Duration> getTimerNonTime() {
     return timerNonTime;
   }
 
-  public MutableLiveData<Integer> getScore() {
+  public IncrementableLiveData getScore() {
     return score;
   }
 
@@ -167,7 +188,7 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     return startTime;
   }
 
-  public MutableLiveData<QuizChampion> getRightChampion() {
+  public MutableLiveData<Champion> getRightChampion() {
     return rightChampion;
   }
 
@@ -175,7 +196,7 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     return quizFinished;
   }
 
-  public MutableLiveData<Integer> getFailedAttempts() {
+  public IncrementableLiveData getFailedAttempts() {
     return failedAttempts;
   }
 

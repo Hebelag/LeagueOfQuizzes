@@ -8,27 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
-
-import com.scp.leagueofquiz.R;
-import com.scp.leagueofquiz.databinding.ChampionQuizFragmentBinding;
 import com.scp.leagueofquiz.databinding.QuizResultFragmentBinding;
-import com.scp.leagueofquiz.entrypoint.championquiz.ChampionQuizFragmentArgs;
-import com.scp.leagueofquiz.entrypoint.championquiz.ChampionQuizViewModel;
-import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuFragmentDirections;
-import com.scp.leagueofquiz.entrypoint.quizmode.QuizModeFragmentDirections;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
-import com.scp.leagueofquiz.entrypoint.shared.QuizType;
-
 import java.time.Duration;
 import java.util.Locale;
 
 public class QuizResultFragment extends Fragment {
 
-  //public static QuizResultFragment newInstance() {
+  // public static QuizResultFragment newInstance() {
   //  return new QuizResultFragment();
-  //}
+  // }
 
   private QuizResultFragmentBinding binding;
   private QuizResultViewModel viewModel;
@@ -61,8 +51,11 @@ public class QuizResultFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    binding.exitButton.setOnClickListener(v -> NavHostFragment.findNavController(this)
-            .navigate(QuizResultFragmentDirections.actionQuizResultFragmentToMainMenuFragment()));
+    binding.exitButton.setOnClickListener(
+        v ->
+            NavHostFragment.findNavController(this)
+                .navigate(
+                    QuizResultFragmentDirections.actionQuizResultFragmentToMainMenuFragment()));
 
     setScoreLineVisibility(viewModel.getQuizMode());
 
@@ -71,18 +64,21 @@ public class QuizResultFragment extends Fragment {
     viewModel.getTimer().observe(getViewLifecycleOwner(), this::setTimer);
   }
 
-
   private void setTimer(Duration duration) {
     String timeString = "";
-    if(duration.toHours() > 0){
+    if (duration.toHours() > 0) {
       timeString =
-              String.format(Locale.getDefault(), "%d:%02d:%02d", duration.toHours(), duration.toMinutes(), duration.getSeconds() % 60);
-    }
-    else{
-      if(duration.isZero()){
-      }
+          String.format(
+              Locale.getDefault(),
+              "%d:%02d:%02d",
+              duration.toHours(),
+              duration.toMinutes(),
+              duration.getSeconds() % 60);
+    } else {
+      if (duration.isZero()) {}
       timeString =
-              String.format(Locale.getDefault(), "%d:%02d", duration.toMinutes(), duration.getSeconds() % 60);
+          String.format(
+              Locale.getDefault(), "%d:%02d", duration.toMinutes(), duration.getSeconds() % 60);
     }
     binding.resultTime.setText(timeString);
   }
@@ -92,9 +88,9 @@ public class QuizResultFragment extends Fragment {
   }
 
   private void setScore(Integer score) {
-    if (viewModel.getQuizMode() == QuizMode.TIME){
+    if (viewModel.getQuizMode() == QuizMode.TIME) {
       binding.resultScoreTimeAttack.setText("Final Score: " + score.toString());
-    }else{
+    } else {
       binding.resultScoreNonTime.setText("Champions: " + score.toString());
     }
   }

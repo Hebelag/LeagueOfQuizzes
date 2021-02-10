@@ -111,7 +111,7 @@ public class ChampionQuizViewModel extends AndroidViewModel {
           }
           break;
         case ENDLESS:
-          //TODO: WEITER ENDLESS IMPLEMENTIEREN
+          // TODO: WEITER ENDLESS IMPLEMENTIEREN
           loadChampionGrid();
           break;
         case MARATHON:
@@ -129,8 +129,8 @@ public class ChampionQuizViewModel extends AndroidViewModel {
     } else {
       failedAttempts.setValue(failedAttempts.getValue() + 1);
     }
-
   }
+
   private void loadChampionGrid() {
     List<QuizChampion> randomChampions =
         logicHandler.getRandomChampions(applicationContext, championsAnswered);

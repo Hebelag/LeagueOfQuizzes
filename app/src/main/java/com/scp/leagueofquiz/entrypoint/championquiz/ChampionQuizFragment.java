@@ -38,7 +38,7 @@ public class ChampionQuizFragment extends Fragment {
       viewModel.setQuizMode(args.getMode());
       viewModel.setChampionCount(args.getChampCount());
       viewModel.getTimerNonTime().setValue(Duration.ofMillis(args.getTime()));
-      if(viewModel.getTimerNonTime().getValue().isNegative()){
+      if (viewModel.getTimerNonTime().getValue().isNegative()) {
         viewModel.getTimerNonTime().setValue(Duration.ZERO);
       }
     }
@@ -73,8 +73,6 @@ public class ChampionQuizFragment extends Fragment {
     viewModel.getButtonText().observe(getViewLifecycleOwner(), this::setButtonText);
   }
 
-
-
   private void setButtonText(String s) {
     binding.startQuizButton.setText(s);
   }
@@ -82,7 +80,7 @@ public class ChampionQuizFragment extends Fragment {
   private void failedAttempt(Integer integer) {
     if (integer != null && integer > 0) {
       Toast.makeText(requireContext(), "WRONG!", Toast.LENGTH_SHORT).show();
-      if(viewModel.getQuizMode() == QuizMode.TIME){
+      if (viewModel.getQuizMode() == QuizMode.TIME) {
         binding.wrongsViewTimeAttack.setText(integer.toString());
       } else {
         binding.wrongViewNonTime.setText(integer.toString());
@@ -98,9 +96,12 @@ public class ChampionQuizFragment extends Fragment {
 
   private void navigateToResult() {
     NavHostFragment.findNavController(this)
-            .navigate(
-                    ChampionQuizFragmentDirections.goToResult(viewModel.getScore().getValue(),viewModel.getTimerNonTime().getValue().toMillis(),
-                            viewModel.getQuizMode(),viewModel.getFailedAttempts().getValue()));
+        .navigate(
+            ChampionQuizFragmentDirections.goToResult(
+                viewModel.getScore().getValue(),
+                viewModel.getTimerNonTime().getValue().toMillis(),
+                viewModel.getQuizMode(),
+                viewModel.getFailedAttempts().getValue()));
   }
 
   private void setRightChampionName(QuizChampion quizChampion) {
@@ -116,12 +117,12 @@ public class ChampionQuizFragment extends Fragment {
     String timeString =
         String.format(Locale.getDefault(), "%d:%02d", timer.toMinutes(), timer.getSeconds() % 60);
 
-    if(viewModel.getQuizMode() == QuizMode.TIME){
+    if (viewModel.getQuizMode() == QuizMode.TIME) {
       if (timer.isZero()) {
         navigateToResult();
       }
-       binding.countdownView.setText(timeString);
-    } else{
+      binding.countdownView.setText(timeString);
+    } else {
       binding.timer.setText(timeString);
     }
   }
@@ -140,17 +141,16 @@ public class ChampionQuizFragment extends Fragment {
     } else {
       // Quiz is running
 
-      if (viewModel.getQuizMode() == QuizMode.ENDLESS){
-        if(binding.startQuizButton.getText().toString().equals("STOP")){
+      if (viewModel.getQuizMode() == QuizMode.ENDLESS) {
+        if (binding.startQuizButton.getText().toString().equals("STOP")) {
           navigateToResult();
-        } else{
+        } else {
           binding.startQuizButton.setText("STOP");
           binding.startQuizButton.setClickable(true);
         }
-      }
-      else{
+      } else {
         binding.startQuizButton.setBackgroundColor(
-                ContextCompat.getColor(getContext(), R.color.grey));
+            ContextCompat.getColor(getContext(), R.color.grey));
       }
       binding.btnAns1.setOnClickListener(this::pickAnswer);
       binding.btnAns2.setOnClickListener(this::pickAnswer);
@@ -161,9 +161,9 @@ public class ChampionQuizFragment extends Fragment {
 
   @SuppressLint("SetTextI18n")
   private void setScore(Integer score) {
-    if (viewModel.getQuizMode() == QuizMode.TIME){
+    if (viewModel.getQuizMode() == QuizMode.TIME) {
       binding.scoreViewTimeAttack.setText(score.toString());
-    }else{
+    } else {
       binding.scoreViewNonTime.setText(score.toString());
     }
   }
@@ -191,10 +191,10 @@ public class ChampionQuizFragment extends Fragment {
                 champions.get(3).getId(), "drawable", requireActivity().getPackageName()));
   }
 
-  private void setTimeAttackLineVisibility(QuizMode quizMode){
-    if (quizMode == QuizMode.TIME){
+  private void setTimeAttackLineVisibility(QuizMode quizMode) {
+    if (quizMode == QuizMode.TIME) {
       binding.timeAttackLayout.setVisibility(View.VISIBLE);
-    } else{
+    } else {
       binding.timeAttackLayout.setVisibility(View.INVISIBLE);
     }
   }

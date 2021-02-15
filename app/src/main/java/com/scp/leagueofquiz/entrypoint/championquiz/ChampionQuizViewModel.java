@@ -36,7 +36,7 @@ public class ChampionQuizViewModel extends ViewModel {
   private final IncrementableLiveData score;
   private final IncrementableLiveData failedAttempts;
   private final MutableLiveData<Instant> startTime;
-  private final DefaultedLiveData<Duration> timerNonTime;
+  private final DefaultedLiveData<Duration> timer;
   private final MutableLiveData<Champion> rightChampion;
   private final MutableLiveData<Boolean> quizFinished;
   private final MutableLiveData<String> buttonText;
@@ -55,10 +55,10 @@ public class ChampionQuizViewModel extends ViewModel {
             case TRAINING:
             case ENDLESS:
             case MARATHON:
-              timerNonTime.setValue(Duration.between(startTime.getValue(), Instant.now()));
+              timer.setValue(Duration.between(startTime.getValue(), Instant.now()));
               break;
             case TIME:
-              timerNonTime.setValue(timerNonTime.getValue().minus(TIMER_REFRESH_DELAY));
+              timer.setValue(timer.getValue().minus(TIMER_REFRESH_DELAY));
               break;
           }
           timerHandler.postDelayed(this, TIMER_REFRESH_DELAY.toMillis());
@@ -74,7 +74,7 @@ public class ChampionQuizViewModel extends ViewModel {
     startTime = new MutableLiveData<>();
     championGrid = new MutableLiveData<>();
     resetChampionGrid();
-    timerNonTime = new DefaultedLiveData<>(Duration.ZERO);
+    timer = new DefaultedLiveData<>(Duration.ZERO);
     championsAnswered = new HashSet<>();
     score = new IncrementableLiveData(0);
     failedAttempts = new IncrementableLiveData(0);
@@ -169,8 +169,8 @@ public class ChampionQuizViewModel extends ViewModel {
     this.championCount = championCount;
   }
 
-  public DefaultedLiveData<Duration> getTimerNonTime() {
-    return timerNonTime;
+  public DefaultedLiveData<Duration> getTimer() {
+    return timer;
   }
 
   public IncrementableLiveData getScore() {

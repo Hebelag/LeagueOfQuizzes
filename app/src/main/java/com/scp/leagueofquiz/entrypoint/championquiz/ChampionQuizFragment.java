@@ -32,15 +32,15 @@ public class ChampionQuizFragment extends Fragment {
     super.onCreate(savedInstanceState);
     viewModel = new ViewModelProvider(this).get(ChampionQuizViewModel.class);
 
-    viewModel.getTimerNonTime().setValue(Duration.ZERO);
+    viewModel.getTimer().setValue(Duration.ZERO);
     Bundle argsBundle = getArguments();
     if (argsBundle != null) {
       ChampionQuizFragmentArgs args = ChampionQuizFragmentArgs.fromBundle(argsBundle);
       viewModel.setQuizMode(args.getMode());
       viewModel.setChampionCount(args.getChampCount());
-      viewModel.getTimerNonTime().setValue(Duration.ofMillis(args.getTime()));
-      if (viewModel.getTimerNonTime().getValue().isNegative()) {
-        viewModel.getTimerNonTime().setValue(Duration.ZERO);
+      viewModel.getTimer().setValue(Duration.ofMillis(args.getTime()));
+      if (viewModel.getTimer().getValue().isNegative()) {
+        viewModel.getTimer().setValue(Duration.ZERO);
       }
     }
   }
@@ -68,7 +68,7 @@ public class ChampionQuizFragment extends Fragment {
     viewModel.getScore().observe(getViewLifecycleOwner(), this::setScore);
     viewModel.getFailedAttempts().observe(getViewLifecycleOwner(), this::failedAttempt);
     viewModel.getStartTime().observe(getViewLifecycleOwner(), t -> setupStartButton());
-    viewModel.getTimerNonTime().observe(getViewLifecycleOwner(), this::setTimer);
+    viewModel.getTimer().observe(getViewLifecycleOwner(), this::setTimer);
     viewModel.getRightChampion().observe(getViewLifecycleOwner(), this::setRightChampionName);
     viewModel.getQuizFinished().observe(getViewLifecycleOwner(), this::checkQuizFinished);
     viewModel.getButtonText().observe(getViewLifecycleOwner(), this::buttonText);
@@ -101,7 +101,7 @@ public class ChampionQuizFragment extends Fragment {
         .navigate(
             ChampionQuizFragmentDirections.goToResult(
                 viewModel.getScore().getValue(),
-                viewModel.getTimerNonTime().getValue().toMillis(),
+                viewModel.getTimer().getValue().toMillis(),
                 viewModel.getQuizMode(),
                 viewModel.getFailedAttempts().getValue()));
   }

@@ -18,7 +18,6 @@ import com.scp.leagueofquiz.databinding.ChampionQuizFragmentBinding;
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 
@@ -68,17 +67,18 @@ public class ChampionQuizFragment extends Fragment {
     viewModel.getChampionGrid().observe(getViewLifecycleOwner(), this::setChampionsGrid);
     viewModel.getScore().observe(getViewLifecycleOwner(), this::setScore);
     viewModel.getFailedAttempts().observe(getViewLifecycleOwner(), this::failedAttempt);
-    viewModel.getStartTime().observe(getViewLifecycleOwner(), this::setupStartButton);
+    viewModel.getStartTime().observe(getViewLifecycleOwner(), t -> setupStartButton());
     viewModel.getTimerNonTime().observe(getViewLifecycleOwner(), this::setTimer);
     viewModel.getRightChampion().observe(getViewLifecycleOwner(), this::setRightChampionName);
     viewModel.getQuizFinished().observe(getViewLifecycleOwner(), this::checkQuizFinished);
-    viewModel.getButtonText().observe(getViewLifecycleOwner(), this::setButtonText);
+    viewModel.getButtonText().observe(getViewLifecycleOwner(), this::buttonText);
   }
 
-  private void setButtonText(String s) {
+  private void buttonText(String s) {
     binding.startQuizButton.setText(s);
   }
 
+  @SuppressLint("SetTextI18n")
   private void failedAttempt(Integer integer) {
     if (integer != null && integer > 0) {
       Toast.makeText(requireContext(), "WRONG!", Toast.LENGTH_SHORT).show();
@@ -129,35 +129,27 @@ public class ChampionQuizFragment extends Fragment {
     }
   }
 
-  private void setupStartButton(Instant startTime) {
-    binding.startQuizButton.setClickable(startTime == null);
-    if (startTime == null) {
-      // No quiz running
-      binding.startQuizButton.setBackgroundColor(
-          ContextCompat.getColor(requireContext(), R.color.purple_500));
-
-      binding.btnAns1.setOnClickListener(null);
-      binding.btnAns2.setOnClickListener(null);
-      binding.btnAns3.setOnClickListener(null);
-      binding.btnAns4.setOnClickListener(null);
-    } else {
-      // Quiz is running
-
+  private void setupStartButton() {
+    binding.startQuizButton.setClickable(!viewModel.isQuizRunning());
+    if (viewModel.isQuizRunning()) {
       if (viewModel.getQuizMode() == QuizMode.ENDLESS) {
-        if (binding.startQuizButton.getText().toString().equals("STOP")) {
-          navigateToResult();
-        } else {
-          binding.startQuizButton.setText("STOP");
-          binding.startQuizButton.setClickable(true);
-        }
+        binding.startQuizButton.setText(R.string.buttonStopText);
+        binding.startQuizButton.setClickable(true);
       } else {
         binding.startQuizButton.setBackgroundColor(
-            ContextCompat.getColor(requireContext(), R.color.grey));
+                ContextCompat.getColor(requireContext(), R.color.grey));
       }
       binding.btnAns1.setOnClickListener(this::pickAnswer);
       binding.btnAns2.setOnClickListener(this::pickAnswer);
       binding.btnAns3.setOnClickListener(this::pickAnswer);
       binding.btnAns4.setOnClickListener(this::pickAnswer);
+    } else {
+      binding.startQuizButton.setBackgroundColor(
+              ContextCompat.getColor(requireContext(), R.color.purple_500));
+      binding.btnAns1.setOnClickListener(null);
+      binding.btnAns2.setOnClickListener(null);
+      binding.btnAns3.setOnClickListener(null);
+      binding.btnAns4.setOnClickListener(null);
     }
   }
 
@@ -171,7 +163,13 @@ public class ChampionQuizFragment extends Fragment {
   }
 
   private void startQuiz(View view) {
-    viewModel.startQuiz();
+    if(viewModel.isQuizRunning()){
+      if (viewModel.getQuizMode() == QuizMode.ENDLESS) {
+        navigateToResult();
+      }
+    } else{
+      viewModel.startQuiz();
+    }
   }
 
   private void setChampionsGrid(List<Champion> champions) {

@@ -54,8 +54,6 @@ public class ChampionQuizViewModel extends ViewModel {
           switch (quizMode) {
             case TRAINING:
             case ENDLESS:
-              timerNonTime.setValue(Duration.between(startTime.getValue(), Instant.now()));
-              break;
             case MARATHON:
               timerNonTime.setValue(Duration.between(startTime.getValue(), Instant.now()));
               break;
@@ -98,6 +96,10 @@ public class ChampionQuizViewModel extends ViewModel {
     timerHandler.postDelayed(timerRunnableTraining, 0);
   }
 
+  public boolean isQuizRunning(){
+    return startTime.getValue() != null;
+  }
+
   public void pickAnswer(int champIndex) {
     List<Champion> grid = championGrid.getValue();
     if (grid == null) throw new RuntimeException("Grid is empty!");
@@ -108,16 +110,6 @@ public class ChampionQuizViewModel extends ViewModel {
 
       switch (quizMode) {
         case TRAINING:
-          if (championsAnswered.size() == championCount) {
-            quizFinished.setValue(true);
-          } else {
-            loadChampionGrid();
-          }
-          break;
-        case ENDLESS:
-          // TODO: WEITER ENDLESS IMPLEMENTIEREN
-          loadChampionGrid();
-          break;
         case MARATHON:
           if (championsAnswered.size() == championCount) {
             quizFinished.setValue(true);
@@ -125,6 +117,7 @@ public class ChampionQuizViewModel extends ViewModel {
             loadChampionGrid();
           }
           break;
+        case ENDLESS:
         case TIME:
           loadChampionGrid();
           break;

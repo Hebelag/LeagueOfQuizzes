@@ -30,4 +30,5 @@
     <string name="btn_ans_2_tag">2</string>
     <string name="btn_ans_3_tag">3</string>
     <string name="btn_ans_4_tag">4</string>
+    <string name="buttonStopText">STOP</string>
 </resources>

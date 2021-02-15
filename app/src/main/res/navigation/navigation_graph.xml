@@ -76,5 +76,14 @@
         <argument
             android:name="timer"
             app:argType="long" />
+        <argument
+            android:name="quizmode"
+            app:argType="com.scp.leagueofquiz.entrypoint.shared.QuizMode" />
+        <action
+            android:id="@+id/action_quizResultFragment_to_mainMenuFragment"
+            app:destination="@id/mainMenuFragment" />
+        <argument
+            android:name="failedAttempts"
+            app:argType="integer" />
     </fragment>
 </navigation>

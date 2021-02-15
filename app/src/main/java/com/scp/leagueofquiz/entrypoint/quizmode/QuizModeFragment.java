@@ -87,7 +87,7 @@ public class QuizModeFragment extends Fragment {
         .setOnClickListener(
             v -> {
               QuizModeFragmentDirections.StartChampQuiz action =
-                  QuizModeFragmentDirections.startChampQuiz(QuizMode.TRAINING);
+                  QuizModeFragmentDirections.startChampQuiz(QuizMode.ENDLESS);
               action.setChampCount(Integer.MAX_VALUE);
               NavHostFragment.findNavController(this).navigate(action);
             });

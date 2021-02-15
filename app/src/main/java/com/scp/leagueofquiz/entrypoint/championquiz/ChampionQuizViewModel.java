@@ -39,6 +39,7 @@ public class ChampionQuizViewModel extends ViewModel {
   private final DefaultedLiveData<Duration> timer;
   private final MutableLiveData<Champion> rightChampion;
   private final MutableLiveData<Boolean> quizFinished;
+  private final MutableLiveData<String> buttonText;
 
   // Dependencies
   private final ChampionRepository championRepository;
@@ -79,6 +80,7 @@ public class ChampionQuizViewModel extends ViewModel {
     failedAttempts = new IncrementableLiveData(0);
     rightChampion = new MutableLiveData<>();
     quizFinished = new MutableLiveData<>(false);
+    buttonText = new MutableLiveData<>();
   }
 
   private void resetChampionGrid() {
@@ -94,6 +96,10 @@ public class ChampionQuizViewModel extends ViewModel {
     timerHandler.postDelayed(timerRunnableTraining, 0);
   }
 
+  public boolean isQuizRunning(){
+    return startTime.getValue() != null;
+  }
+
   public void pickAnswer(int champIndex) {
     List<Champion> grid = championGrid.getValue();
     if (grid == null) throw new RuntimeException("Grid is empty!");
@@ -104,7 +110,6 @@ public class ChampionQuizViewModel extends ViewModel {
 
       switch (quizMode) {
         case TRAINING:
-        case ENDLESS:
         case MARATHON:
           if (championsAnswered.size() == championCount) {
             quizFinished.setValue(true);
@@ -112,6 +117,7 @@ public class ChampionQuizViewModel extends ViewModel {
             loadChampionGrid();
           }
           break;
+        case ENDLESS:
         case TIME:
           loadChampionGrid();
           break;
@@ -185,5 +191,9 @@ public class ChampionQuizViewModel extends ViewModel {
 
   public IncrementableLiveData getFailedAttempts() {
     return failedAttempts;
+  }
+
+  public MutableLiveData<String> getButtonText() {
+    return buttonText;
   }
 }

@@ -231,7 +231,7 @@ public class ChampionQuizTimeAttack extends AppCompatActivity {
     btnAns4 = findViewById(R.id.btnAns4);
     buttonStartQuiz = findViewById(R.id.startQuizButton);
     championText = findViewById(R.id.championText);
-    scoreView = findViewById(R.id.scoreView);
+    scoreView = findViewById(R.id.scoreViewText);
     finalAccuracy = findViewById(R.id.tvFinalAccuracy);
     returnButton = findViewById(R.id.returnButton);
     retryButton = findViewById(R.id.retryButton);
@@ -240,9 +240,9 @@ public class ChampionQuizTimeAttack extends AppCompatActivity {
 
     finalScore = findViewById(R.id.tvFinalScore);
 
-    wrongsView = findViewById(R.id.wrongsView);
+    wrongsView = findViewById(R.id.wrongsViewText);
     countDownView = findViewById(R.id.countdownView);
 
-    ImageView countDownTimerView = findViewById(R.id.countdownTimerView);
+    ImageView countDownTimerView = findViewById(R.id.timeAttackTimer);
   }
 }

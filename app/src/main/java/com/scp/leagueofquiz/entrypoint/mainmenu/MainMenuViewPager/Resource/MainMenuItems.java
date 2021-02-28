@@ -4,8 +4,11 @@ import com.scp.leagueofquiz.R;
 import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuViewPager.MainMenuItem;
 import com.scp.leagueofquiz.entrypoint.shared.QuizType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class MainMenuItems {
-  public static MainMenuItem[] getMainMenuItems() {
+  public static ArrayList<MainMenuItem> getMainMenuItems() {
     return MAIN_MENU_ITEMS;
   }
 
@@ -16,5 +19,5 @@ public class MainMenuItems {
   public static final MainMenuItem ITEM_QUIZ =
       new MainMenuItem("Item Quiz", R.drawable.azir, QuizType.ITEM);
 
-  public static MainMenuItem[] MAIN_MENU_ITEMS = {CHAMPION_QUIZ, ABILITY_QUIZ, ITEM_QUIZ};
+  public static ArrayList<MainMenuItem> MAIN_MENU_ITEMS = new ArrayList<>(Arrays.asList(CHAMPION_QUIZ, ABILITY_QUIZ, ITEM_QUIZ));
 }

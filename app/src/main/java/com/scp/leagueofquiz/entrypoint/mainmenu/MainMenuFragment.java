@@ -70,7 +70,7 @@ public class MainMenuFragment extends Fragment {
 
   private void init() {
     ArrayList<Fragment> fragments = new ArrayList<>();
-    MainMenuItem[] mainMenuItems = MainMenuItems.getMainMenuItems();
+    ArrayList<MainMenuItem> mainMenuItems = MainMenuItems.getMainMenuItems();
     for (MainMenuItem mainMenuItem : mainMenuItems) {
       MainMenuItemFragment fragment = MainMenuItemFragment.getInstance(mainMenuItem);
       fragments.add(fragment);
@@ -82,7 +82,7 @@ public class MainMenuFragment extends Fragment {
             binding.viewPager,
             true,
             true,
-            (tab, position) -> tab.setText("poop"))
+            (tab, position) -> tab.setText(""))
         .attach();
   }
 }

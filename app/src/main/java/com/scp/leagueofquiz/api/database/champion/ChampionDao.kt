@@ -1,19 +1,18 @@
-package com.scp.leagueofquiz.api.database.champion;
+package com.scp.leagueofquiz.api.database.champion
 
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.Query;
-import com.google.common.util.concurrent.ListenableFuture;
-import java.util.List;
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import com.google.common.util.concurrent.ListenableFuture
 
 @Dao
-public interface ChampionDao {
-  @Insert
-  void insertAll(List<Champion> champions);
+interface ChampionDao {
+    @Insert
+    fun insertAll(champions: List<Champion?>?)
 
-  @Query("SELECT * FROM champion")
-  ListenableFuture<List<Champion>> findAll();
+    @Query("SELECT * FROM champion")
+    fun findAll(): ListenableFuture<List<Champion?>?>?
 
-  @Query("SELECT * FROM champion WHERE name NOT IN (:names) ORDER BY random() LIMIT :quantity")
-  ListenableFuture<List<Champion>> findRandomChampsExcept(List<String> names, int quantity);
+    @Query("SELECT * FROM champion WHERE name NOT IN (:names) ORDER BY random() LIMIT :quantity")
+    fun findRandomChampsExcept(names: List<String?>?, quantity: Int): ListenableFuture<List<Champion?>?>?
 }

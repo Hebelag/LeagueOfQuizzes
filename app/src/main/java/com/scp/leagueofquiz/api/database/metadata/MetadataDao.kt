@@ -1,17 +1,16 @@
-package com.scp.leagueofquiz.api.database.metadata;
+package com.scp.leagueofquiz.api.database.metadata
 
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
-import androidx.room.Query;
-import com.google.common.util.concurrent.ListenableFuture;
-import java.util.List;
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.google.common.util.concurrent.ListenableFuture
 
 @Dao
-public interface MetadataDao {
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  ListenableFuture<Void> insert(Metadata metadata);
+interface MetadataDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(metadata: Metadata?): ListenableFuture<Void?>?
 
-  @Query("SELECT * FROM metadata")
-  ListenableFuture<List<Metadata>> findAll();
+    @Query("SELECT * FROM metadata")
+    fun findAll(): ListenableFuture<List<Metadata?>?>?
 }

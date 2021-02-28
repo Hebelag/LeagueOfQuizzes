@@ -4,6 +4,7 @@ buildscript {
         nav_version = "2.3.3"
         hilt_version = '2.31.2-alpha'
         room_version = "2.2.6"
+        kotlin_version = "1.4.31"
     }
     repositories {
         google()
@@ -18,6 +19,7 @@ buildscript {
 
 plugins {
     id "com.diffplug.spotless" version "5.9.0"
+    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
 }
 
 spotless {
@@ -32,5 +34,25 @@ allprojects {
         google()
         jcenter()
         maven{url 'https://jitpack.io'}
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }

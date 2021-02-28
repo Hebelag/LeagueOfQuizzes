@@ -3,53 +3,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".entrypoint.mainmenu.MainMenuFragment">
+    tools:context=".entrypoint.mainmenu.MainMenuFragment"
+    android:weightSum="100">
 
-<TextView
-    android:id="@+id/textView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:text="@string/app_name"
-    android:textSize="30sp"
-    android:textStyle="bold" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
-<Button
-    android:id="@+id/buttonChampQuiz"
-    android:layout_width="250dp"
-    android:layout_height="100dp"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:paddingLeft="16dp"
-    android:paddingTop="4dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="4dp"
-    android:text="@string/start_champ_quiz" />
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="80"
+        android:id="@+id/view_pager">
 
-<Button
-    android:id="@+id/buttonItemQuiz"
-    android:layout_width="250dp"
-    android:layout_height="100dp"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:text="@string/start_item_quiz" />
+    </androidx.viewpager2.widget.ViewPager2>
 
-<Button
-    android:id="@+id/buttonAbilityQuiz"
-    android:layout_width="250dp"
-    android:layout_height="100dp"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:text="@string/start_ability_quiz" />
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tab_layout"
+        app:tabBackground="@drawable/main_menu_tab_selector"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabMaxWidth="10dp">
 
-<Button
-    android:id="@+id/buttonTEST"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:text="@string/start_ability_quiz" />
+    </com.google.android.material.tabs.TabLayout>
+
+
+
+
+    <Button
+        android:id="@+id/buttonChampQuiz"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="4dp"
+        android:text="@string/start_champ_quiz" />
+
+    <Button
+        android:id="@+id/buttonItemQuiz"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/start_item_quiz" />
+
+    <Button
+        android:id="@+id/buttonAbilityQuiz"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/start_ability_quiz" />
+
+    <Button
+        android:id="@+id/buttonTEST"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/start_ability_quiz" />
 
 </LinearLayout>

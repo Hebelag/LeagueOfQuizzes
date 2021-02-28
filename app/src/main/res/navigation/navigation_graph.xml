@@ -16,6 +16,9 @@
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_dragModeFragment"
+            app:destination="@id/dragModeFragment" />
     </fragment>
     <fragment
         android:id="@+id/abilityQuizFragment"
@@ -86,4 +89,9 @@
             android:name="failedAttempts"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/dragModeFragment"
+        android:name="com.scp.leagueofquiz.entrypoint.dragmode.DragModeFragment"
+        android:label="fragment_drag_mode"
+        tools:layout="@layout/fragment_drag_mode" />
 </navigation>

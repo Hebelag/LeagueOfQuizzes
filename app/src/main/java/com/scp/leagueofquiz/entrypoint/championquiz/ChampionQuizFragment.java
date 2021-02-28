@@ -137,7 +137,7 @@ public class ChampionQuizFragment extends Fragment {
         binding.startQuizButton.setClickable(true);
       } else {
         binding.startQuizButton.setBackgroundColor(
-                ContextCompat.getColor(requireContext(), R.color.grey));
+            ContextCompat.getColor(requireContext(), R.color.grey));
       }
       binding.btnAns1.setOnClickListener(this::pickAnswer);
       binding.btnAns2.setOnClickListener(this::pickAnswer);
@@ -145,7 +145,7 @@ public class ChampionQuizFragment extends Fragment {
       binding.btnAns4.setOnClickListener(this::pickAnswer);
     } else {
       binding.startQuizButton.setBackgroundColor(
-              ContextCompat.getColor(requireContext(), R.color.purple_500));
+          ContextCompat.getColor(requireContext(), R.color.purple_500));
       binding.btnAns1.setOnClickListener(null);
       binding.btnAns2.setOnClickListener(null);
       binding.btnAns3.setOnClickListener(null);
@@ -163,11 +163,11 @@ public class ChampionQuizFragment extends Fragment {
   }
 
   private void startQuiz(View view) {
-    if(viewModel.isQuizRunning()){
+    if (viewModel.isQuizRunning()) {
       if (viewModel.getQuizMode() == QuizMode.ENDLESS) {
         navigateToResult();
       }
-    } else{
+    } else {
       viewModel.startQuiz();
     }
   }

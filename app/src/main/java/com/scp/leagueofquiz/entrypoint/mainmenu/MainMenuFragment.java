@@ -78,11 +78,7 @@ public class MainMenuFragment extends Fragment {
     MainMenuPagerAdapter pagerAdapter = new MainMenuPagerAdapter(getParentFragment(), fragments);
     binding.viewPager.setAdapter(pagerAdapter);
     new TabLayoutMediator(
-            binding.tabLayout,
-            binding.viewPager,
-            true,
-            true,
-            (tab, position) -> tab.setText(""))
+            binding.tabLayout, binding.viewPager, true, true, (tab, position) -> tab.setText(""))
         .attach();
   }
 }

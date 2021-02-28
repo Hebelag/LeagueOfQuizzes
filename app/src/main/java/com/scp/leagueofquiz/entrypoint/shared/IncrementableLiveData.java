@@ -1,7 +1,5 @@
 package com.scp.leagueofquiz.entrypoint.shared;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import java.util.function.Consumer;
 
 public class IncrementableLiveData extends DefaultedLiveData<Integer> {

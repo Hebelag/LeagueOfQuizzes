@@ -96,7 +96,7 @@ public class ChampionQuizViewModel extends ViewModel {
     timerHandler.postDelayed(timerRunnableTraining, 0);
   }
 
-  public boolean isQuizRunning(){
+  public boolean isQuizRunning() {
     return startTime.getValue() != null;
   }
 

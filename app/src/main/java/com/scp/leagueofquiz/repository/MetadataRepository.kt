@@ -35,24 +35,24 @@ class MetadataRepository @Inject constructor(
                             Timber.i("Database outdated, populating...")
                             val jsonRoot = loadJsonRoot()
                             val champsToSave: MutableList<Champion?> = ArrayList()
-                            for (championJSON in jsonRoot.data.values) {
+                            for (champion in jsonRoot.data.values) {
                                 champsToSave.add(
                                         Champion(
-                                                identifier = championJSON.id.toLowerCase(Locale.ROOT),
-                                                name = championJSON.name,
-                                                allytips = championJSON.allytips,
-                                                blurb = championJSON.blurb,
-                                                enemytips = championJSON.enemytips,
-                                                info = championJSON.info,
-                                                key = championJSON.key,
-                                                title = championJSON.title,
-                                                skins = championJSON.skins,
-                                                lore = championJSON.lore,
-                                                tags = championJSON.tags,
-                                                partype = championJSON.partype,
-                                                stats = championJSON.stats,
-                                                spells = championJSON.spells,
-                                                passive = championJSON.passive
+                                                identifier = champion.identifier.toLowerCase(Locale.ROOT),
+                                                name = champion.name,
+                                                allytips = champion.allytips,
+                                                blurb = champion.blurb,
+                                                enemytips = champion.enemytips,
+                                                info = champion.info,
+                                                key = champion.key,
+                                                title = champion.title,
+                                                skins = champion.skins,
+                                                lore = champion.lore,
+                                                tags = champion.tags,
+                                                partype = champion.partype,
+                                                stats = champion.stats,
+                                                spells = champion.spells,
+                                                passive = champion.passive
                                         ))
                             }
                             championDao.insertAll(champsToSave)

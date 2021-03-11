@@ -9,7 +9,7 @@ import com.scp.leagueofquiz.api.database.champion.jsonClasses.Skin
 import com.scp.leagueofquiz.api.database.champion.jsonClasses.Spell
 
 @Entity
-data class Champion(@PrimaryKey(autoGenerate = true)
+data class Champion(@PrimaryKey(autoGenerate = true) @SerializedName("countId")
                     val id: Int = 0,
                     @SerializedName("id")
                     val identifier: String,

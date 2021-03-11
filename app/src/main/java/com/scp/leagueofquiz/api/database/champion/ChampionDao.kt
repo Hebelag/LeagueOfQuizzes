@@ -11,7 +11,7 @@ interface ChampionDao {
     fun insertAll(champions: List<Champion?>?)
 
     @Query("SELECT * FROM champion")
-    fun findAll(): ListenableFuture<List<Champion?>?>?
+    fun findAll(): List<Champion?>?
 
     @Query("SELECT * FROM champion WHERE name NOT IN (:names) ORDER BY random() LIMIT :quantity")
     fun findRandomChampsExcept(names: List<String?>?, quantity: Int): ListenableFuture<List<Champion?>?>?

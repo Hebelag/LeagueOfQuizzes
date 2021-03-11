@@ -1,9 +1,9 @@
 package com.scp.leagueofquiz.repository
 
 import android.content.Context
-import com.example.quiztest2.json.ChampionJSONRoot
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.gson.Gson
+import com.scp.leagueofquiz.api.database.ChampionJSONRoot
 import com.scp.leagueofquiz.api.database.champion.Champion
 import com.scp.leagueofquiz.api.database.champion.ChampionDao
 import com.scp.leagueofquiz.api.database.metadata.Metadata
@@ -28,7 +28,43 @@ class MetadataRepository @Inject constructor(
     fun startDatabaseUpdate() {
         Timber.i("Checking database update availability")
         val metadataList = metadataDao.findAll()
-        metadataList!!.addListener({ handleDatabaseUpdate(metadataList) }, executor)
+        metadataList!!.addListener(
+                Runnable {
+                    try {
+                        if (metadataList.get()!!.isEmpty()) {
+                            Timber.i("Database outdated, populating...")
+                            val jsonRoot = loadJsonRoot()
+                            val champsToSave: MutableList<Champion?> = ArrayList()
+                            for (championJSON in jsonRoot.data.values) {
+                                champsToSave.add(
+                                        Champion(
+                                                identifier = championJSON.id.toLowerCase(Locale.ROOT),
+                                                name = championJSON.name,
+                                                allytips = championJSON.allytips,
+                                                blurb = championJSON.blurb,
+                                                enemytips = championJSON.enemytips,
+                                                info = championJSON.info,
+                                                key = championJSON.key,
+                                                title = championJSON.title,
+                                                skins = championJSON.skins,
+                                                lore = championJSON.lore,
+                                                tags = championJSON.tags,
+                                                partype = championJSON.partype,
+                                                stats = championJSON.stats,
+                                                spells = championJSON.spells,
+                                                passive = championJSON.passive
+                                        ))
+                            }
+                            championDao.insertAll(champsToSave)
+                            Timber.i("Database updated.")
+                        }
+                    } catch (e: ExecutionException) {
+                        Timber.e(e, "Error while updating the database")
+                    } catch (e: InterruptedException) {
+                        Timber.e(e, "Error while updating the database")
+                    }
+                },
+                executor)
     }
 
     /**
@@ -36,25 +72,6 @@ class MetadataRepository @Inject constructor(
      * with the data currently owned, and perform an update if needed. For now, it simply checks if
      * the database is empty, and if yes, loads the embedded champion json.
      */
-    private fun handleDatabaseUpdate(metadataList: ListenableFuture<List<Metadata?>?>?) {
-        try {
-            if (metadataList!!.get()!!.isEmpty()) {
-                Timber.i("Database outdated, populating...")
-                val jsonRoot = loadJsonRoot()
-                val champsToSave: MutableList<Champion?> = ArrayList()
-                for (championJSON in jsonRoot.data.values) {
-                    champsToSave.add(
-                            Champion(identifier = championJSON.id.toLowerCase(Locale.ROOT), name = championJSON.name))
-                }
-                championDao.insertAll(champsToSave)
-                Timber.i("Database updated.")
-            }
-        } catch (e: ExecutionException) {
-            Timber.e(e, "Error while updating the database")
-        } catch (e: InterruptedException) {
-            Timber.e(e, "Error while updating the database")
-        }
-    }
 
     private fun loadJsonRoot(): ChampionJSONRoot {
         try {

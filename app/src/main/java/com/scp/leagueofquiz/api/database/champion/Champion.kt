@@ -2,13 +2,16 @@ package com.scp.leagueofquiz.api.database.champion
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 import com.scp.leagueofquiz.api.database.champion.jsonClasses.Info
 import com.scp.leagueofquiz.api.database.champion.jsonClasses.Passive
 import com.scp.leagueofquiz.api.database.champion.jsonClasses.Skin
 import com.scp.leagueofquiz.api.database.champion.jsonClasses.Spell
 
 @Entity
-data class Champion(@PrimaryKey(autoGenerate = true) val id: Int = 0,
+data class Champion(@PrimaryKey(autoGenerate = true)
+                    val id: Int = 0,
+                    @SerializedName("id")
                     val identifier: String,
                     val name: String,
                     val allytips: List<String>,

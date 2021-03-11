@@ -3,7 +3,6 @@ package com.scp.leagueofquiz.api.database;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-
 import com.scp.leagueofquiz.api.database.champion.Champion;
 import com.scp.leagueofquiz.api.database.champion.ChampionDao;
 import com.scp.leagueofquiz.api.database.champion.Converters;

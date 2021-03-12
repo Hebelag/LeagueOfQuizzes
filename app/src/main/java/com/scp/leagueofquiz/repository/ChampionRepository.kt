@@ -14,4 +14,8 @@ class ChampionRepository @Inject constructor(private val championDao: ChampionDa
         val namesAnswered = championsAnswered.map { it.name }
         return championDao.findRandomChampsExcept(namesAnswered, howMany)
     }
+
+    fun getAllChampions(): List<Champion?>?{
+        return championDao.findAll()
+    }
 }

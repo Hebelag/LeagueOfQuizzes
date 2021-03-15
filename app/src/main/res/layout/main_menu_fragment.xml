@@ -6,67 +6,64 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".entrypoint.mainmenu.MainMenuFragment"
-    android:weightSum="100">
+    android:weightSum="100"
+    android:background="@drawable/background_magic_720">
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@drawable/main_menu_title_background_combined"
+        android:fontFamily="@font/beaufort_bold"
         android:gravity="center"
-        android:text="@string/app_name"
+        android:text="League Campus"
+        android:textColor="@android:color/holo_orange_light"
         android:textSize="30sp"
         android:textStyle="bold" />
-
-    <androidx.viewpager2.widget.ViewPager2
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="80"
-        android:id="@+id/view_pager">
+        android:layout_height="200dp"/>
 
-    </androidx.viewpager2.widget.ViewPager2>
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/pedestal_04_inventory"
+            android:contentDescription="@string/buttonTestText"
+            android:scaleType="fitXY"/>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:id="@+id/view_pager"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="top"/>
+
+    </FrameLayout>
+
+
+
 
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tab_layout"
+        android:background="#00FFFFFF"
         app:tabBackground="@drawable/main_menu_tab_selector"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp"
-        app:tabMaxWidth="10dp">
-
-    </com.google.android.material.tabs.TabLayout>
-
-
-
-
-    <Button
-        android:id="@+id/buttonChampQuiz"
-        android:layout_width="250dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingLeft="16dp"
-        android:paddingTop="4dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="4dp"
-        android:text="@string/start_champ_quiz" />
-
-    <Button
-        android:id="@+id/buttonItemQuiz"
-        android:layout_width="250dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/start_item_quiz" />
-
-    <Button
-        android:id="@+id/buttonAbilityQuiz"
-        android:layout_width="250dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/start_ability_quiz" />
+        app:tabMaxWidth="10dp" />
 
     <Button
         android:id="@+id/buttonTEST"

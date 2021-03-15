@@ -54,7 +54,7 @@ public class MainMenuFragment extends Fragment {
 
     init();
 
-    binding.buttonChampQuiz.setOnClickListener(
+    /*binding.buttonChampQuiz.setOnClickListener(
         v ->
             NavHostFragment.findNavController(this)
                 .navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.CHAMPION)));
@@ -65,7 +65,7 @@ public class MainMenuFragment extends Fragment {
     binding.buttonAbilityQuiz.setOnClickListener(
         v ->
             NavHostFragment.findNavController(this)
-                .navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ABILITY)));
+                .navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ABILITY)));*/
   }
 
   private void init() {

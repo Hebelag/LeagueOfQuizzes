@@ -2,5 +2,6 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/average</item>
+        <item>@font/beaufort_bold</item>
     </array>
 </resources>

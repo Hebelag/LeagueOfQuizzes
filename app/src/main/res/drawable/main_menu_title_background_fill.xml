@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="311dp"
+    android:height="63dp"
+    android:viewportWidth="311"
+    android:viewportHeight="63">
+    <group>
+        <path
+            android:fillType="evenOdd"
+            android:pathData="M295.61 1H1v46.28h0.48c7.52 0 13.65 6.54 13.9 14.72H310V16.77h-0.48c-7.69 0-13.91-6.82-13.91-15.24V1z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="155.5"
+                    android:startY="1"
+                    android:endX="155.5"
+                    android:endY="62">
+                    <item
+                        android:color="#360C3138"
+                        android:offset="0"/>
+                    <item
+                        android:color="#1B5E6A"
+                        android:offset="0.51"/>
+                    <item
+                        android:color="#278395"
+                        android:offset="1"/>
+                    <item
+                        android:color="#B89E19"
+                        android:offset="1"/>
+                </gradient>
+            </aapt:attr>
+        </path>
+        <group>
+            <clip-path
+                android:pathData="M295.61 1H1v46.28h0.48c7.52 0 13.65 6.54 13.9 14.72H310V16.77h-0.48c-7.69 0-13.91-6.82-13.91-15.24V1z"/>
+            <path
+                android:fillColor="#000"
+                android:pathData="M295.61 1l1 0.03l0.03-1.03h-1.03v1zM1 1V0H0v1h1zm0 46.28H0v1.04l1.04-0.04l-0.04-1zM15.39 62l-1 0.03l0.03 0.97h0.97v-1zM310 62v1h1v-1h-1zm0-45.23h1v-1.04l-1.04 0.04l0.04 1zM295.61 0H1v2h294.61V0zM0 1v46.28h2V1H0zm1.04 47.28h0.44v-2H0.96l0.08 2zm0.44 0c6.9 0 12.67 6.03 12.9 13.75l2-0.06c-0.26-8.63-6.75-15.7-14.9-15.7v2zM15.38 63H310v-2H15.39v2zM311 62V16.77h-2V62h2zm-1.04-46.23h-0.44v2h0.52l-0.08-2zm-0.44 0c-7.05 0-12.91-6.29-12.91-14.24h-2c0 8.88 6.59 16.25 14.91 16.25v-2zM296.61 1.54v-0.5l-2-0.06v0.56h2z"/>
+        </group>
+    </group>
+</vector>

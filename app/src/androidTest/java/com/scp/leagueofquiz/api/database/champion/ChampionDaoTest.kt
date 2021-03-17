@@ -1,74 +1,73 @@
-package com.scp.leagueofquiz.api.database.champion;
+package com.scp.leagueofquiz.api.database.champion
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
+import android.content.Context
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.scp.leagueofquiz.api.database.LolDatabase
+import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.runBlockingTest
+import org.hamcrest.Matchers
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
-import android.content.Context;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.scp.leagueofquiz.api.database.LolDatabase;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+@Suppress("EXPERIMENTAL_API_USAGE")
+@RunWith(AndroidJUnit4::class)
+class ChampionDaoTest {
+    private val testDispatcher = TestCoroutineDispatcher()
+    private val testScope = TestCoroutineScope(testDispatcher)
+    lateinit var db: LolDatabase
+    lateinit var underTest: ChampionDao
 
-@SuppressWarnings("RedundantThrows")
-@RunWith(AndroidJUnit4.class)
-public class ChampionDaoTest {
-  private LolDatabase db;
-  private ChampionDao underTest;
+    @Before
+    fun setUp() {
+        val context: Context = ApplicationProvider.getApplicationContext()
+        db = Room.inMemoryDatabaseBuilder(context, LolDatabase::class.java)
+                .setTransactionExecutor(testDispatcher.asExecutor())
+                .setQueryExecutor(testDispatcher.asExecutor()).build()
+        underTest = db.championDao()
+    }
 
-  @Before
-  public void setUp() throws Exception {
-    Context context = ApplicationProvider.getApplicationContext();
-    db = Room.inMemoryDatabaseBuilder(context, LolDatabase.class).build();
-    underTest = db.championDao();
-  }
+    @After
+    fun tearDown() {
+        db.close()
+    }
 
-  @After
-  public void tearDown() throws Exception {
-    db.close();
-  }
+    @Test
+    fun insertAll_findAll() = testScope.runBlockingTest {
+        // Arrange
+        val c1 = Champion(identifier = "id1", name = "name1")
+        val c2 = Champion(identifier = "id2", name = "name2")
 
-  @Test
-  public void insertAll_findAll() throws ExecutionException, InterruptedException {
-    // Arrange
-    Champion c1 = new Champion("id1", "name1");
-    Champion c2 = new Champion("id2", "name2");
+        // Act
+        underTest.insertAll(listOf(c1, c2))
+        val result = underTest.findAll()
 
-    // Act
-    underTest.insertAll(Arrays.asList(c1, c2));
-    ListenableFuture<List<Champion>> all = underTest.findAll();
-    List<Champion> result = all.get();
+        // Assert
+        Assert.assertThat(result, Matchers.`is`(listOf(c1, c2)))
+    }
 
-    // Assert
-    assertThat(result, is(Arrays.asList(c1, c2)));
-  }
+    @Test
+    fun findRandomChampsExcept() = testScope.runBlockingTest {
+        // Arrange
+        val c1 = Champion(identifier = "id1", name = "name1")
+        val c2 = Champion(identifier = "id2", name = "name2")
+        val c3 = Champion(identifier = "id3", name = "name3")
+        val c4 = Champion(identifier = "id4", name = "name4")
+        val toExclude = listOf("name2", "name3")
 
-  @Test
-  public void findRandomChampsExcept() throws ExecutionException, InterruptedException {
-    // Arrange
-    Champion c1 = new Champion("id1", "name1");
-    Champion c2 = new Champion("id2", "name2");
-    Champion c3 = new Champion("id3", "name3");
-    Champion c4 = new Champion("id4", "name4");
-    List<String> toExclude = Arrays.asList("name2", "name3");
+        // Act
+        underTest.insertAll(listOf(c1, c2, c3, c4))
+        val result = underTest.findRandomChampsExcept(toExclude, 2)
 
-    // Act
-    underTest.insertAll(Arrays.asList(c1, c2, c3, c4));
-    ListenableFuture<List<Champion>> future = underTest.findRandomChampsExcept(toExclude, 2);
-    List<Champion> result = future.get();
-
-    // Assert
-    assertThat(result, notNullValue());
-    assertThat(result.size(), is(2));
-    assertThat(result, containsInAnyOrder(c1, c4));
-  }
+        // Assert
+        Assert.assertThat(result, Matchers.notNullValue())
+        Assert.assertThat(result.size, Matchers.`is`(2))
+        Assert.assertThat(result, Matchers.containsInAnyOrder(c1, c4))
+    }
 }

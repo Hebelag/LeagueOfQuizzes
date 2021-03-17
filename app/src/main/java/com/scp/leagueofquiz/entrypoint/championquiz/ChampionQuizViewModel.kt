@@ -1,199 +1,111 @@
-package com.scp.leagueofquiz.entrypoint.championquiz;
+package com.scp.leagueofquiz.entrypoint.championquiz
 
-import android.os.Handler;
-import android.os.Looper;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.scp.leagueofquiz.api.database.champion.Champion;
-import com.scp.leagueofquiz.entrypoint.shared.DefaultedLiveData;
-import com.scp.leagueofquiz.entrypoint.shared.IncrementableLiveData;
-import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
-import com.scp.leagueofquiz.repository.ChampionRepository;
-import dagger.hilt.android.lifecycle.HiltViewModel;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import javax.inject.Inject;
-import timber.log.Timber;
+import android.os.Handler
+import android.os.Looper
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.scp.leagueofquiz.api.database.champion.Champion
+import com.scp.leagueofquiz.entrypoint.shared.DefaultedLiveData
+import com.scp.leagueofquiz.entrypoint.shared.IncrementableLiveData
+import com.scp.leagueofquiz.entrypoint.shared.QuizMode
+import com.scp.leagueofquiz.repository.ChampionRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.Instant
+import java.util.*
+import javax.inject.Inject
 
 @HiltViewModel
-public class ChampionQuizViewModel extends ViewModel {
-  private static final Duration TIMER_REFRESH_DELAY = Duration.ofMillis(500);
+class ChampionQuizViewModel @Inject constructor(
+        private val championRepository: ChampionRepository) : ViewModel() {
+    // Accessors
+    // Static data
+    var quizMode: QuizMode? = null
+    private var championCount: Int? = null
+    private val championsAnswered = HashSet<Champion>()
 
-  // Static data
-  private QuizMode quizMode;
-  private Integer championCount;
-  private final Set<Champion> championsAnswered;
+    // Mutable data
+    val championGrid: MutableLiveData<List<Champion>> = MutableLiveData()
+    val score = IncrementableLiveData(0)
+    val failedAttempts = IncrementableLiveData(0)
+    val startTime: MutableLiveData<Instant> = MutableLiveData()
+    val timer = DefaultedLiveData(Duration.ZERO)
+    val rightChampion = MutableLiveData<Champion>()
+    val quizFinished = MutableLiveData(false)
+    val buttonText = MutableLiveData<String>()
 
-  // Mutable data
-  private final MutableLiveData<List<Champion>> championGrid;
-  private final IncrementableLiveData score;
-  private final IncrementableLiveData failedAttempts;
-  private final MutableLiveData<Instant> startTime;
-  private final DefaultedLiveData<Duration> timer;
-  private final MutableLiveData<Champion> rightChampion;
-  private final MutableLiveData<Boolean> quizFinished;
-  private final MutableLiveData<String> buttonText;
-
-  // Dependencies
-  private final ChampionRepository championRepository;
-  private final Executor executor;
-
-  // Other
-  private final Handler timerHandler = new Handler(Looper.getMainLooper());
-  private final Runnable timerRunnableTraining =
-      new Runnable() {
-        @Override
-        public void run() {
-          switch (quizMode) {
-            case TRAINING:
-            case ENDLESS:
-            case MARATHON:
-              timer.setValue(Duration.between(startTime.getValue(), Instant.now()));
-              break;
-            case TIME:
-              timer.setValue(timer.getValue().minus(TIMER_REFRESH_DELAY));
-              break;
-          }
-          timerHandler.postDelayed(this, TIMER_REFRESH_DELAY.toMillis());
-        }
-      };
-
-  @Inject
-  public ChampionQuizViewModel(ChampionRepository championRepository, Executor executor) {
-    // Initialisations to be removed with dependency injection
-    this.championRepository = championRepository;
-    this.executor = executor;
-
-    startTime = new MutableLiveData<>();
-    championGrid = new MutableLiveData<>();
-    resetChampionGrid();
-    timer = new DefaultedLiveData<>(Duration.ZERO);
-    championsAnswered = new HashSet<>();
-    score = new IncrementableLiveData(0);
-    failedAttempts = new IncrementableLiveData(0);
-    rightChampion = new MutableLiveData<>();
-    quizFinished = new MutableLiveData<>(false);
-    buttonText = new MutableLiveData<>();
-  }
-
-  private void resetChampionGrid() {
-    championGrid.setValue(
-        Arrays.asList(Champion.DEFAULT, Champion.DEFAULT, Champion.DEFAULT, Champion.DEFAULT));
-  }
-
-  public void startQuiz() {
-    startTime.setValue(Instant.now());
-    championsAnswered.clear();
-    score.setValue(0);
-    loadChampionGrid();
-    timerHandler.postDelayed(timerRunnableTraining, 0);
-  }
-
-  public boolean isQuizRunning() {
-    return startTime.getValue() != null;
-  }
-
-  public void pickAnswer(int champIndex) {
-    List<Champion> grid = championGrid.getValue();
-    if (grid == null) throw new RuntimeException("Grid is empty!");
-    Champion championChosen = grid.get(champIndex - 1);
-    if (championChosen.equals(rightChampion.getValue())) {
-      championsAnswered.add(championChosen);
-      score.setIncrement();
-
-      switch (quizMode) {
-        case TRAINING:
-        case MARATHON:
-          if (championsAnswered.size() == championCount) {
-            quizFinished.setValue(true);
-          } else {
-            loadChampionGrid();
-          }
-          break;
-        case ENDLESS:
-        case TIME:
-          loadChampionGrid();
-          break;
-      }
-
-    } else {
-      failedAttempts.setIncrement();
+    init {
+        // Initialisations to be removed with dependency injection
+        resetChampionGrid()
     }
-  }
 
-  private void loadChampionGrid() {
-    ListenableFuture<List<Champion>> future =
-        championRepository.getRandomChampions(championsAnswered, 4);
-    future.addListener(
-        () -> {
-          List<Champion> randomChampions;
-          try {
-            randomChampions = future.get();
-            rightChampion.postValue(selectRightChampion(randomChampions));
-            championGrid.postValue(randomChampions);
-          } catch (ExecutionException | InterruptedException e) {
-            Timber.e(e, "Could not load champion grid");
-            resetChampionGrid();
-            rightChampion.postValue(Champion.DEFAULT);
-          }
-        },
-        executor);
-  }
+    // Other
+    private val timerHandler = Handler(Looper.getMainLooper())
+    private val timerRunnableTraining: Runnable = object : Runnable {
+        override fun run() {
+            when (quizMode) {
+                QuizMode.TRAINING, QuizMode.ENDLESS, QuizMode.MARATHON -> timer.setValue(Duration.between(startTime.value, Instant.now()))
+                QuizMode.TIME -> timer.setValue(timer.value.minus(TIMER_REFRESH_DELAY))
+            }
+            timerHandler.postDelayed(this, TIMER_REFRESH_DELAY.toMillis())
+        }
+    }
 
-  private Champion selectRightChampion(List<Champion> buttonChampions) {
-    int rightChampionPosition = (int) (Math.random() * 4);
-    return buttonChampions.get(rightChampionPosition);
-  }
+    private fun resetChampionGrid() {
+        championGrid.value = listOf(Champion.DEFAULT, Champion.DEFAULT, Champion.DEFAULT, Champion.DEFAULT)
+    }
 
-  // Accessors
-  public QuizMode getQuizMode() {
-    return quizMode;
-  }
+    fun startQuiz() {
+        startTime.value = Instant.now()
+        championsAnswered.clear()
+        score.value = 0
+        loadChampionGrid()
+        timerHandler.postDelayed(timerRunnableTraining, 0)
+    }
 
-  public void setQuizMode(QuizMode quizMode) {
-    this.quizMode = quizMode;
-  }
+    val isQuizRunning: Boolean
+        get() = startTime.value != null
 
-  public MutableLiveData<List<Champion>> getChampionGrid() {
-    return championGrid;
-  }
+    fun pickAnswer(champIndex: Int) {
+        val grid = championGrid.value ?: throw RuntimeException("Grid is empty!")
+        val championChosen = grid[champIndex - 1]
+        if (championChosen == rightChampion.value) {
+            championsAnswered.add(championChosen)
+            score.setIncrement()
+            when (quizMode) {
+                QuizMode.TRAINING, QuizMode.MARATHON -> if (championsAnswered.size == championCount) {
+                    quizFinished.setValue(true)
+                } else {
+                    loadChampionGrid()
+                }
 
-  public void setChampionCount(Integer championCount) {
-    this.championCount = championCount;
-  }
+                QuizMode.ENDLESS, QuizMode.TIME -> loadChampionGrid()
+            }
+        } else {
+            failedAttempts.setIncrement()
+        }
+    }
 
-  public DefaultedLiveData<Duration> getTimer() {
-    return timer;
-  }
+    private fun loadChampionGrid() {
+        viewModelScope.launch {
+            val randomChampions = championRepository.getRandomChampions(championsAnswered, 4)
+            rightChampion.postValue(selectRightChampion(randomChampions))
+            championGrid.postValue(randomChampions)
+        }
+    }
 
-  public IncrementableLiveData getScore() {
-    return score;
-  }
+    private fun selectRightChampion(buttonChampions: List<Champion>): Champion {
+        val rightChampionPosition = (Math.random() * 4).toInt()
+        return buttonChampions[rightChampionPosition]
+    }
 
-  public MutableLiveData<Instant> getStartTime() {
-    return startTime;
-  }
+    fun setChampionCount(championCount: Int?) {
+        this.championCount = championCount
+    }
 
-  public MutableLiveData<Champion> getRightChampion() {
-    return rightChampion;
-  }
-
-  public MutableLiveData<Boolean> getQuizFinished() {
-    return quizFinished;
-  }
-
-  public IncrementableLiveData getFailedAttempts() {
-    return failedAttempts;
-  }
-
-  public MutableLiveData<String> getButtonText() {
-    return buttonText;
-  }
+    companion object {
+        private val TIMER_REFRESH_DELAY = Duration.ofMillis(500)
+    }
 }

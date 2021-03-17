@@ -1,51 +1,52 @@
-package com.scp.leagueofquiz.api.database.metadata;
+package com.scp.leagueofquiz.api.database.metadata
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import android.content.Context
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import com.scp.leagueofquiz.api.database.LolDatabase
+import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.runBlockingTest
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 
-import android.content.Context;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.scp.leagueofquiz.api.database.LolDatabase;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+@Suppress("EXPERIMENTAL_API_USAGE")
+class MetadataDaoTest {
+    private val testDispatcher = TestCoroutineDispatcher()
+    private val testScope = TestCoroutineScope(testDispatcher)
+    lateinit var db: LolDatabase
+    lateinit var underTest: MetadataDao
 
-@SuppressWarnings("RedundantThrows")
-public class MetadataDaoTest {
-  private LolDatabase db;
-  private MetadataDao underTest;
+    @Before
+    fun setUp() {
+        val context: Context = ApplicationProvider.getApplicationContext()
+        db = Room.inMemoryDatabaseBuilder(context, LolDatabase::class.java)
+                .setTransactionExecutor(testDispatcher.asExecutor())
+                .setQueryExecutor(testDispatcher.asExecutor()).build()
+        underTest = db.metadataDao()
+    }
 
-  @Before
-  public void setUp() throws Exception {
-    Context context = ApplicationProvider.getApplicationContext();
-    db = Room.inMemoryDatabaseBuilder(context, LolDatabase.class).build();
-    underTest = db.metadataDao();
-  }
+    @After
+    fun tearDown() {
+        db.close()
+    }
 
-  @After
-  public void tearDown() throws Exception {
-    db.close();
-  }
+    @Test
+    fun insert_findAll() = testScope.runBlockingTest {
+        // Arrange
+        val metadata = Metadata(123456789, 123456789)
 
-  @Test
-  public void insert_findAll() throws ExecutionException, InterruptedException {
-    // Arrange
-    Metadata metadata = new Metadata(123456789);
+        // Act
+        underTest.insert(metadata)
+        val result = underTest.findAll()
 
-    // Act
-    ListenableFuture<Void> insertFuture = underTest.insert(metadata);
-    insertFuture.get();
-    ListenableFuture<List<Metadata>> future = underTest.findAll();
-    List<Metadata> result = future.get();
-
-    // Assert
-    assertThat(result, notNullValue());
-    assertThat(result.isEmpty(), is(false));
-    assertThat(result.get(0), is(metadata));
-  }
+        // Assert
+        MatcherAssert.assertThat(result, Matchers.notNullValue())
+        MatcherAssert.assertThat(result.isEmpty(), Matchers.`is`(false))
+        MatcherAssert.assertThat(result[0], Matchers.`is`(metadata))
+    }
 }

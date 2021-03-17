@@ -42,6 +42,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageButton
+            android:id="@+id/preferences"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/main_menu_settings_selector"

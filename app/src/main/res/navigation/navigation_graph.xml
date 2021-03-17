@@ -16,6 +16,9 @@
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/actionSettings"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/abilityQuizFragment"
@@ -86,4 +89,8 @@
             android:name="failedAttempts"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.scp.leagueofquiz.entrypoint.preferences.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

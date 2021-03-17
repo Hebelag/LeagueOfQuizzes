@@ -5,16 +5,19 @@
 
         <EditTextPreference
             android:key="signature"
-            android:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+            android:title="@string/signature_title"/>
 
         <ListPreference
             android:defaultValue="reply"
             android:entries="@array/reply_entries"
             android:entryValues="@array/reply_values"
             android:key="reply"
-            android:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+            android:title="@string/reply_title"/>
+
+        <SeekBarPreference
+            android:key="seekbar"
+            android:title="How much do you like the app?"
+            />
 
     </PreferenceCategory>
 

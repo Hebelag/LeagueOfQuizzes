@@ -66,7 +66,7 @@ public class MainMenuFragment extends Fragment {
         v ->
             NavHostFragment.findNavController(this)
                 .navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ABILITY)));*/
-    binding.buttonTEST.setOnClickListener(
+    binding.preferences.setOnClickListener(
         v -> NavHostFragment.findNavController(this)
     .navigate(MainMenuFragmentDirections.actionSettings()));
   }

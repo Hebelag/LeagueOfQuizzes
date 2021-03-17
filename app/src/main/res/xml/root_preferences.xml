@@ -1,0 +1,61 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/messages_header">
+
+        <EditTextPreference
+            android:key="signature"
+            android:title="@string/signature_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            android:defaultValue="reply"
+            android:entries="@array/reply_entries"
+            android:entryValues="@array/reply_values"
+            android:key="reply"
+            android:title="@string/reply_title"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/sync_header">
+
+        <SwitchPreferenceCompat
+            android:key="sync"
+            android:title="@string/sync_title" />
+
+        <SwitchPreferenceCompat
+            android:dependency="sync"
+            android:key="attachment"
+            android:summaryOff="@string/attachment_summary_off"
+            android:summaryOn="@string/attachment_summary_on"
+            android:title="@string/attachment_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="game_related_preferences"
+        android:title="Game">
+        <Preference
+            android:key="feedback"
+            android:title="Send feedback"
+            android:summary="Report technical issues or suggest new features"
+            android:icon="@drawable/heimerdinger"
+            />
+        <CheckBoxPreference
+            android:key="noob_protection"
+            android:title="Protect against pro players"
+            android:summary="If you're bronze please tick this"/>
+
+    </PreferenceCategory>
+
+    //Customizable Preference, access with key with findPreference()
+    <Preference
+        android:key="custom"
+        android:title="Press to activate camera">
+        <intent
+            android:action="android.intent.action.SET_WALLPAPER"
+            android:data="@string/app_name"/>
+    </Preference>
+
+</PreferenceScreen>

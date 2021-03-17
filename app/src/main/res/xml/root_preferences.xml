@@ -36,20 +36,25 @@
     <PreferenceCategory
         android:key="game_related_preferences"
         android:title="Game">
+
         <Preference
             android:key="feedback"
             android:title="Send feedback"
             android:summary="Report technical issues or suggest new features"
-            android:icon="@drawable/heimerdinger"
-            />
-        <CheckBoxPreference
+            android:icon="@drawable/heimerdinger">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://support-leagueoflegends.riotgames.com/hc/en-us"/>
+        </Preference>
+
+        <SwitchPreferenceCompat
             android:key="noob_protection"
             android:title="Protect against pro players"
             android:summary="If you're bronze please tick this"/>
 
     </PreferenceCategory>
 
-    //Customizable Preference, access with key with findPreference()
+    //Customizable Preference, access with key at findPreference()
     <Preference
         android:key="custom"
         android:title="Press to activate camera">
@@ -57,5 +62,20 @@
             android:action="android.intent.action.SET_WALLPAPER"
             android:data="@string/app_name"/>
     </Preference>
+
+    <Preference
+        android:key="riot_connect"
+        android:title="Connect your account with Riot Games"
+        android:summary="Log-in to LoL and get +500 BE">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://na.leagueoflegends.com/en-gb/"/>
+
+    </Preference>
+
+    <SwitchPreferenceCompat
+        android:key="another_one"
+        android:title="Check if scroll works"
+        android:summary="If you can read this then scrolling works"/>
 
 </PreferenceScreen>

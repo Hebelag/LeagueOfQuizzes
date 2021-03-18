@@ -1,18 +1,18 @@
 package com.scp.leagueofquiz.repository
 
 import android.content.Context
-import com.google.common.util.concurrent.ListenableFuture
 import com.google.gson.Gson
 import com.scp.leagueofquiz.api.database.ChampionJSONRoot
 import com.scp.leagueofquiz.api.database.champion.Champion
 import com.scp.leagueofquiz.api.database.champion.ChampionDao
-import com.scp.leagueofquiz.api.database.metadata.Metadata
 import com.scp.leagueofquiz.api.database.metadata.MetadataDao
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,44 +27,47 @@ class MetadataRepository @Inject constructor(
 
     fun startDatabaseUpdate() {
         Timber.i("Checking database update availability")
-        val metadataList = metadataDao.findAll()
-        metadataList!!.addListener(
-                Runnable {
-                    try {
-                        if (metadataList.get()!!.isEmpty()) {
-                            Timber.i("Database outdated, populating...")
-                            val jsonRoot = loadJsonRoot()
-                            val champsToSave: MutableList<Champion?> = ArrayList()
-                            for (champion in jsonRoot.data.values) {
-                                champsToSave.add(
-                                        Champion(
-                                                identifier = champion.identifier.toLowerCase(Locale.ROOT),
-                                                name = champion.name,
-                                                allytips = champion.allytips,
-                                                blurb = champion.blurb,
-                                                enemytips = champion.enemytips,
-                                                info = champion.info,
-                                                key = champion.key,
-                                                title = champion.title,
-                                                skins = champion.skins,
-                                                lore = champion.lore,
-                                                tags = champion.tags,
-                                                partype = champion.partype,
-                                                stats = champion.stats,
-                                                spells = champion.spells,
-                                                passive = champion.passive
-                                        ))
-                            }
-                            championDao.insertAll(champsToSave)
-                            Timber.i("Database updated.")
-                        }
-                    } catch (e: ExecutionException) {
-                        Timber.e(e, "Error while updating the database")
-                    } catch (e: InterruptedException) {
-                        Timber.e(e, "Error while updating the database")
-                    }
-                },
-                executor)
+
+        // Run this in the default thread pool that runs coroutines
+        CoroutineScope(Dispatchers.Default).launch {
+            // findAll() is a coroutine so the thread inside launch will pause until the data is
+            // retrieved
+            val metadata = metadataDao.findAll()
+
+            // Data is retrieved so we continue by checking if the database is new, and if yes,
+            // we run the update; handleDatabaseUpdate() is also a coroutine
+            if (metadata.isEmpty()) {
+                handleDatabaseUpdate()
+            }
+        }
+    }
+
+    private suspend fun handleDatabaseUpdate() {
+        Timber.i("Database outdated, populating...")
+        val jsonRoot = loadJsonRoot()
+        val champsToSave: MutableList<Champion?> = ArrayList()
+        for (champion in jsonRoot.data.values) {
+            champsToSave.add(
+                    Champion(
+                            identifier = champion.identifier.toLowerCase(Locale.ROOT),
+                            name = champion.name,
+                            allytips = champion.allytips,
+                            blurb = champion.blurb,
+                            enemytips = champion.enemytips,
+                            info = champion.info,
+                            key = champion.key,
+                            title = champion.title,
+                            skins = champion.skins,
+                            lore = champion.lore,
+                            tags = champion.tags,
+                            partype = champion.partype,
+                            stats = champion.stats,
+                            spells = champion.spells,
+                            passive = champion.passive
+                    ))
+        }
+        championDao.insertAll(champsToSave)
+        Timber.i("Database updated.")
     }
 
     /**

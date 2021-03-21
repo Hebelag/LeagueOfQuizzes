@@ -22,7 +22,7 @@ class ChampionQuizViewModel @Inject constructor(
         private val championRepository: ChampionRepository) : ViewModel() {
     // Accessors
     // Static data
-    var quizMode: QuizMode? = null
+    lateinit var quizMode: QuizMode
     private var championCount: Int? = null
     private val championsAnswered = HashSet<Champion>()
 

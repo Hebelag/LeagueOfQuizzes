@@ -48,4 +48,9 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!-- Result Screen-->
+    <string name="result_wrong_champions">Wrong champions answered: %1$d</string>
+    <string name="result_final_score">Final Score: %1$d</string>
+    <string name="result_champions">Champions: %1$d</string>
 </resources>

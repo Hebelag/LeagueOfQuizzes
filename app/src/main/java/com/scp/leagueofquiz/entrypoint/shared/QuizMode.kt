@@ -1,8 +1,5 @@
-package com.scp.leagueofquiz.entrypoint.shared;
+package com.scp.leagueofquiz.entrypoint.shared
 
-public enum QuizMode {
-  TRAINING,
-  TIME,
-  ENDLESS,
-  MARATHON
+enum class QuizMode {
+    TRAINING, TIME, ENDLESS, MARATHON
 }

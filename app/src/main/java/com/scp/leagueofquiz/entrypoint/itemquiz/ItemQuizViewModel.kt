@@ -1,7 +1,5 @@
-package com.scp.leagueofquiz.entrypoint.itemquiz;
+package com.scp.leagueofquiz.entrypoint.itemquiz
 
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel
 
-public class ItemQuizViewModel extends ViewModel {
-  // TODO: Implement the ViewModel
-}
+class ItemQuizViewModel : ViewModel()

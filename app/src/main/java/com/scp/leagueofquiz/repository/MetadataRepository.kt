@@ -22,8 +22,7 @@ class MetadataRepository @Inject constructor(
         @param:ApplicationContext private val applicationContext: Context,
         private val metadataDao: MetadataDao,
         private val championDao: ChampionDao,
-        private val gson: Gson,
-        private val executor: Executor) {
+        private val gson: Gson) {
 
     fun startDatabaseUpdate() {
         Timber.i("Checking database update availability")

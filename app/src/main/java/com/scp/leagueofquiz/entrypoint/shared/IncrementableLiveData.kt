@@ -1,22 +1,11 @@
-package com.scp.leagueofquiz.entrypoint.shared;
+package com.scp.leagueofquiz.entrypoint.shared
 
-import java.util.function.Consumer;
+import java.util.function.Consumer
 
-public class IncrementableLiveData extends DefaultedLiveData<Integer> {
+class IncrementableLiveData(i: Int) : DefaultedLiveData<Int?>(i) {
+    fun setIncrement() = increment { this.value = it }
 
-  public IncrementableLiveData(int i) {
-    super(i);
-  }
+    fun postIncrement() = increment { postValue(it) }
 
-  public void setIncrement() {
-    increment(this::setValue);
-  }
-
-  public void postIncrement() {
-    increment(this::postValue);
-  }
-
-  public void increment(Consumer<Integer> newValue) {
-    newValue.accept(getValue() + 1);
-  }
+    fun increment(incrementAction: Consumer<Int?>) = incrementAction.accept(value?.plus(1))
 }

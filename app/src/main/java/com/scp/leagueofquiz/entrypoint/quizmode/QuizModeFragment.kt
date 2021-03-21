@@ -1,100 +1,67 @@
-package com.scp.leagueofquiz.entrypoint.quizmode;
+package com.scp.leagueofquiz.entrypoint.quizmode
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
-import com.scp.leagueofquiz.R;
-import com.scp.leagueofquiz.entrypoint.shared.QuizMode;
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment
+import com.scp.leagueofquiz.R
+import com.scp.leagueofquiz.databinding.QuizModeFragmentBinding
+import com.scp.leagueofquiz.entrypoint.shared.QuizMode
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
-public class QuizModeFragment extends Fragment {
+class QuizModeFragment : Fragment(R.layout.quiz_mode_fragment) {
+    private val viewModel: QuizModeViewModel by viewModels()
+    private val binding by viewBinding(QuizModeFragmentBinding::bind)
 
-  private QuizModeViewModel mViewModel;
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-  @Override
-  public View onCreateView(
-      @NonNull LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.quiz_mode_fragment, container, false);
-  }
+        binding.trainFirstButton.setOnClickListener {
+            val action = QuizModeFragmentDirections.startChampQuiz(QuizMode.TRAINING)
+            action.champCount = 20
+            NavHostFragment.findNavController(this).navigate(action)
+        }
 
-  @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    mViewModel = new ViewModelProvider(this).get(QuizModeViewModel.class);
-    // TODO: Use the ViewModel
-  }
+        binding.trainSecondButton.setOnClickListener {
+            val action = QuizModeFragmentDirections.startChampQuiz(QuizMode.TRAINING)
+            action.champCount = 50
+            NavHostFragment.findNavController(this).navigate(action)
+        }
 
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+        binding.trainThirdButton.setOnClickListener {
+            val action = QuizModeFragmentDirections.startChampQuiz(QuizMode.TRAINING)
+            action.champCount = 100
+            NavHostFragment.findNavController(this).navigate(action)
+        }
 
-    view.findViewById(R.id.trainFirstButton)
-        .setOnClickListener(
-            v -> {
-              QuizModeFragmentDirections.StartChampQuiz action =
-                  QuizModeFragmentDirections.startChampQuiz(QuizMode.TRAINING);
-              action.setChampCount(20);
-              NavHostFragment.findNavController(this).navigate(action);
-            });
-    view.findViewById(R.id.trainSecondButton)
-        .setOnClickListener(
-            v -> {
-              QuizModeFragmentDirections.StartChampQuiz action =
-                  QuizModeFragmentDirections.startChampQuiz(QuizMode.TRAINING);
-              action.setChampCount(50);
-              NavHostFragment.findNavController(this).navigate(action);
-            });
-    view.findViewById(R.id.trainThirdButton)
-        .setOnClickListener(
-            v -> {
-              QuizModeFragmentDirections.StartChampQuiz action =
-                  QuizModeFragmentDirections.startChampQuiz(QuizMode.TRAINING);
-              action.setChampCount(100);
-              NavHostFragment.findNavController(this).navigate(action);
-            });
-    view.findViewById(R.id.timeFirstButton)
-        .setOnClickListener(
-            v -> {
-              QuizModeFragmentDirections.StartChampQuiz action =
-                  QuizModeFragmentDirections.startChampQuiz(QuizMode.TIME);
-              action.setTime(30000);
-              NavHostFragment.findNavController(this).navigate(action);
-            });
-    view.findViewById(R.id.timeSecondButton)
-        .setOnClickListener(
-            v -> {
-              QuizModeFragmentDirections.StartChampQuiz action =
-                  QuizModeFragmentDirections.startChampQuiz(QuizMode.TIME);
-              action.setTime(60000);
-              NavHostFragment.findNavController(this).navigate(action);
-            });
-    view.findViewById(R.id.timeThirdButton)
-        .setOnClickListener(
-            v -> {
-              QuizModeFragmentDirections.StartChampQuiz action =
-                  QuizModeFragmentDirections.startChampQuiz(QuizMode.TIME);
-              action.setTime(120000);
-              NavHostFragment.findNavController(this).navigate(action);
-            });
-    view.findViewById(R.id.endlessButton)
-        .setOnClickListener(
-            v -> {
-              QuizModeFragmentDirections.StartChampQuiz action =
-                  QuizModeFragmentDirections.startChampQuiz(QuizMode.ENDLESS);
-              action.setChampCount(Integer.MAX_VALUE);
-              NavHostFragment.findNavController(this).navigate(action);
-            });
-    view.findViewById(R.id.marathonButton)
-        .setOnClickListener(
-            v ->
-                NavHostFragment.findNavController(this)
-                    .navigate(QuizModeFragmentDirections.startChampQuiz(QuizMode.MARATHON)));
-  }
+        binding.timeFirstButton.setOnClickListener {
+            val action = QuizModeFragmentDirections.startChampQuiz(QuizMode.TIME)
+            action.time = 30000
+            NavHostFragment.findNavController(this).navigate(action)
+        }
+
+        binding.timeSecondButton.setOnClickListener {
+            val action = QuizModeFragmentDirections.startChampQuiz(QuizMode.TIME)
+            action.time = 60000
+            NavHostFragment.findNavController(this).navigate(action)
+        }
+
+        binding.timeThirdButton.setOnClickListener {
+            val action = QuizModeFragmentDirections.startChampQuiz(QuizMode.TIME)
+            action.time = 120000
+            NavHostFragment.findNavController(this).navigate(action)
+        }
+
+        binding.endlessButton.setOnClickListener {
+            val action = QuizModeFragmentDirections.startChampQuiz(QuizMode.ENDLESS)
+            action.champCount = Int.MAX_VALUE
+            NavHostFragment.findNavController(this).navigate(action)
+        }
+
+        binding.marathonButton.setOnClickListener {
+            NavHostFragment.findNavController(this)
+                    .navigate(QuizModeFragmentDirections.startChampQuiz(QuizMode.MARATHON))
+        }
+    }
 }

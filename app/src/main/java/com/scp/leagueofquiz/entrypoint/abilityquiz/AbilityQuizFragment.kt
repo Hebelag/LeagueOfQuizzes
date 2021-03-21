@@ -1,35 +1,13 @@
-package com.scp.leagueofquiz.entrypoint.abilityquiz;
+package com.scp.leagueofquiz.entrypoint.abilityquiz
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import com.scp.leagueofquiz.R;
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.scp.leagueofquiz.R
+import com.scp.leagueofquiz.databinding.AbilityQuizFragmentBinding
+import com.scp.leagueofquiz.entrypoint.quizresult.QuizResultViewModel
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
-public class AbilityQuizFragment extends Fragment {
-
-  private AbilityQuizViewModel mViewModel;
-
-  public static AbilityQuizFragment newInstance() {
-    return new AbilityQuizFragment();
-  }
-
-  @Override
-  public View onCreateView(
-      @NonNull LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.ability_quiz_fragment, container, false);
-  }
-
-  @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    mViewModel = new ViewModelProvider(this).get(AbilityQuizViewModel.class);
-    // TODO: Use the ViewModel
-  }
+class AbilityQuizFragment : Fragment(R.layout.ability_quiz_fragment) {
+    private val viewModel: QuizResultViewModel by viewModels()
+    private val binding by viewBinding(AbilityQuizFragmentBinding::bind)
 }

@@ -13,6 +13,11 @@ class ChampionRepository @Inject constructor(private val championDao: ChampionDa
         return championDao.findRandomChampsExcept(namesAnswered, howMany)
     }
 
+    suspend fun getRandomChampion( championsAnswered: Set<Champion>): Champion{
+        val namesAnswered = championsAnswered.map { it.name }
+        return championDao.findRandomChampionExcept(namesAnswered)
+    }
+
     suspend fun getAllChampions(): List<Champion> {
         return championDao.findAll()
     }

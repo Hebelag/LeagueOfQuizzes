@@ -90,7 +90,17 @@ class ChampionQuizViewModel @Inject constructor(
 
     private fun loadChampionGrid() {
         viewModelScope.launch {
-            val randomChampions = championRepository.getRandomChampions(championsAnswered, 4)
+
+            //val randomChampions = championRepository.getRandomChampions(emptySet(),4)
+            val randomChampions = mutableListOf<Champion>()
+            repeat(4){
+                randomChampions.add(championRepository.getRandomChampion(emptySet()))
+                while (randomChampions.count() != randomChampions.distinct().count()){
+                    randomChampions.removeAt(it)
+                    randomChampions.add(championRepository.getRandomChampion(emptySet()))
+                }
+            }
+
             rightChampion.postValue(selectRightChampion(randomChampions))
             championGrid.postValue(randomChampions)
         }

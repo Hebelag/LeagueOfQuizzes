@@ -78,7 +78,7 @@ class ChampionQuizFragment : Fragment(R.layout.champion_quiz_fragment) {
     }
 
     private fun checkQuizFinished(isQuizFinished: Boolean) {
-        if (java.lang.Boolean.TRUE == isQuizFinished) {
+        if (isQuizFinished) {
             navigateToResult()
         }
     }

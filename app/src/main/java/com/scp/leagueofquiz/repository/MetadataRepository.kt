@@ -86,18 +86,11 @@ class MetadataRepository @Inject constructor(
         lateinit var urlConnection: HttpURLConnection
         var inputAsString = ""
         try{
-            println("TEST")
             val url = URL("http://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/championFull.json")
-
-            println("TEST2")
             urlConnection = url.openConnection() as HttpURLConnection
-            println("TEST3")
             urlConnection.requestMethod = "GET"
-            println("TEST4")
             urlConnection.connect()
-            println("TEST5")
             stream = urlConnection.inputStream
-            println("TEST6")
             inputAsString = stream.bufferedReader().readText()
 
         }catch(e: MalformedURLException){
@@ -110,6 +103,7 @@ class MetadataRepository @Inject constructor(
         return inputAsString
     }
 
+    /* This is a retrofit stub to maybe implement in the future for more flexible data fetching
     fun downloadNewVersion(): String{
         val retrofit = Retrofit
                 .Builder()
@@ -137,7 +131,7 @@ class MetadataRepository @Inject constructor(
         })
         return championFull
 
-    }
+    }*/
 
     /**
      * This method will one day check online for availability of an update of the data, compare it
@@ -158,9 +152,5 @@ class MetadataRepository @Inject constructor(
             throw RuntimeException(e)
         }
 
-    }
-
-    companion object {
-        private const val EMBEDDED_JSON_NAME = "championFull.json"
     }
 }

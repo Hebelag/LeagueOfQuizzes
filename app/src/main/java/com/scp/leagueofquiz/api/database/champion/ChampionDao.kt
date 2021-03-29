@@ -14,4 +14,7 @@ interface ChampionDao {
 
     @Query("SELECT * FROM champion WHERE name NOT IN (:names) ORDER BY random() LIMIT :quantity")
     suspend fun findRandomChampsExcept(names: List<String>, quantity: Int): List<Champion>
+
+    @Query("SELECT * FROM champion WHERE name NOT IN (:names) ORDER BY random() LIMIT 1")
+    suspend fun findRandomChampionExcept(names: List<String>): Champion
 }

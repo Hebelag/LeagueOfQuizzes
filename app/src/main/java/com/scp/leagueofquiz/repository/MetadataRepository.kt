@@ -5,17 +5,14 @@ import com.google.gson.Gson
 import com.scp.leagueofquiz.api.database.ChampionJSONRoot
 import com.scp.leagueofquiz.api.database.champion.Champion
 import com.scp.leagueofquiz.api.database.champion.ChampionDao
+import com.scp.leagueofquiz.api.database.item.Item
+import com.scp.leagueofquiz.api.database.item.ItemDao
+import com.scp.leagueofquiz.api.database.item.ItemRoot
 import com.scp.leagueofquiz.api.database.metadata.MetadataDao
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
@@ -31,6 +28,7 @@ class MetadataRepository @Inject constructor(
         @param:ApplicationContext private val applicationContext: Context,
         private val metadataDao: MetadataDao,
         private val championDao: ChampionDao,
+        private val itemDao: ItemDao,
         private val gson: Gson) {
 
     fun startDatabaseUpdate() {
@@ -52,7 +50,53 @@ class MetadataRepository @Inject constructor(
 
     private suspend fun handleDatabaseUpdate() {
         Timber.i("Database outdated, populating...")
-        val jsonRoot = loadJsonRoot()
+
+        handleChampionUpdate()
+        handleItemUpdate()
+
+        Timber.i("Database updated.")
+    }
+
+    private suspend fun handleItemUpdate() {
+        val json = loadItemJSON()
+        val itemsToSave: MutableList<Item?> = ArrayList()
+        for (item in json.data.values){
+            itemsToSave.add(
+                    Item(
+
+                            name = item.name,
+                            rune = item.rune,
+                            gold = item.gold,
+                            group = item.group,
+                            description = item.description,
+                            colloq = item.colloq,
+                            plaintext = item.plaintext,
+                            consumed = item.consumed,
+                            stacks = item.stacks,
+                            depth = item.depth,
+                            consumeOnFull = item.consumeOnFull,
+                            from = item.from,
+                            into = item.into,
+                            specialRecipe = item.specialRecipe,
+                            inStore = item.inStore,
+                            hideFromAll = item.hideFromAll,
+                            requiredChampion = item.requiredChampion,
+                            requiredAlly = item.requiredAlly,
+                            stats = item.stats,
+                            tags = item.tags,
+                            maps = item.maps
+                    )
+            )
+        }
+        itemDao.insertAll(itemsToSave)
+    }
+
+    private fun loadItemJSON(): ItemRoot {
+        return gson.fromJson(downloadJSON("ITEM"),ItemRoot::class.java)
+    }
+
+    private suspend fun handleChampionUpdate() {
+        val jsonRoot = loadChampionJson()
         val champsToSave: MutableList<Champion?> = ArrayList()
         for (champion in jsonRoot.data.values) {
             champsToSave.add(
@@ -75,18 +119,20 @@ class MetadataRepository @Inject constructor(
                     ))
         }
         championDao.insertAll(champsToSave)
-        Timber.i("Database updated.")
     }
 
-    private fun downloadChampionJSON(): String {
-
-
+    private fun downloadJSON(objectType: String): String {
 
         lateinit var stream: InputStream
         lateinit var urlConnection: HttpURLConnection
+        var urlString = ""
+        when (objectType){
+            "ITEM" ->  urlString = "http://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/item.json"
+            "CHAMPION" -> urlString  ="http://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/championFull.json"
+        }
         var inputAsString = ""
         try{
-            val url = URL("http://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/championFull.json")
+            val url = URL(urlString)
             urlConnection = url.openConnection() as HttpURLConnection
             urlConnection.requestMethod = "GET"
             urlConnection.connect()
@@ -139,18 +185,13 @@ class MetadataRepository @Inject constructor(
      * the database is empty, and if yes, loads the embedded champion json.
      */
 
-    private fun loadJsonRoot(): ChampionJSONRoot {
+    private fun loadChampionJson(): ChampionJSONRoot {
 
 
-        // Anstatt applicationContext.assets.open(EMBEDDED_JSON_NAME).use
-        // Soll die Datei aus dem Internet geladen werden und sofort als String hier reinkopiert werden
-        try {
-            return gson.fromJson(downloadChampionJSON(), ChampionJSONRoot::class.java)
-
-        } catch (e: IOException) {
-            Timber.e(e, "Error while loading embedded json")
-            throw RuntimeException(e)
-        }
+        // Instead of applicationContext.assets.open(EMBEDDED_JSON_NAME).use
+        // The data will be downloaded from the internet and directly passed as string without
+        // Taking phone storage
+        return gson.fromJson(downloadJSON("CHAMPION"), ChampionJSONRoot::class.java)
 
     }
 }

@@ -10,11 +10,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import timber.log.Timber
-import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
-import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
@@ -74,7 +78,10 @@ class MetadataRepository @Inject constructor(
         Timber.i("Database updated.")
     }
 
-    private fun downloadNewVersion(): String {
+    private fun downloadChampionJSON(): String {
+
+
+
         lateinit var stream: InputStream
         lateinit var urlConnection: HttpURLConnection
         var inputAsString = ""
@@ -103,6 +110,35 @@ class MetadataRepository @Inject constructor(
         return inputAsString
     }
 
+    fun downloadNewVersion(): String{
+        val retrofit = Retrofit
+                .Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .baseUrl("http://ddragon.leagueoflegends.com/")
+                .build()
+
+        val service = retrofit.create(DownloadFiles::class.java)
+        val championFullCall = service.getChampionFull()
+
+        var championFull = ""
+        championFullCall.enqueue(object : Callback<String>{
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if(response.isSuccessful){
+                    championFull = response.body().toString()
+                    println("HELLO")
+                    println(response.body())
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                t.printStackTrace()
+            }
+
+        })
+        return championFull
+
+    }
+
     /**
      * This method will one day check online for availability of an update of the data, compare it
      * with the data currently owned, and perform an update if needed. For now, it simply checks if
@@ -115,13 +151,13 @@ class MetadataRepository @Inject constructor(
         // Anstatt applicationContext.assets.open(EMBEDDED_JSON_NAME).use
         // Soll die Datei aus dem Internet geladen werden und sofort als String hier reinkopiert werden
         try {
-                val loadedJson = downloadNewVersion()
-                return gson.fromJson(loadedJson, ChampionJSONRoot::class.java)
+            return gson.fromJson(downloadChampionJSON(), ChampionJSONRoot::class.java)
 
         } catch (e: IOException) {
             Timber.e(e, "Error while loading embedded json")
             throw RuntimeException(e)
         }
+
     }
 
     companion object {

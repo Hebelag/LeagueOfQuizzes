@@ -7,12 +7,18 @@ import com.scp.leagueofquiz.api.database.champion.jsonClasses.Info
 import com.scp.leagueofquiz.api.database.champion.jsonClasses.Passive
 import com.scp.leagueofquiz.api.database.champion.jsonClasses.Skin
 import com.scp.leagueofquiz.api.database.champion.jsonClasses.Spell
+import com.scp.leagueofquiz.api.database.item.jsonClasses.Effect
+import com.scp.leagueofquiz.api.database.item.jsonClasses.Gold
 
 class Converters {
 
     @TypeConverter
-    fun arrayToString(stringList: List<String>): String{
-        return stringList.joinToString(separator = ",")
+    fun arrayToString(stringList: List<String>?): String?{
+        if (stringList != null) {
+            return stringList.joinToString(separator = ",")
+        }
+        else
+            return null
     }
 
     @TypeConverter
@@ -73,6 +79,50 @@ class Converters {
     fun gsonStringToStats(gsonString: String): Map<String,Double>{
         val turnsType = object : TypeToken<Map<String,Double>>(){}.type
         return Gson().fromJson(gsonString,turnsType)
+    }
+
+    @TypeConverter
+    fun infoStatsToString(statsObject: Map<String,Number>):String{
+        return Gson().toJson(statsObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToInfoStats(gsonString: String): Map<String,Number>{
+        val turnsType = object : TypeToken<Map<String,Number>>(){}.type
+        return Gson().fromJson(gsonString,turnsType)
+    }
+
+    @TypeConverter
+    fun goldToString(goldObject: Gold?): String{
+        return Gson().toJson(goldObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToGold(gsonString: String): Gold? {
+        val turnsType = object: TypeToken<Gold>(){}.type
+        return Gson().fromJson(gsonString, turnsType)
+    }
+
+    @TypeConverter
+    fun itemMapsToString(mapsObject: Map<String, Boolean>): String{
+        return Gson().toJson(mapsObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToItemMaps(gsonString: String): Map<String, Boolean>{
+        val turnsType = object: TypeToken<Map<String, Boolean>>(){}.type
+        return Gson().fromJson(gsonString, turnsType)
+    }
+
+    @TypeConverter
+    fun itemEffectToString(effectObject: Effect?): String{
+        return Gson().toJson(effectObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToItemEffect(gsonString: String): Effect?{
+        val turnsType = object: TypeToken<Effect>(){}.type
+        return Gson().fromJson(gsonString, turnsType)
     }
 
 }

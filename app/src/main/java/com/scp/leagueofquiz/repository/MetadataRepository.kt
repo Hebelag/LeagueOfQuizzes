@@ -58,14 +58,13 @@ class MetadataRepository @Inject constructor(
     }
 
     private suspend fun handleItemUpdate() {
+        Timber.i("Start Item Database Update")
         val json = loadItemJSON()
         val itemsToSave: MutableList<Item?> = ArrayList()
         for (item in json.data.values){
             itemsToSave.add(
                     Item(
-
                             name = item.name,
-                            rune = item.rune,
                             gold = item.gold,
                             group = item.group,
                             description = item.description,
@@ -74,6 +73,7 @@ class MetadataRepository @Inject constructor(
                             consumed = item.consumed,
                             stacks = item.stacks,
                             depth = item.depth,
+                            effect = item.effect,
                             consumeOnFull = item.consumeOnFull,
                             from = item.from,
                             into = item.into,
@@ -89,6 +89,7 @@ class MetadataRepository @Inject constructor(
             )
         }
         itemDao.insertAll(itemsToSave)
+        Timber.i("Item Database Updated")
     }
 
     private fun loadItemJSON(): ItemRoot {
@@ -96,6 +97,7 @@ class MetadataRepository @Inject constructor(
     }
 
     private suspend fun handleChampionUpdate() {
+        Timber.i("Start Champion Database Update")
         val jsonRoot = loadChampionJson()
         val champsToSave: MutableList<Champion?> = ArrayList()
         for (champion in jsonRoot.data.values) {
@@ -119,6 +121,22 @@ class MetadataRepository @Inject constructor(
                     ))
         }
         championDao.insertAll(champsToSave)
+        Timber.i("Champion Database updated.")
+    }
+    /**
+     * This method will one day check online for availability of an update of the data, compare it
+     * with the data currently owned, and perform an update if needed. For now, it simply checks if
+     * the database is empty, and if yes, loads the embedded champion json.
+     */
+
+    private fun loadChampionJson(): ChampionJSONRoot {
+
+
+        // Instead of applicationContext.assets.open(EMBEDDED_JSON_NAME).use
+        // The data will be downloaded from the internet and directly passed as string without
+        // Taking phone storage
+        return gson.fromJson(downloadJSON("CHAMPION"), ChampionJSONRoot::class.java)
+
     }
 
     private fun downloadJSON(objectType: String): String {
@@ -178,20 +196,4 @@ class MetadataRepository @Inject constructor(
         return championFull
 
     }*/
-
-    /**
-     * This method will one day check online for availability of an update of the data, compare it
-     * with the data currently owned, and perform an update if needed. For now, it simply checks if
-     * the database is empty, and if yes, loads the embedded champion json.
-     */
-
-    private fun loadChampionJson(): ChampionJSONRoot {
-
-
-        // Instead of applicationContext.assets.open(EMBEDDED_JSON_NAME).use
-        // The data will be downloaded from the internet and directly passed as string without
-        // Taking phone storage
-        return gson.fromJson(downloadJSON("CHAMPION"), ChampionJSONRoot::class.java)
-
-    }
 }

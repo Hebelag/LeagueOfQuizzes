@@ -389,7 +389,7 @@ public class DBHelper extends SQLiteOpenHelper {
     String jsonFormatted = "";
 
     try {
-      InputStream is = context.getAssets().open("championFull.json");
+      InputStream is = context.getAssets().open("");
       int size = is.available();
       byte[] buffer = new byte[size];
       is.read(buffer);

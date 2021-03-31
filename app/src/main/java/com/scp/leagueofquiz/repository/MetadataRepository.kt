@@ -61,30 +61,31 @@ class MetadataRepository @Inject constructor(
         Timber.i("Start Item Database Update")
         val json = loadItemJSON()
         val itemsToSave: MutableList<Item?> = ArrayList()
-        for (item in json.data.values){
+        for (item in json.data.entries){
             itemsToSave.add(
                     Item(
-                            name = item.name,
-                            gold = item.gold,
-                            group = item.group,
-                            description = item.description,
-                            colloq = item.colloq,
-                            plaintext = item.plaintext,
-                            consumed = item.consumed,
-                            stacks = item.stacks,
-                            depth = item.depth,
-                            effect = item.effect,
-                            consumeOnFull = item.consumeOnFull,
-                            from = item.from,
-                            into = item.into,
-                            specialRecipe = item.specialRecipe,
-                            inStore = item.inStore,
-                            hideFromAll = item.hideFromAll,
-                            requiredChampion = item.requiredChampion,
-                            requiredAlly = item.requiredAlly,
-                            stats = item.stats,
-                            tags = item.tags,
-                            maps = item.maps
+                            identifier = item.key,
+                            name = item.value.name,
+                            gold = item.value.gold,
+                            group = item.value.group,
+                            description = item.value.description,
+                            colloq = item.value.colloq,
+                            plaintext = item.value.plaintext,
+                            consumed = item.value.consumed,
+                            stacks = item.value.stacks,
+                            depth = item.value.depth,
+                            effect = item.value.effect,
+                            consumeOnFull = item.value.consumeOnFull,
+                            from = item.value.from,
+                            into = item.value.into,
+                            specialRecipe = item.value.specialRecipe,
+                            inStore = item.value.inStore,
+                            hideFromAll = item.value.hideFromAll,
+                            requiredChampion = item.value.requiredChampion,
+                            requiredAlly = item.value.requiredAlly,
+                            stats = item.value.stats,
+                            tags = item.value.tags,
+                            maps = item.value.maps
                     )
             )
         }

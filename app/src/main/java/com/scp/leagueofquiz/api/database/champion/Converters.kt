@@ -14,16 +14,12 @@ class Converters {
 
     @TypeConverter
     fun arrayToString(stringList: List<String>?): String?{
-        if (stringList != null) {
-            return stringList.joinToString(separator = ",")
-        }
-        else
-            return null
+        return stringList?.joinToString(separator = ",")
     }
 
     @TypeConverter
-    fun stringToArray(stringListString: String): List<String>{
-        return stringListString.split(",").map{it}
+    fun stringToArray(stringListString: String?): List<String>?{
+        return stringListString?.split(",")?.map{it}
     }
 
     @TypeConverter
@@ -81,7 +77,7 @@ class Converters {
         return Gson().fromJson(gsonString,turnsType)
     }
 
-    @TypeConverter
+    /*@TypeConverter
     fun infoStatsToString(statsObject: Map<String,Number>):String{
         return Gson().toJson(statsObject)
     }
@@ -90,7 +86,7 @@ class Converters {
     fun gsonStringToInfoStats(gsonString: String): Map<String,Number>{
         val turnsType = object : TypeToken<Map<String,Number>>(){}.type
         return Gson().fromJson(gsonString,turnsType)
-    }
+    }*/
 
     @TypeConverter
     fun goldToString(goldObject: Gold?): String{

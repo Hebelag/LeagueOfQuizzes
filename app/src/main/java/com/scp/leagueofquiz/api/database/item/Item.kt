@@ -9,6 +9,7 @@ import com.scp.leagueofquiz.api.database.item.jsonClasses.Gold
 data class Item (
         @PrimaryKey(autoGenerate = true)
         val id: Int = 0,
+        val identifier: String = "",
         val name: String,
         val gold: Gold,
         val group: String? = "",
@@ -27,7 +28,7 @@ data class Item (
         val hideFromAll: Boolean? = null,
         val requiredChampion: String? = "",
         val requiredAlly: String? = "",
-        val stats: Map<String, Number>? = mapOf(),
+        val stats: Map<String, Double>? = mapOf(),
         val tags: List<String>,
         val maps: Map<String, Boolean>
         ){

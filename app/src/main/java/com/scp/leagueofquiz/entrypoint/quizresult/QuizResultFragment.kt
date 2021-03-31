@@ -1,17 +1,24 @@
 package com.scp.leagueofquiz.entrypoint.quizresult
 
+import android.content.res.AssetManager
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.scp.leagueofquiz.R
+import com.scp.leagueofquiz.api.database.item.Item
 import com.scp.leagueofquiz.databinding.QuizResultFragmentBinding
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
+import java.io.InputStream
 import java.time.Duration
 import java.util.*
 
+@AndroidEntryPoint
 class QuizResultFragment : Fragment(R.layout.quiz_result_fragment) {
     private val viewModel: QuizResultViewModel by viewModels()
     private val binding by viewBinding(QuizResultFragmentBinding::bind)
@@ -36,10 +43,27 @@ class QuizResultFragment : Fragment(R.layout.quiz_result_fragment) {
                     .navigate(
                             QuizResultFragmentDirections.actionQuizResultFragmentToMainMenuFragment())
         }
+        binding.itemView.setOnClickListener {
+            viewModel.chooseImage()}
         setScoreLineVisibility(viewModel.quizMode)
         viewModel.score.observe(viewLifecycleOwner, { score: Int -> setScore(score) })
         viewModel.failedAttempts.observe(viewLifecycleOwner, { failedAttempts: Int -> failedAttempt(failedAttempts) })
         viewModel.timer.observe(viewLifecycleOwner, { duration: Duration -> setTimer(duration) })
+        viewModel.itemImage.observe(viewLifecycleOwner, ::setItemImage)
+    }
+
+    private fun setItemImage(item: Item) {
+        try {
+            // get input stream
+            val ims: InputStream = requireContext().assets.open("image_drawables/${item.identifier}.png", AssetManager.ACCESS_BUFFER)
+            // load image as Drawable
+            val d = Drawable.createFromStream(ims, null)
+            // set image to ImageView
+            binding.itemView.setImageDrawable(d)
+            ims.close()
+        } catch (ex: IOException) {
+            return
+        }
     }
 
     private fun setTimer(duration: Duration) {

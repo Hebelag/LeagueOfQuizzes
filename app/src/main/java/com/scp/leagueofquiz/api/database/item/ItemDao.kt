@@ -16,6 +16,6 @@ interface ItemDao {
     @Query("SELECT * FROM item WHERE name ORDER BY random() LIMIT :quantity")
     suspend fun findRandomItems( quantity: Int): List<Item>
 
-    @Query("SELECT * FROM item WHERE name ORDER BY random() LIMIT 1")
+    @Query("SELECT * FROM item ORDER BY random() LIMIT 1")
     suspend fun findRandomItem(): Item
 }

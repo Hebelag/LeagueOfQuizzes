@@ -1,6 +1,8 @@
 package com.scp.leagueofquiz.entrypoint.championquiz
 
 import android.annotation.SuppressLint
+import android.content.res.AssetManager
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,8 @@ import com.scp.leagueofquiz.entrypoint.championquiz.ChampionQuizViewModel
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
+import java.io.InputStream
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -164,22 +168,27 @@ class ChampionQuizFragment : Fragment(R.layout.champion_quiz_fragment) {
     }
 
     private fun setChampionsGrid(champions: List<Champion>) {
-        binding.btnAns1.setImageResource(
-                resources
-                        .getIdentifier(
-                                champions[0].identifier, "drawable", requireActivity().packageName))
-        binding.btnAns2.setImageResource(
-                resources
-                        .getIdentifier(
-                                champions[1].identifier, "drawable", requireActivity().packageName))
-        binding.btnAns3.setImageResource(
-                resources
-                        .getIdentifier(
-                                champions[2].identifier, "drawable", requireActivity().packageName))
-        binding.btnAns4.setImageResource(
-                resources
-                        .getIdentifier(
-                                champions[3].identifier, "drawable", requireActivity().packageName))
+        binding.btnAns1.setImageDrawable(getChampionImage(champions[0].image.full))
+        binding.btnAns2.setImageDrawable(getChampionImage(champions[1].image.full))
+        binding.btnAns3.setImageDrawable(getChampionImage(champions[2].image.full))
+        binding.btnAns4.setImageDrawable(getChampionImage(champions[3].image.full))
+    }
+
+    private fun getChampionImage(endPath: String): Drawable? {
+        var d: Drawable? = null
+        try {
+            // get input stream
+            val ims: InputStream = requireContext().assets
+                    .open("champion_drawables/$endPath", AssetManager.ACCESS_BUFFER)
+            // load image as Drawable
+            d = Drawable.createFromStream(ims, null)
+            // set image to ImageView
+            ims.close()
+
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+        }
+        return d
     }
 
     private fun setTimeAttackLineVisibility(quizMode: QuizMode?) {

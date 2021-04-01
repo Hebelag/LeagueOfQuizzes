@@ -3,10 +3,7 @@ package com.scp.leagueofquiz.api.database.champion
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Info
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Passive
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Skin
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Spell
+import com.scp.leagueofquiz.api.database.champion.jsonClasses.*
 
 @Suppress("EqualsOrHashCode")
 @Entity
@@ -29,7 +26,8 @@ data class Champion(
         val spells: List<Spell> = arrayListOf(),
         val stats: Map<String, Double> = mapOf(),
         val tags: List<String> = arrayListOf(),
-        val title: String = ""
+        val title: String = "",
+        val image: Image = Image()
 ) {
     companion object {
         private const val DEFAULT_CHAMPION_ID = "defaultchampion"

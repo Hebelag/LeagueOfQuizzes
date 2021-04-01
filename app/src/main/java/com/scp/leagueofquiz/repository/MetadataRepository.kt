@@ -85,7 +85,8 @@ class MetadataRepository @Inject constructor(
                             requiredAlly = item.value.requiredAlly,
                             stats = item.value.stats,
                             tags = item.value.tags,
-                            maps = item.value.maps
+                            maps = item.value.maps,
+                            image = item.value.image
                     )
             )
         }
@@ -112,6 +113,7 @@ class MetadataRepository @Inject constructor(
                             info = champion.info,
                             key = champion.key,
                             title = champion.title,
+                            image = champion.image,
                             skins = champion.skins,
                             lore = champion.lore,
                             tags = champion.tags,

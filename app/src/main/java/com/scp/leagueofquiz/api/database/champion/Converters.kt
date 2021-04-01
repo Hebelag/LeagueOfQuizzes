@@ -3,10 +3,7 @@ package com.scp.leagueofquiz.api.database.champion
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Info
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Passive
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Skin
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Spell
+import com.scp.leagueofquiz.api.database.champion.jsonClasses.*
 import com.scp.leagueofquiz.api.database.item.jsonClasses.Effect
 import com.scp.leagueofquiz.api.database.item.jsonClasses.Gold
 
@@ -77,16 +74,16 @@ class Converters {
         return Gson().fromJson(gsonString,turnsType)
     }
 
-    /*@TypeConverter
-    fun infoStatsToString(statsObject: Map<String,Number>):String{
-        return Gson().toJson(statsObject)
+    @TypeConverter
+    fun imageToString(imageObject: Image):String{
+        return Gson().toJson(imageObject)
     }
 
     @TypeConverter
-    fun gsonStringToInfoStats(gsonString: String): Map<String,Number>{
-        val turnsType = object : TypeToken<Map<String,Number>>(){}.type
+    fun gsonStringToImage(gsonString: String): Image{
+        val turnsType = object : TypeToken<Image>(){}.type
         return Gson().fromJson(gsonString,turnsType)
-    }*/
+    }
 
     @TypeConverter
     fun goldToString(goldObject: Gold?): String{

@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.scp.leagueofquiz.api.database.item.jsonClasses.Effect
 import com.scp.leagueofquiz.api.database.item.jsonClasses.Gold
+import com.scp.leagueofquiz.api.database.item.jsonClasses.Image
 
 @Entity
 data class Item (
@@ -30,6 +31,7 @@ data class Item (
         val requiredAlly: String? = "",
         val stats: Map<String, Double>? = mapOf(),
         val tags: List<String>,
-        val maps: Map<String, Boolean>
+        val maps: Map<String, Boolean>,
+        val image: Image = Image()
         ){
 }

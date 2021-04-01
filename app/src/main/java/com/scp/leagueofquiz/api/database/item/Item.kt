@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.scp.leagueofquiz.api.database.item.jsonClasses.Effect
 import com.scp.leagueofquiz.api.database.item.jsonClasses.Gold
-import com.scp.leagueofquiz.api.database.item.jsonClasses.Image
+import com.scp.leagueofquiz.api.database.shared.Image
 
 @Entity
 data class Item (

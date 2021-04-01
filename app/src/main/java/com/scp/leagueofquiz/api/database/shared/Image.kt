@@ -1,4 +1,4 @@
-package com.scp.leagueofquiz.api.database.item.jsonClasses
+package com.scp.leagueofquiz.api.database.shared
 
 data class Image(
         val full: String = "",

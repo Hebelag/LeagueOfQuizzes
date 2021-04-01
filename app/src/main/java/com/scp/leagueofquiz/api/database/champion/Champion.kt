@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.scp.leagueofquiz.api.database.champion.jsonClasses.*
+import com.scp.leagueofquiz.api.database.shared.Image
 
 @Suppress("EqualsOrHashCode")
 @Entity
@@ -32,10 +33,13 @@ data class Champion(
     companion object {
         private const val DEFAULT_CHAMPION_ID = "defaultchampion"
         private const val DEFAULT_CHAMPION_NAME = "Default Champion"
+        private const val DEFAULT_CHAMPION_IMG_PATH = "DefaultChampion.png"
         @JvmField
         val DEFAULT = Champion(
                 identifier = DEFAULT_CHAMPION_ID,
-                name = DEFAULT_CHAMPION_NAME
+                name = DEFAULT_CHAMPION_NAME,
+                image = Image(full = DEFAULT_CHAMPION_IMG_PATH)
+
         )
     }
 

@@ -55,7 +55,8 @@ class QuizResultFragment : Fragment(R.layout.quiz_result_fragment) {
     private fun setItemImage(item: Item) {
         try {
             // get input stream
-            val ims: InputStream = requireContext().assets.open("image_drawables/${item.image.full}", AssetManager.ACCESS_BUFFER)
+            val ims: InputStream = requireContext().assets
+                    .open("image_drawables/${item.image.full}", AssetManager.ACCESS_BUFFER)
             // load image as Drawable
             val d = Drawable.createFromStream(ims, null)
             // set image to ImageView

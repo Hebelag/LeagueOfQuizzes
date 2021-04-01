@@ -29,7 +29,7 @@
         android:id="@+id/championQuizFragment"
         android:name="com.scp.leagueofquiz.entrypoint.championquiz.ChampionQuizFragment"
         android:label="activity_champion_quiz_game_mode"
-        tools:layout="@layout/activity_champion_quiz_game_mode" >
+        tools:layout="@layout/champion_quiz_fragment" >
         <argument
             android:name="mode"
             app:argType="com.scp.leagueofquiz.entrypoint.shared.QuizMode" />

@@ -92,5 +92,5 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.scp.leagueofquiz.entrypoint.preferences.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment"/>
 </navigation>

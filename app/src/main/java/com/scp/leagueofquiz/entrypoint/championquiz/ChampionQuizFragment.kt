@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.res.AssetManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
+import android.util.Log.ERROR
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +22,14 @@ import com.scp.leagueofquiz.entrypoint.championquiz.ChampionQuizViewModel
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.Response.error
+import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
 import java.time.Duration
 import java.time.Instant
 import java.util.*
+import java.util.logging.Logger
 
 @AndroidEntryPoint
 class ChampionQuizFragment : Fragment(R.layout.champion_quiz_fragment) {
@@ -180,14 +185,14 @@ class ChampionQuizFragment : Fragment(R.layout.champion_quiz_fragment) {
             // get input stream
             val ims: InputStream = requireContext().assets
                     .open("champion_drawables/$endPath", AssetManager.ACCESS_BUFFER)
-            // load image as Drawable
+            // create drawable from input stream
             d = Drawable.createFromStream(ims, null)
-            // set image to ImageView
             ims.close()
 
         } catch (ex: IOException) {
-            ex.printStackTrace()
+            Timber.e(ex)
         }
+        // return the drawable
         return d
     }
 

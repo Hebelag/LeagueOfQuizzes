@@ -95,7 +95,7 @@ class MetadataRepository @Inject constructor(
     }
 
     private fun loadItemJSON(): ItemRoot {
-        return gson.fromJson(downloadJSON("ITEM"),ItemRoot::class.java)
+        return gson.fromJson(downloadJSON(ITEM_OBJECT),ItemRoot::class.java)
     }
 
     private suspend fun handleChampionUpdate() {
@@ -148,8 +148,8 @@ class MetadataRepository @Inject constructor(
         lateinit var urlConnection: HttpURLConnection
         var urlString = ""
         when (objectType){
-            "ITEM" ->  urlString = "http://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/item.json"
-            "CHAMPION" -> urlString  ="http://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/championFull.json"
+            ITEM_OBJECT ->  urlString = "http://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/item.json"
+            CHAMPION_OBJECT -> urlString  ="http://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/championFull.json"
         }
         var inputAsString = ""
         try{
@@ -168,6 +168,11 @@ class MetadataRepository @Inject constructor(
             urlConnection.disconnect()
         }
         return inputAsString
+    }
+
+    companion object{
+        const val ITEM_OBJECT = "ITEM"
+        const val CHAMPION_OBJECT = "CHAMPION"
     }
 
     /* This is a retrofit stub to maybe implement in the future for more flexible data fetching

@@ -13,6 +13,7 @@ import com.scp.leagueofquiz.databinding.QuizResultFragmentBinding
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
 import java.time.Duration
@@ -43,8 +44,7 @@ class QuizResultFragment : Fragment(R.layout.quiz_result_fragment) {
                     .navigate(
                             QuizResultFragmentDirections.actionQuizResultFragmentToMainMenuFragment())
         }
-        binding.itemView.setOnClickListener {
-            viewModel.chooseImage()}
+        binding.itemView.setOnClickListener {viewModel.chooseImage()}
         setScoreLineVisibility(viewModel.quizMode)
         viewModel.score.observe(viewLifecycleOwner, { score: Int -> setScore(score) })
         viewModel.failedAttempts.observe(viewLifecycleOwner, { failedAttempts: Int -> failedAttempt(failedAttempts) })
@@ -63,7 +63,7 @@ class QuizResultFragment : Fragment(R.layout.quiz_result_fragment) {
             binding.itemView.setImageDrawable(d)
             ims.close()
         } catch (ex: IOException) {
-            return
+            Timber.e(ex)
         }
     }
 

@@ -4,32 +4,24 @@ import android.annotation.SuppressLint
 import android.content.res.AssetManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
-import android.util.Log.ERROR
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.scp.leagueofquiz.R
 import com.scp.leagueofquiz.api.database.champion.Champion
 import com.scp.leagueofquiz.databinding.ChampionQuizFragmentBinding
-import com.scp.leagueofquiz.entrypoint.championquiz.ChampionQuizViewModel
 import com.scp.leagueofquiz.entrypoint.shared.QuizMode
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.Response.error
 import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
 import java.time.Duration
 import java.time.Instant
 import java.util.*
-import java.util.logging.Logger
 
 @AndroidEntryPoint
 class ChampionQuizFragment : Fragment(R.layout.champion_quiz_fragment) {

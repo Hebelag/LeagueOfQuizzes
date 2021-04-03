@@ -2,7 +2,7 @@ package com.scp.leagueofquiz.repository
 
 import android.content.Context
 import com.google.gson.Gson
-import com.scp.leagueofquiz.api.database.ChampionJSONRoot
+import com.scp.leagueofquiz.api.database.champion.ChampionRoot
 import com.scp.leagueofquiz.api.database.champion.Champion
 import com.scp.leagueofquiz.api.database.champion.ChampionDao
 import com.scp.leagueofquiz.api.database.item.Item
@@ -132,13 +132,13 @@ class MetadataRepository @Inject constructor(
      * the database is empty, and if yes, loads the embedded champion json.
      */
 
-    private fun loadChampionJson(): ChampionJSONRoot {
+    private fun loadChampionJson(): ChampionRoot {
 
 
         // Instead of applicationContext.assets.open(EMBEDDED_JSON_NAME).use
         // The data will be downloaded from the internet and directly passed as string without
         // Taking phone storage
-        return gson.fromJson(downloadJSON("CHAMPION"), ChampionJSONRoot::class.java)
+        return gson.fromJson(downloadJSON("CHAMPION"), ChampionRoot::class.java)
 
     }
 

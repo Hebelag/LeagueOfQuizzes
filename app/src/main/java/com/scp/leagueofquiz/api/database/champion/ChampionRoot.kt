@@ -1,8 +1,6 @@
-package com.scp.leagueofquiz.api.database
+package com.scp.leagueofquiz.api.database.champion
 
-import com.scp.leagueofquiz.api.database.champion.Champion
-
-data class ChampionJSONRoot(
+data class ChampionRoot(
         val type: String,
         val format: String,
         val version: String,

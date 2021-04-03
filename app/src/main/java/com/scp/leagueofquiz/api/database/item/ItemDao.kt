@@ -3,7 +3,6 @@ package com.scp.leagueofquiz.api.database.item
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.scp.leagueofquiz.api.database.champion.Champion
 
 @Dao
 interface ItemDao {

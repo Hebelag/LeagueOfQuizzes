@@ -1,23 +1,18 @@
 package com.scp.leagueofquiz.entrypoint.mainmenu
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.scp.leagueofquiz.R
 import com.scp.leagueofquiz.databinding.MainMenuFragmentBinding
-import com.scp.leagueofquiz.databinding.QuizResultFragmentBinding
-import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuViewPager.MainMenuItemFragment
-import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuViewPager.MainMenuPagerAdapter
+import com.scp.leagueofquiz.entrypoint.mainmenu.mainMenuViewPager.MainMenuItemFragment
+import com.scp.leagueofquiz.entrypoint.mainmenu.mainMenuViewPager.MainMenuPagerAdapter
 import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuViewPager.Resource.MainMenuItems
-import com.scp.leagueofquiz.entrypoint.quizresult.QuizResultViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*

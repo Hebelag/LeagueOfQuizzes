@@ -3,21 +3,21 @@ package com.scp.leagueofquiz.api.database.champion
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Info
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Passive
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Skin
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Spell
+import com.scp.leagueofquiz.api.database.champion.jsonClasses.*
+import com.scp.leagueofquiz.api.database.item.jsonClasses.Effect
+import com.scp.leagueofquiz.api.database.item.jsonClasses.Gold
+import com.scp.leagueofquiz.api.database.shared.Image
 
 class Converters {
 
     @TypeConverter
-    fun arrayToString(stringList: List<String>): String{
-        return stringList.joinToString(separator = ",")
+    fun arrayToString(stringList: List<String>?): String?{
+        return stringList?.joinToString(separator = ",")
     }
 
     @TypeConverter
-    fun stringToArray(stringListString: String): List<String>{
-        return stringListString.split(",").map{it}
+    fun stringToArray(stringListString: String?): List<String>?{
+        return stringListString?.split(",")?.map{it}
     }
 
     @TypeConverter
@@ -73,6 +73,50 @@ class Converters {
     fun gsonStringToStats(gsonString: String): Map<String,Double>{
         val turnsType = object : TypeToken<Map<String,Double>>(){}.type
         return Gson().fromJson(gsonString,turnsType)
+    }
+
+    @TypeConverter
+    fun imageToString(imageObject: Image):String{
+        return Gson().toJson(imageObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToImage(gsonString: String): Image{
+        val turnsType = object : TypeToken<Image>(){}.type
+        return Gson().fromJson(gsonString,turnsType)
+    }
+
+    @TypeConverter
+    fun goldToString(goldObject: Gold?): String{
+        return Gson().toJson(goldObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToGold(gsonString: String): Gold? {
+        val turnsType = object: TypeToken<Gold>(){}.type
+        return Gson().fromJson(gsonString, turnsType)
+    }
+
+    @TypeConverter
+    fun itemMapsToString(mapsObject: Map<String, Boolean>): String{
+        return Gson().toJson(mapsObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToItemMaps(gsonString: String): Map<String, Boolean>{
+        val turnsType = object: TypeToken<Map<String, Boolean>>(){}.type
+        return Gson().fromJson(gsonString, turnsType)
+    }
+
+    @TypeConverter
+    fun itemEffectToString(effectObject: Effect?): String{
+        return Gson().toJson(effectObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToItemEffect(gsonString: String): Effect?{
+        val turnsType = object: TypeToken<Effect>(){}.type
+        return Gson().fromJson(gsonString, turnsType)
     }
 
 }

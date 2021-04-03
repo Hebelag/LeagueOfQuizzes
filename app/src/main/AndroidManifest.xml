@@ -20,17 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.example.quiztest2.championQuizActivities.ChampionQuizActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name="com.example.quiztest2.championQuizActivities.ChampionQuizEndless" />
-        <activity android:name="com.example.quiztest2.championQuizActivities.ChampionQuizTimeAttack" />
-        <activity android:name="com.example.quiztest2.TestAllValuesFromJSON" />
-        <activity android:name="com.example.quiztest2.championQuizActivities.ChampionQuizTraining" />
-        <activity android:name="com.example.quiztest2.ChampionQuizModeSelect" />
-        <activity android:name="com.example.quiztest2.TestActitity" />
-        <activity android:name="com.example.quiztest2.AbilityQuizActivity" />
-        <activity android:name="com.example.quiztest2.ItemQuizActivity" />
 
 
         <meta-data

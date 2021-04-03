@@ -70,7 +70,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         feedbackPreference.key = "feedback"
         feedbackPreference.title = "Send feedback"
         feedbackPreference.summary = "Report technical issues or suggest new features"
-        feedbackPreference.setIcon(R.drawable.heimerdinger)
+        feedbackPreference.setIcon(R.drawable.ic_launcher_foreground)
         feedbackPreference.intent = Intent(ACTION_VIEW,
                 Uri.parse("https://support-leagueoflegends.riotgames.com/hc/en-us"))
 

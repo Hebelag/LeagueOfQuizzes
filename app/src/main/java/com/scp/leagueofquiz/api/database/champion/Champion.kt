@@ -3,10 +3,8 @@ package com.scp.leagueofquiz.api.database.champion
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Info
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Passive
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Skin
-import com.scp.leagueofquiz.api.database.champion.jsonClasses.Spell
+import com.scp.leagueofquiz.api.database.champion.jsonClasses.*
+import com.scp.leagueofquiz.api.database.shared.Image
 
 @Suppress("EqualsOrHashCode")
 @Entity
@@ -29,15 +27,19 @@ data class Champion(
         val spells: List<Spell> = arrayListOf(),
         val stats: Map<String, Double> = mapOf(),
         val tags: List<String> = arrayListOf(),
-        val title: String = ""
+        val title: String = "",
+        val image: Image = Image()
 ) {
     companion object {
         private const val DEFAULT_CHAMPION_ID = "defaultchampion"
         private const val DEFAULT_CHAMPION_NAME = "Default Champion"
+        private const val DEFAULT_CHAMPION_IMG_PATH = "DefaultChampion.png"
         @JvmField
         val DEFAULT = Champion(
                 identifier = DEFAULT_CHAMPION_ID,
-                name = DEFAULT_CHAMPION_NAME
+                name = DEFAULT_CHAMPION_NAME,
+                image = Image(full = DEFAULT_CHAMPION_IMG_PATH)
+
         )
     }
 

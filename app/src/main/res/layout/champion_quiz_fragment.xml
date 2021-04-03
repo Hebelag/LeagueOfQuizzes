@@ -180,7 +180,6 @@
                 android:contentDescription="@android:string/untitled"
                 android:padding="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/defaultchampion"
                 android:tag="@string/btn_ans_1_tag"/>
 
             <ImageButton
@@ -190,7 +189,6 @@
                 android:contentDescription="@android:string/untitled"
                 android:padding="5dp"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/defaultchampion"
                 android:tag="@string/btn_ans_2_tag" />
 
         </LinearLayout>
@@ -211,7 +209,6 @@
                 android:cropToPadding="false"
                 android:padding="5dp"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/defaultchampion"
                 android:tag="@string/btn_ans_3_tag" />
 
             <ImageButton
@@ -221,7 +218,6 @@
                 android:contentDescription="@android:string/untitled"
                 android:padding="5dp"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/defaultchampion"
                 android:tag="@string/btn_ans_4_tag" />
 
         </LinearLayout>

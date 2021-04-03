@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.scp.leagueofquiz.api.database.LolDatabase
 import com.scp.leagueofquiz.api.database.champion.ChampionDao
+import com.scp.leagueofquiz.api.database.item.ItemDao
 import com.scp.leagueofquiz.api.database.metadata.MetadataDao
 import dagger.Module
 import dagger.Provides
@@ -27,6 +28,13 @@ class ApiModule {
     fun provideChampionDao(db: LolDatabase): ChampionDao {
         return db.championDao()
     }
+
+    @Singleton
+    @Provides
+    fun provideItemDao(db: LolDatabase): ItemDao {
+        return db.itemDao()
+    }
+
 
     @Singleton
     @Provides

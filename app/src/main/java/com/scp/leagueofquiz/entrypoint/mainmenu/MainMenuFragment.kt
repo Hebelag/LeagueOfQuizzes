@@ -12,7 +12,7 @@ import com.scp.leagueofquiz.R
 import com.scp.leagueofquiz.databinding.MainMenuFragmentBinding
 import com.scp.leagueofquiz.entrypoint.mainmenu.mainMenuViewPager.MainMenuItemFragment
 import com.scp.leagueofquiz.entrypoint.mainmenu.mainMenuViewPager.MainMenuPagerAdapter
-import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuViewPager.Resource.MainMenuItems
+import com.scp.leagueofquiz.entrypoint.mainmenu.mainMenuViewPager.resource.MainMenuItems
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*

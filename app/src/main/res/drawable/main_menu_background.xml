@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@drawable/background_magic_720"/>
-    <item android:drawable= "@drawable/main_menu_border_small"/>
+    <item android:drawable= "@drawable/main_menu_border_ninepatched"/>
     <item android:drawable="@drawable/split_start_background"/>
 
 </layer-list>

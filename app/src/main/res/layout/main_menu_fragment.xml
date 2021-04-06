@@ -37,17 +37,76 @@
         android:layout_width="match_parent">
 
     </Space>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <ImageButton
             android:id="@+id/preferences"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/main_menu_settings_selector"
-            android:contentDescription="Settings Cog"/>
-    </LinearLayout>
+            android:contentDescription="Settings Cog"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/b_e_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/icon_blue_essence"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toStartOf="@id/b_e_container"
+            app:layout_constraintStart_toEndOf="@id/preferences"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/b_e_container"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:background="@drawable/essence_background"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintStart_toEndOf="@id/b_e_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/icon_background"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            app:layout_constraintStart_toEndOf="@id/b_e_container"
+            app:layout_constraintEnd_toStartOf="@id/o_e_container"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/icon_background"
+            android:foreground="@drawable/icon_foreground"/>
+
+        <TextView
+            android:id="@+id/o_e_container"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:background="@drawable/essence_background"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintEnd_toStartOf="@id/o_e_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/o_e_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/icon_orange_essence"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toStartOf="@id/info_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/info_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/info_icon"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Space
         android:layout_width="match_parent"

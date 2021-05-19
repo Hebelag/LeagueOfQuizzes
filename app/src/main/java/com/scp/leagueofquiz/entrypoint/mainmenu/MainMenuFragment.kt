@@ -12,7 +12,7 @@ import com.scp.leagueofquiz.R
 import com.scp.leagueofquiz.databinding.MainMenuFragmentBinding
 import com.scp.leagueofquiz.entrypoint.mainmenu.mainMenuViewPager.MainMenuItemFragment
 import com.scp.leagueofquiz.entrypoint.mainmenu.mainMenuViewPager.MainMenuPagerAdapter
-import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuViewPager.Resource.MainMenuItems
+import com.scp.leagueofquiz.entrypoint.mainmenu.mainMenuViewPager.resource.MainMenuItems
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -47,11 +47,11 @@ class MainMenuFragment : Fragment(R.layout.main_menu_fragment) {
     binding.buttonAbilityQuiz.setOnClickListener(
         v ->
             NavHostFragment.findNavController(this)
-                .navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ABILITY)));*/
+                .navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ABILITY)));
         binding.preferences.setOnClickListener {
             NavHostFragment.findNavController(this)
                     .navigate(MainMenuFragmentDirections.actionSettings())
-        }
+        }*/
     }
 
     private fun init() {

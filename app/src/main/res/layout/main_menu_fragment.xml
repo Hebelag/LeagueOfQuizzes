@@ -1,113 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/main_menu_background"
     android:orientation="vertical"
-    tools:context=".entrypoint.mainmenu.MainMenuFragment"
-    android:weightSum="100"
-    android:background="@drawable/background_magic_720"
-    >
-
-    <LinearLayout android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:weightSum="100">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ver 0.000001xl.1 alpha2"
-            android:textColor="@color/white"/>
-        <Space
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="UID: 05782850238583"
-            android:textColor="@color/white"/>
-
-    </LinearLayout>
+    tools:context=".entrypoint.mainmenu.MainMenuFragment">
 
 
+    <ImageView
+        android:id="@+id/b_e_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/icon_blue_essence"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_info_below"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/o_e_image"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:layout_marginStart="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top_bar" />
+
+    <TextView
+        android:id="@+id/b_e_container"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/essence_background"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_info_below"
+        app:layout_constraintStart_toEndOf="@+id/b_e_image"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top_bar" />
+
+    <TextView
+        android:id="@+id/o_e_container"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/essence_background"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_info_below"
+        app:layout_constraintEnd_toStartOf="@+id/o_e_image"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top_bar" />
+
+    <ImageView
+        android:id="@+id/o_e_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/icon_orange_essence"
+        android:scaleType="fitCenter"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_info_below"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/b_e_image"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top_bar" />
 
 
-    <Space android:layout_height="10dp"
-        android:layout_width="match_parent">
-
-    </Space>
-    <LinearLayout
+    <ImageView
+        android:id="@+id/icon_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <ImageButton
-            android:id="@+id/preferences"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/main_menu_settings_selector"
-            android:contentDescription="Settings Cog"/>
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:background="@drawable/icon_background"
+        android:foreground="@drawable/icon_foreground"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline_top_bar" />
 
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/guideline_bottom_pager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_top_pager" />
 
-    <FrameLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="@string/buttonTestText"
-
-            android:background="@drawable/pedestal_04_inventory"
-            android:scaleType="fitXY"/>
-
-        <FrameLayout
-            android:layout_width="426dp"
-            android:layout_height="wrap_content">
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/view_pager"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_gravity="top"
-                android:layout_marginBottom="10dp" />
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="35dp"
-                android:layout_height="10dp"
-                android:layout_gravity="top|center"
-                android:layout_marginStart="1dp"
-                android:layout_marginTop="135dp"
-                android:background="#00FFFFFF"
-                app:tabBackground="@drawable/main_menu_tab_selector"
-                app:tabGravity="center"
-                app:tabIndicatorHeight="0dp"
-                app:tabMaxWidth="30dp"
-                app:tabMinWidth="3dp" />
-
-        </FrameLayout>
-    </FrameLayout>
-
-
-
-
-
+        android:layout_height="0dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintDimensionRatio="h,3:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_pager"
+        app:tabBackground="@drawable/main_menu_tab_selector"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabMaxWidth="30dp"
+        app:tabMinWidth="3dp" />
 
     <Button
         android:id="@+id/buttonTEST"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/buttonTestText"
-        android:textSize="8sp"/>
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tab_layout"
+        tools:layout_conversion_absoluteHeight="50dp"
+        tools:layout_conversion_absoluteWidth="100dp" />
 
-</LinearLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.015" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top_pager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom_pager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_info_below"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="icon_background,b_e_image,b_e_container,o_e_container,o_e_image,icon_background" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

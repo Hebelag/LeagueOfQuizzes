@@ -1,4 +1,4 @@
-package com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuViewPager
+package com.scp.leagueofquiz.entrypoint.mainmenu.mainMenuViewPager
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

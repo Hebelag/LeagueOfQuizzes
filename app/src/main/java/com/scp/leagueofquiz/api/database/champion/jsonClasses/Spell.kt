@@ -1,5 +1,7 @@
 package com.scp.leagueofquiz.api.database.champion.jsonClasses
 
+import com.scp.leagueofquiz.api.database.shared.Image
+
 data class Spell (val cooldown: ArrayList<Float>,
                   val cooldownBurn: String,
                   val cost: ArrayList<Float>,
@@ -9,6 +11,7 @@ data class Spell (val cooldown: ArrayList<Float>,
                   val effect: ArrayList<ArrayList<Float>>,
                   val effectBurn: ArrayList<String>,
                   val id: String,
+                  val image: Image,
                   val leveltip: Leveltip,
                   val maxammo: String,
                   val maxrank: Byte,
@@ -17,4 +20,5 @@ data class Spell (val cooldown: ArrayList<Float>,
                   val rangeBurn: String,
                   val resource: String,
                   val tooltip: String
+
 )

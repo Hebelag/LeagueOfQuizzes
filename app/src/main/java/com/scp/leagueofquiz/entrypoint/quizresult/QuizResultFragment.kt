@@ -29,7 +29,6 @@ class QuizResultFragment : Fragment(R.layout.quiz_result_fragment) {
         val argsBundle = arguments
         if (argsBundle != null) {
             val args = QuizResultFragmentArgs.fromBundle(argsBundle)
-            viewModel.quizMode = args.quizmode
             viewModel.score.value = args.score
             viewModel.timer.value = Duration.ofMillis(args.timer)
             viewModel.failedAttempts.value = args.failedAttempts
@@ -45,7 +44,7 @@ class QuizResultFragment : Fragment(R.layout.quiz_result_fragment) {
                             QuizResultFragmentDirections.actionQuizResultFragmentToMainMenuFragment())
         }
         binding.itemView.setOnClickListener {viewModel.chooseImage()}
-        setScoreLineVisibility(viewModel.quizMode)
+        setScoreLineVisibility()
         viewModel.score.observe(viewLifecycleOwner, { score: Int -> setScore(score) })
         viewModel.failedAttempts.observe(viewLifecycleOwner, { failedAttempts: Int -> failedAttempt(failedAttempts) })
         viewModel.timer.observe(viewLifecycleOwner, { duration: Duration -> setTimer(duration) })
@@ -91,20 +90,11 @@ class QuizResultFragment : Fragment(R.layout.quiz_result_fragment) {
     }
 
     private fun setScore(score: Int) {
-        if (viewModel.quizMode == QuizMode.TIME) {
-            binding.resultScoreTimeAttack.text = getString(R.string.result_final_score, score)
-        } else {
             binding.resultScoreNonTime.text = getString(R.string.result_champions, score)
-        }
     }
 
-    private fun setScoreLineVisibility(quizMode: QuizMode) {
-        if (quizMode == QuizMode.TIME) {
-            binding.resultScoreTimeAttack.visibility = View.VISIBLE
-            binding.resultScoreNonTime.visibility = View.INVISIBLE
-        } else {
+    private fun setScoreLineVisibility() {
             binding.resultScoreTimeAttack.visibility = View.INVISIBLE
             binding.resultScoreNonTime.visibility = View.VISIBLE
-        }
     }
 }

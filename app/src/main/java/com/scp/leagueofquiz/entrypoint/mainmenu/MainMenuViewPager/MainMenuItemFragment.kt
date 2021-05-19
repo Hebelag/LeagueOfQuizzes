@@ -15,7 +15,8 @@ import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuFragmentDirections
 
 class MainMenuItemFragment : Fragment() {
     // Widgets
-    private lateinit var mImageView: ImageView
+    private lateinit var mPedestalImageView: ImageView
+    private lateinit var mLightShineView: ImageView
     private lateinit var mTitle: TextView
 
     // Variables
@@ -33,7 +34,8 @@ class MainMenuItemFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mImageView = view.findViewById(R.id.image)
+        mPedestalImageView = view.findViewById(R.id.pedestal_image)
+        mLightShineView = view.findViewById(R.id.light_shine_image)
         mTitle = view.findViewById(R.id.title)
         init()
     }
@@ -43,10 +45,14 @@ class MainMenuItemFragment : Fragment() {
             val options = RequestOptions().placeholder(R.drawable.ic_launcher_background)
             Glide.with(requireActivity())
                     .setDefaultRequestOptions(options)
-                    .load(mMainMenuItem?.image)
-                    .into(mImageView)
+                    .load(mMainMenuItem?.pedestal_image)
+                    .into(mPedestalImageView)
+            Glide.with(requireActivity())
+                    .setDefaultRequestOptions(options)
+                    .load(mMainMenuItem?.light_image)
+                    .into(mLightShineView)
             mTitle.text = mMainMenuItem?.title
-            mImageView.setOnClickListener {
+            mPedestalImageView.setOnClickListener {
                 val primaryNavFragment = parentFragmentManager.primaryNavigationFragment
                 val quizType = mMainMenuItem?.quizType
                 if (primaryNavFragment != null && quizType != null) {

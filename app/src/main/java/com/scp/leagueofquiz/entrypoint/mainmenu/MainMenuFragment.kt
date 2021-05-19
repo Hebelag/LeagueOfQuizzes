@@ -47,11 +47,11 @@ class MainMenuFragment : Fragment(R.layout.main_menu_fragment) {
     binding.buttonAbilityQuiz.setOnClickListener(
         v ->
             NavHostFragment.findNavController(this)
-                .navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ABILITY)));*/
+                .navigate(MainMenuFragmentDirections.actionQuizMode(QuizType.ABILITY)));
         binding.preferences.setOnClickListener {
             NavHostFragment.findNavController(this)
                     .navigate(MainMenuFragmentDirections.actionSettings())
-        }
+        }*/
     }
 
     private fun init() {

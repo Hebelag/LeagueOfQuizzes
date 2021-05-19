@@ -6,4 +6,4 @@ import com.scp.leagueofquiz.entrypoint.shared.QuizType
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class MainMenuItem(val title: String, val image: Int = R.drawable.empty_pedestal_2, val quizType: QuizType) : Parcelable
+class MainMenuItem(val title: String, val pedestal_image: Int = R.drawable.pedestal_01_inventory, val light_image: Int = R.drawable.pedestal_light_shine, val quizType: QuizType) : Parcelable

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.scp.leagueofquiz.api.database.champion.Champion
 import com.scp.leagueofquiz.api.database.shared.Image
 import com.scp.leagueofquiz.entrypoint.shared.DefaultedLiveData
+import com.scp.leagueofquiz.entrypoint.shared.FetchUtil
 import com.scp.leagueofquiz.entrypoint.shared.IncrementableLiveData
 import com.scp.leagueofquiz.entrypoint.shared.QuizType
 import com.scp.leagueofquiz.repository.ChampionRepository
@@ -80,20 +81,18 @@ class TextToPicturesViewModel @Inject constructor(
     fun pickAnswer(champIndex: Int) {
         val grid = imageGrid.value ?: throw RuntimeException("Grid is empty!")
         val imageChosen = grid[champIndex - 1]
-        // If answer is right:
         if (imageChosen == rightImage.value) {
             questionsAnswered.add(imageChosen)
             score.setIncrement()
             // Switch statement which game mode is currently played. Should be restructured in the
             // Future for our needs
-            if (questionsAnswered.size == questionCount) {
+            if (score.value == questionCount) {
                 quizFinished.setValue(true)
             } else {
                 loadImageGrid()
             }
 
         }
-        // If it's wrong.
         else {
             // Add some audio or image flash here
 
@@ -110,17 +109,17 @@ class TextToPicturesViewModel @Inject constructor(
 
             repeat(4){
                 when(quizType){
-                    QuizType.CHAMPION -> randomImages.add(fetchChampion())
-                    QuizType.ABILITY -> randomImages.add(fetchAbility())
-                    QuizType.ITEM -> randomImages.add(fetchItem())
+                    QuizType.CHAMPION -> randomImages.add(FetchUtil.fetchChampion(championRepository))
+                    QuizType.ABILITY -> randomImages.add(FetchUtil.fetchAbility(championRepository))
+                    QuizType.ITEM -> randomImages.add(FetchUtil.fetchItem(itemRepository))
                 }
 
                 while (randomImages.count() != randomImages.distinct().count()){
                     randomImages.removeAt(it)
                     when(quizType){
-                        QuizType.CHAMPION -> randomImages.add(fetchChampion())
-                        QuizType.ABILITY -> randomImages.add(fetchAbility())
-                        QuizType.ITEM -> randomImages.add(fetchItem())
+                        QuizType.CHAMPION -> randomImages.add(FetchUtil.fetchChampion(championRepository))
+                        QuizType.ABILITY -> randomImages.add(FetchUtil.fetchAbility(championRepository))
+                        QuizType.ITEM -> randomImages.add(FetchUtil.fetchItem(itemRepository))
                     }
                 }
             }
@@ -130,20 +129,7 @@ class TextToPicturesViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchItem(): Pair<String, Image> {
-        val item = itemRepository.getRandomItem()
-        return Pair(item.name, item.image)
-    }
 
-    private suspend fun fetchAbility(): Pair<String, Image> {
-        val ability = championRepository.getRandomAbility()
-        return Pair(ability.name,ability.image)
-    }
-
-    private suspend fun fetchChampion(): Pair<String,Image> {
-        val champion = championRepository.getRandomChampion(emptySet())
-        return Pair(champion.name,champion.image)
-    }
 
     // One of the four champions needs to be the right one. This randomizer chooses which one it is
     private fun selectRightImage(fetchedImages: List<Pair<String,Image>>): Pair<String,Image> {

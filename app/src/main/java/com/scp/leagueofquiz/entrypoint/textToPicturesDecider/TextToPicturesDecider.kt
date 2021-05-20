@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.scp.leagueofquiz.R
 import com.scp.leagueofquiz.databinding.TextToPicturesDeciderFragmentBinding
+import com.scp.leagueofquiz.entrypoint.shared.GameModes
 import com.scp.leagueofquiz.entrypoint.shared.QuizType
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,23 +19,45 @@ class TextToPicturesDecider : Fragment(R.layout.text_to_pictures_decider_fragmen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val argsBundle = arguments
+        if (argsBundle != null){
+            val args = TextToPicturesDeciderArgs.fromBundle(argsBundle)
+            viewModel.gameMode = args.gameMode
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonToChampions.setOnClickListener{
-            NavHostFragment.findNavController(this)
-                .navigate(TextToPicturesDeciderDirections.goToTextToPictures(QuizType.CHAMPION))
+        if (viewModel.gameMode == GameModes.TEXTTOPICTURES){
+            binding.buttonToChampions.setOnClickListener{
+                NavHostFragment.findNavController(this)
+                        .navigate(TextToPicturesDeciderDirections.goToTextToPictures(QuizType.CHAMPION))
+            }
+            binding.buttonToAbilitites.setOnClickListener {
+                NavHostFragment.findNavController(this)
+                        .navigate(TextToPicturesDeciderDirections.goToTextToPictures(QuizType.ABILITY))
+            }
+            binding.buttonToIcons.setOnClickListener {
+                NavHostFragment.findNavController(this)
+                        .navigate(TextToPicturesDeciderDirections.goToTextToPictures(QuizType.ITEM))
+            }
+
+        } else {
+            binding.buttonToChampions.setOnClickListener{
+                NavHostFragment.findNavController(this)
+                        .navigate(TextToPicturesDeciderDirections.goToPictureToTexts(QuizType.CHAMPION))
+            }
+            binding.buttonToAbilitites.setOnClickListener {
+                NavHostFragment.findNavController(this)
+                        .navigate(TextToPicturesDeciderDirections.goToPictureToTexts(QuizType.ABILITY))
+            }
+            binding.buttonToIcons.setOnClickListener {
+                NavHostFragment.findNavController(this)
+                        .navigate(TextToPicturesDeciderDirections.goToPictureToTexts(QuizType.ITEM))
+            }
         }
-        binding.buttonToAbilitites.setOnClickListener {
-            NavHostFragment.findNavController(this)
-                    .navigate(TextToPicturesDeciderDirections.goToTextToPictures(QuizType.ABILITY))
-        }
-        binding.buttonToIcons.setOnClickListener {
-            NavHostFragment.findNavController(this)
-                    .navigate(TextToPicturesDeciderDirections.goToTextToPictures(QuizType.ITEM))
-        }
+
 
     }
 

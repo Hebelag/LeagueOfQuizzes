@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.scp.leagueofquiz.R
 import com.scp.leagueofquiz.entrypoint.mainmenu.MainMenuFragmentDirections
+import com.scp.leagueofquiz.entrypoint.shared.GameModes
 
 class MainMenuItemFragment : Fragment() {
     // Widgets
@@ -57,7 +58,7 @@ class MainMenuItemFragment : Fragment() {
                 val quizType = mMainMenuItem?.quizType
                 if (primaryNavFragment != null && quizType != null) {
                     NavHostFragment.findNavController(primaryNavFragment)
-                            .navigate(MainMenuFragmentDirections.goToQuizTypeDecider())
+                            .navigate(MainMenuFragmentDirections.goToQuizTypeDecider(GameModes.randomGameMode()))
                 }
             }
         }

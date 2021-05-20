@@ -97,8 +97,8 @@ class TextToPicturesFragment : Fragment(R.layout.text_to_pictures_fragment) {
     }
 
     private fun pickAnswer(view: View) {
-        val champIndex = view.tag.toString().toInt()
-        viewModel.pickAnswer(champIndex)
+        val instanceIndex = view.tag.toString().toInt()
+        viewModel.pickAnswer(instanceIndex)
     }
 
     private fun setTimer(timer: Duration) {

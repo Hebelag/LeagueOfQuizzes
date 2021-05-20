@@ -68,5 +68,23 @@
         <action
             android:id="@+id/goToTextToPictures"
             app:destination="@id/textToPicturesQuizFragment" />
+        <action
+            android:id="@+id/goToPictureToTexts"
+            app:destination="@id/pictureToTexts" />
+        <argument
+            android:name="GameMode"
+            app:argType="com.scp.leagueofquiz.entrypoint.shared.GameModes" />
+    </fragment>
+    <fragment
+        android:id="@+id/pictureToTexts"
+        android:name="com.scp.leagueofquiz.entrypoint.picturetotexts.PictureToTexts"
+        android:label="picture_to_texts_fragment"
+        tools:layout="@layout/picture_to_texts_fragment" >
+        <argument
+            android:name="quizType"
+            app:argType="com.scp.leagueofquiz.entrypoint.shared.QuizType" />
+        <action
+            android:id="@+id/goToResultFromPicToTexts"
+            app:destination="@id/quizResultFragment" />
     </fragment>
 </navigation>

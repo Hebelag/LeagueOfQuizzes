@@ -119,4 +119,37 @@ class Converters {
         return Gson().fromJson(gsonString, turnsType)
     }
 
+    @TypeConverter
+    fun leveltipToString(leveltipObject: Leveltip?): String{
+        return Gson().toJson(leveltipObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToLeveltip(gsonString: String): Leveltip?{
+        val turnsType = object: TypeToken<Leveltip>(){}.type
+        return Gson().fromJson(gsonString, turnsType)
+    }
+
+    @TypeConverter
+    fun floatArrayToString(floatArrayObject: List<Float>): String{
+        return Gson().toJson(floatArrayObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToFloatArray(gsonString: String): List<Float>{
+        val turnsType = object: TypeToken<List<Float>>(){}.type
+        return Gson().fromJson(gsonString, turnsType)
+    }
+
+    @TypeConverter
+    fun arrayFloatArrayToString(arrayFloatArrayObject: List<ArrayList<Float>>): String{
+        return Gson().toJson(arrayFloatArrayObject)
+    }
+
+    @TypeConverter
+    fun gsonStringToArrayFloatArray(gsonString: String): List<ArrayList<Float>>{
+        val turnsType = object: TypeToken<List<ArrayList<Float>>>(){}.type
+        return Gson().fromJson(gsonString, turnsType)
+    }
+
 }

@@ -14,6 +14,7 @@ import com.scp.leagueofquiz.R
 import com.scp.leagueofquiz.api.database.champion.Champion
 import com.scp.leagueofquiz.api.database.shared.Image
 import com.scp.leagueofquiz.databinding.TextToPicturesFragmentBinding
+import com.scp.leagueofquiz.entrypoint.shared.QuizType
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -136,18 +137,23 @@ class TextToPicturesFragment : Fragment(R.layout.text_to_pictures_fragment) {
     }
 
     private fun setImageGrid(images: List<Pair<String, Image>>) {
-        binding.btnAns1.setImageDrawable(getImage(images[0].second.full))
-        binding.btnAns2.setImageDrawable(getImage(images[1].second.full))
-        binding.btnAns3.setImageDrawable(getImage(images[2].second.full))
-        binding.btnAns4.setImageDrawable(getImage(images[3].second.full))
+        binding.btnAns1.setImageDrawable(getImage(images[0].second.full, viewModel.quizType))
+        binding.btnAns2.setImageDrawable(getImage(images[1].second.full, viewModel.quizType))
+        binding.btnAns3.setImageDrawable(getImage(images[2].second.full, viewModel.quizType))
+        binding.btnAns4.setImageDrawable(getImage(images[3].second.full, viewModel.quizType))
     }
 
-    private fun getImage(endPath: String): Drawable? {
+    private fun getImage(endPath: String, quizType: QuizType): Drawable? {
         var d: Drawable? = null
         try {
-            // get input stream
+
+            val imagePath = when(quizType){
+                QuizType.CHAMPION -> "champion_drawables"
+                QuizType.ABILITY -> "ability_drawables"
+                QuizType.ITEM -> "image_drawables"
+            }
             val ims: InputStream = requireContext().assets
-                    .open("champion_drawables/$endPath", AssetManager.ACCESS_BUFFER)
+                    .open("$imagePath/$endPath", AssetManager.ACCESS_BUFFER)
             // create drawable from input stream
             d = Drawable.createFromStream(ims, null)
             ims.close()

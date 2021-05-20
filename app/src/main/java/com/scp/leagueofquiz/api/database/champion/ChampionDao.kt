@@ -3,6 +3,7 @@ package com.scp.leagueofquiz.api.database.champion
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.scp.leagueofquiz.api.database.champion.jsonClasses.Spell
 
 @Dao
 interface ChampionDao {
@@ -17,4 +18,7 @@ interface ChampionDao {
 
     @Query("SELECT * FROM champion WHERE name NOT IN (:names) ORDER BY random() LIMIT 1")
     suspend fun findRandomChampionExcept(names: List<String>): Champion
+
+    @Query("SELECT * FROM champion ORDER BY random() LIMIT 1")
+    suspend fun findRandomAbility(): Champion
 }

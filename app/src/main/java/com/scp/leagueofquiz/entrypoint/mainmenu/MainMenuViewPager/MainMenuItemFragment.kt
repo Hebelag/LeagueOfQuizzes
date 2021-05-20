@@ -57,7 +57,7 @@ class MainMenuItemFragment : Fragment() {
                 val quizType = mMainMenuItem?.quizType
                 if (primaryNavFragment != null && quizType != null) {
                     NavHostFragment.findNavController(primaryNavFragment)
-                            .navigate(MainMenuFragmentDirections.goToTextToPictures())
+                            .navigate(MainMenuFragmentDirections.goToQuizTypeDecider())
                 }
             }
         }

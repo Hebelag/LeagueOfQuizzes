@@ -29,7 +29,7 @@ class TextToPicturesViewModel @Inject constructor(
     private val questionsAnswered = HashSet<Pair<String,Image>>()
 
     // Mutable data
-    var quizType: String = ""
+    lateinit var quizType: QuizType
     val imageGrid: MutableLiveData<List<Pair<String,Image>>> = MutableLiveData()
     val score = IncrementableLiveData(0)
     val failedAttempts = IncrementableLiveData(0)
@@ -55,7 +55,7 @@ class TextToPicturesViewModel @Inject constructor(
 
     private fun resetImageGrid() {
         // Reset the champion images to the default image
-        var defaultPair = Pair(Champion.DEFAULT.name,Champion.DEFAULT.image)
+        val defaultPair = Pair(Champion.DEFAULT.name,Champion.DEFAULT.image)
         imageGrid.value = listOf(defaultPair, defaultPair, defaultPair, defaultPair)
     }
 
@@ -110,16 +110,18 @@ class TextToPicturesViewModel @Inject constructor(
 
             repeat(4){
                 when(quizType){
-                    "Champion" -> randomImages.add(fetchChampion())
-                    "Ability" -> randomImages.add(fetchAbility())
-                    "Item" -> randomImages.add(fetchItem())
+                    QuizType.CHAMPION -> randomImages.add(fetchChampion())
+                    QuizType.ABILITY -> randomImages.add(fetchAbility())
+                    QuizType.ITEM -> randomImages.add(fetchItem())
                 }
 
                 while (randomImages.count() != randomImages.distinct().count()){
                     randomImages.removeAt(it)
-                    var fetchedInstance = championRepository.getRandomChampion(emptySet())
-                    var fetchedInstancePair = Pair(fetchedInstance.name,fetchedInstance.image)
-                    randomImages.add(fetchedInstancePair)
+                    when(quizType){
+                        QuizType.CHAMPION -> randomImages.add(fetchChampion())
+                        QuizType.ABILITY -> randomImages.add(fetchAbility())
+                        QuizType.ITEM -> randomImages.add(fetchItem())
+                    }
                 }
             }
 
@@ -129,17 +131,17 @@ class TextToPicturesViewModel @Inject constructor(
     }
 
     private suspend fun fetchItem(): Pair<String, Image> {
-        var item = itemRepository.getRandomItem()
+        val item = itemRepository.getRandomItem()
         return Pair(item.name, item.image)
     }
 
-    private fun fetchAbility(): Pair<String, Image> {
-        // MAKE NEW DATABASE FUNCTION IN CHAMPIONDAO
-        return Pair(Champion.DEFAULT.name,Champion.DEFAULT.image)
+    private suspend fun fetchAbility(): Pair<String, Image> {
+        val ability = championRepository.getRandomAbility()
+        return Pair(ability.name,ability.image)
     }
 
     private suspend fun fetchChampion(): Pair<String,Image> {
-        var champion = championRepository.getRandomChampion(emptySet())
+        val champion = championRepository.getRandomChampion(emptySet())
         return Pair(champion.name,champion.image)
     }
 

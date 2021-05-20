@@ -14,8 +14,8 @@
             android:id="@+id/actionSettings"
             app:destination="@id/settingsFragment" />
         <action
-            android:id="@+id/goToTextToPictures"
-            app:destination="@id/textToPicturesQuizFragment" />
+            android:id="@+id/goToQuizTypeDecider"
+            app:destination="@id/textToPicturesDecider" />
     </fragment>
     <fragment
         android:id="@+id/textToPicturesQuizFragment"
@@ -27,8 +27,7 @@
             app:destination="@id/quizResultFragment" />
         <argument
             android:name="quizType"
-            app:argType="string"
-            android:defaultValue="Champion" />
+            app:argType="com.scp.leagueofquiz.entrypoint.shared.QuizType" />
     </fragment>
     <fragment
         android:id="@+id/quizModeFragment"
@@ -61,4 +60,13 @@
         android:id="@+id/settingsFragment"
         android:name="com.scp.leagueofquiz.entrypoint.preferences.SettingsFragment"
         android:label="SettingsFragment"/>
+    <fragment
+        android:id="@+id/textToPicturesDecider"
+        android:name="com.scp.leagueofquiz.entrypoint.textToPicturesDecider.TextToPicturesDecider"
+        android:label="text_to_pictures_decider_fragment"
+        tools:layout="@layout/text_to_pictures_decider_fragment" >
+        <action
+            android:id="@+id/goToTextToPictures"
+            app:destination="@id/textToPicturesQuizFragment" />
+    </fragment>
 </navigation>

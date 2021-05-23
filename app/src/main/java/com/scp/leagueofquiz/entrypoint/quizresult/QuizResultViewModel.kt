@@ -31,7 +31,6 @@ class QuizResultViewModel @Inject constructor(private val itemRepo: ItemReposito
 
     }
 
-    lateinit var quizMode: QuizMode
     val score: MutableLiveData<Int> = MutableLiveData(0)
     val failedAttempts: MutableLiveData<Int> = MutableLiveData(0)
     val timer: MutableLiveData<Duration> = MutableLiveData(Duration.ZERO)

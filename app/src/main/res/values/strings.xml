@@ -53,4 +53,5 @@
     <string name="result_wrong_champions">Wrong champions answered: %1$d</string>
     <string name="result_final_score">Final Score: %1$d</string>
     <string name="result_champions">Champions: %1$d</string>
+    <string name="background_light_image">Background light image</string>
 </resources>

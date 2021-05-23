@@ -16,6 +16,7 @@ class QuizModeFragment : Fragment(R.layout.quiz_mode_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        /*
 
         binding.trainFirstButton.setOnClickListener {
             val action = QuizModeFragmentDirections.startChampQuiz(QuizMode.TRAINING)
@@ -63,5 +64,6 @@ class QuizModeFragment : Fragment(R.layout.quiz_mode_fragment) {
             NavHostFragment.findNavController(this)
                     .navigate(QuizModeFragmentDirections.startChampQuiz(QuizMode.MARATHON))
         }
+        */
     }
 }

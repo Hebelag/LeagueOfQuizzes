@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayoutPicToTexts"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".entrypoint.picturetotexts.PictureToTexts">
+
+    <LinearLayout
+        android:id="@+id/scoreLineNonTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".2" />
+
+        <TextView
+            android:id="@+id/scoreViewTextNonTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"
+            android:freezesText="true"
+            android:gravity="end"
+            android:text="@string/score_text" />
+
+        <TextView
+            android:id="@+id/scoreViewNonTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"
+            android:freezesText="true"
+            android:gravity="start"
+            android:text="@string/score_default" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".2" />
+
+        <TextView
+            android:id="@+id/wrongViewTextNonTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"
+            android:freezesText="true"
+            android:gravity="end"
+            android:text="@string/wrongs_default" />
+
+        <TextView
+            android:id="@+id/wrongViewNonTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"
+            android:freezesText="true"
+            android:gravity="start"
+            android:text="@string/score_default" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".2" />
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"
+            android:gravity="end"
+            android:text="@string/timer_default" />
+
+        <ImageView
+            android:id="@+id/timerImageView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_weight="0"
+            android:cropToPadding="false"
+            android:scaleType="center"
+            app:srcCompat="@android:drawable/ic_lock_idle_alarm" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".2" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/instanceImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scoreLineNonTime"
+        app:layout_constraintVertical_bias="0.02"
+        tools:src="@tools:sample/avatars" />
+
+    <Button
+        android:id="@+id/textAns1"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/textAns3"
+        app:layout_constraintEnd_toStartOf="@+id/textAns2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instanceImage" />
+
+    <Button
+        android:id="@+id/textAns2"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/textAns4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textAns1"
+        app:layout_constraintTop_toBottomOf="@+id/instanceImage" />
+
+    <Button
+        android:id="@+id/textAns3"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:text="Button"
+        app:layout_constraintEnd_toStartOf="@+id/textAns4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textAns1" />
+
+    <Button
+        android:id="@+id/textAns4"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:text="Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textAns3"
+        app:layout_constraintTop_toBottomOf="@+id/textAns2" />
+
+    <Button
+        android:id="@+id/startQuizButtonPicToTexts"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:text="@string/countdown_button_default"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instanceImage"
+        app:layout_constraintVertical_bias="0.65" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

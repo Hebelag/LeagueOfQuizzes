@@ -30,7 +30,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/background_light_image" />
 
 
 
@@ -47,7 +48,6 @@
         android:autoSizeStepGranularity="2sp"
 
         android:autoSizeTextType="uniform"
-        android:fontFamily="@font/hacked_title_font"
         android:gravity="center"
         android:maxLines="1"
 
@@ -58,6 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/guideline_h" />
+<!--    android:fontFamily="@font/hacked_title_font"-->
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom_pedestal"

@@ -23,20 +23,22 @@ import javax.inject.Inject
 @HiltViewModel
 class TextToPicturesViewModel @Inject constructor(
         private val championRepository: ChampionRepository,
-        private val itemRepository: ItemRepository) : ViewModel() {
+        private val itemRepository: ItemRepository,
+        private val fetchUtil: FetchUtil
+) : ViewModel() {
     // Accessors
     // Static data
     private var questionCount: Int? = 20
-    private val questionsAnswered = HashSet<Pair<String,Image>>()
+    private val questionsAnswered = HashSet<Pair<String, Image>>()
 
     // Mutable data
     lateinit var quizType: QuizType
-    val imageGrid: MutableLiveData<List<Pair<String,Image>>> = MutableLiveData()
+    val imageGrid: MutableLiveData<List<Pair<String, Image>>> = MutableLiveData()
     val score = IncrementableLiveData(0)
     val failedAttempts = IncrementableLiveData(0)
     val startTime: MutableLiveData<Instant> = MutableLiveData()
     val timer = DefaultedLiveData(Duration.ZERO)
-    val rightImage = MutableLiveData<Pair<String,Image>>()
+    val rightImage = MutableLiveData<Pair<String, Image>>()
     val quizFinished = MutableLiveData(false)
     val buttonText = MutableLiveData<String>()
 
@@ -56,7 +58,7 @@ class TextToPicturesViewModel @Inject constructor(
 
     private fun resetImageGrid() {
         // Reset the champion images to the default image
-        val defaultPair = Pair(Champion.DEFAULT.name,Champion.DEFAULT.image)
+        val defaultPair = Pair(Champion.DEFAULT.name, Champion.DEFAULT.image)
         imageGrid.value = listOf(defaultPair, defaultPair, defaultPair, defaultPair)
     }
 
@@ -92,8 +94,7 @@ class TextToPicturesViewModel @Inject constructor(
                 loadImageGrid()
             }
 
-        }
-        else {
+        } else {
             // Add some audio or image flash here
 
             failedAttempts.setIncrement()
@@ -105,21 +106,21 @@ class TextToPicturesViewModel @Inject constructor(
         viewModelScope.launch {
 
             //val randomChampions = championRepository.getRandomChampions(emptySet(),4)
-            val randomImages = mutableListOf<Pair<String,Image>>()
+            val randomImages = mutableListOf<Pair<String, Image>>()
 
-            repeat(4){
-                when(quizType){
-                    QuizType.CHAMPION -> randomImages.add(FetchUtil.fetchChampion(championRepository))
-                    QuizType.ABILITY -> randomImages.add(FetchUtil.fetchAbility(championRepository))
-                    QuizType.ITEM -> randomImages.add(FetchUtil.fetchItem(itemRepository))
+            repeat(4) {
+                when (quizType) {
+                    QuizType.CHAMPION -> randomImages.add(fetchUtil.fetchChampion(championRepository))
+                    QuizType.ABILITY -> randomImages.add(fetchUtil.fetchAbility(championRepository))
+                    QuizType.ITEM -> randomImages.add(fetchUtil.fetchItem(itemRepository))
                 }
 
-                while (randomImages.count() != randomImages.distinct().count()){
+                while (randomImages.count() != randomImages.distinct().count()) {
                     randomImages.removeAt(it)
-                    when(quizType){
-                        QuizType.CHAMPION -> randomImages.add(FetchUtil.fetchChampion(championRepository))
-                        QuizType.ABILITY -> randomImages.add(FetchUtil.fetchAbility(championRepository))
-                        QuizType.ITEM -> randomImages.add(FetchUtil.fetchItem(itemRepository))
+                    when (quizType) {
+                        QuizType.CHAMPION -> randomImages.add(fetchUtil.fetchChampion(championRepository))
+                        QuizType.ABILITY -> randomImages.add(fetchUtil.fetchAbility(championRepository))
+                        QuizType.ITEM -> randomImages.add(fetchUtil.fetchItem(itemRepository))
                     }
                 }
             }
@@ -130,19 +131,12 @@ class TextToPicturesViewModel @Inject constructor(
     }
 
 
-
     // One of the four champions needs to be the right one. This randomizer chooses which one it is
-    private fun selectRightImage(fetchedImages: List<Pair<String,Image>>): Pair<String,Image> {
+    private fun selectRightImage(fetchedImages: List<Pair<String, Image>>): Pair<String, Image> {
         val rightImagePosition = (Math.random() * 4).toInt()
         return fetchedImages[rightImagePosition]
     }
 
-    // Questionable setter in Kotlin?
-    fun setChampionCount(championCount: Int?) {
-        this.questionCount = championCount
-    }
-
-    // Static initializer to the top?
     companion object {
         private val TIMER_REFRESH_DELAY = Duration.ofMillis(500)
     }

@@ -23,7 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PictureToTextsViewModel @Inject constructor(
         private val championRepository: ChampionRepository,
-        private val itemRepository: ItemRepository): ViewModel() {
+        private val itemRepository: ItemRepository,
+        private val fetchUtil: FetchUtil
+): ViewModel() {
 
     lateinit var quizType: QuizType
     val imageGrid: MutableLiveData<List<Pair<String, Image>>> = MutableLiveData()
@@ -95,17 +97,17 @@ class PictureToTextsViewModel @Inject constructor(
 
             repeat(4){
                 when(quizType){
-                    QuizType.CHAMPION -> randomTexts.add(FetchUtil.fetchChampion(championRepository))
-                    QuizType.ABILITY -> randomTexts.add(FetchUtil.fetchAbility(championRepository))
-                    QuizType.ITEM -> randomTexts.add(FetchUtil.fetchItem(itemRepository))
+                    QuizType.CHAMPION -> randomTexts.add(fetchUtil.fetchChampion(championRepository))
+                    QuizType.ABILITY -> randomTexts.add(fetchUtil.fetchAbility(championRepository))
+                    QuizType.ITEM -> randomTexts.add(fetchUtil.fetchItem(itemRepository))
                 }
 
                 while (randomTexts.count() != randomTexts.distinct().count()){
                     randomTexts.removeAt(it)
                     when(quizType){
-                        QuizType.CHAMPION -> randomTexts.add(FetchUtil.fetchChampion(championRepository))
-                        QuizType.ABILITY -> randomTexts.add(FetchUtil.fetchAbility(championRepository))
-                        QuizType.ITEM -> randomTexts.add(FetchUtil.fetchItem(itemRepository))
+                        QuizType.CHAMPION -> randomTexts.add(fetchUtil.fetchChampion(championRepository))
+                        QuizType.ABILITY -> randomTexts.add(fetchUtil.fetchAbility(championRepository))
+                        QuizType.ITEM -> randomTexts.add(fetchUtil.fetchItem(itemRepository))
                     }
                 }
             }
@@ -115,7 +117,7 @@ class PictureToTextsViewModel @Inject constructor(
         }
     }
 
-    private fun selectRightText(fetchedTexts: MutableList<Pair<String, Image>>): Pair<String, Image>? {
+    private fun selectRightText(fetchedTexts: MutableList<Pair<String, Image>>): Pair<String, Image> {
         val rightImagePosition = (Math.random() * 4).toInt()
         return fetchedTexts[rightImagePosition]
     }

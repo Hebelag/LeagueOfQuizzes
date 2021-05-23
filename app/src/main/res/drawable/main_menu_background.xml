@@ -4,6 +4,6 @@
     <item android:drawable="@drawable/background_magic_720"
         android:gravity="center_horizontal"/>
     <item android:drawable="@drawable/split_start_background" />
-    <item android:drawable="@drawable/main_menu_2_corner_small_circle"/>
+<!--    <item android:drawable="@drawable/main_menu_2_corner_small_circle"/>-->
 
 </layer-list>

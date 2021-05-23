@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.scp.leagueofquiz.R
-import com.scp.leagueofquiz.api.database.champion.Champion
 import com.scp.leagueofquiz.api.database.shared.Image
 import com.scp.leagueofquiz.databinding.TextToPicturesFragmentBinding
 import com.scp.leagueofquiz.entrypoint.shared.QuizType
@@ -28,7 +27,7 @@ import java.util.*
 class TextToPicturesFragment : Fragment(R.layout.text_to_pictures_fragment) {
     private val viewModel: TextToPicturesViewModel by viewModels()
     private val binding by viewBinding(TextToPicturesFragmentBinding::bind)
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.timer.value = Duration.ZERO
@@ -44,21 +43,25 @@ class TextToPicturesFragment : Fragment(R.layout.text_to_pictures_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUi()
+        setupObservers()
+    }
 
-        // Setup UI
+    private fun setupUi() = with(binding) {
         setScoreLineVisibility()
         setTimeAttackLineVisibility()
-        binding.startQuizButton.setOnClickListener(::startQuiz)
+        startQuizButton.setOnClickListener(::startQuiz)
+    }
 
-        // Setup observers
-        viewModel.imageGrid.observe(viewLifecycleOwner, ::setImageGrid)
-        viewModel.score.observe(viewLifecycleOwner, ::setScore)
-        viewModel.failedAttempts.observe(viewLifecycleOwner, ::failedAttempt)
-        viewModel.startTime.observe(viewLifecycleOwner, ::setupStartButton)
-        viewModel.timer.observe(viewLifecycleOwner, ::setTimer)
-        viewModel.rightImage.observe(viewLifecycleOwner,::setRightInstanceName)
-        viewModel.quizFinished.observe(viewLifecycleOwner, ::checkQuizFinished)
-        viewModel.buttonText.observe(viewLifecycleOwner, ::buttonText)
+    private fun setupObservers() = with(viewModel) {
+        imageGrid.observe(viewLifecycleOwner, ::setImageGrid)
+        score.observe(viewLifecycleOwner, ::setScore)
+        failedAttempts.observe(viewLifecycleOwner, ::failedAttempt)
+        startTime.observe(viewLifecycleOwner, ::setupStartButton)
+        timer.observe(viewLifecycleOwner, ::setTimer)
+        rightImage.observe(viewLifecycleOwner, ::setRightInstanceName)
+        quizFinished.observe(viewLifecycleOwner, ::checkQuizFinished)
+        buttonText.observe(viewLifecycleOwner, ::buttonText)
     }
 
     private fun buttonText(s: String) {
@@ -107,70 +110,67 @@ class TextToPicturesFragment : Fragment(R.layout.text_to_pictures_fragment) {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun setupStartButton(startTime: Instant) {
-        binding.startQuizButton.isClickable = !viewModel.isQuizRunning
+    private fun setupStartButton(startTime: Instant) = with(binding) {
+        startQuizButton.isClickable = !viewModel.isQuizRunning
         if (viewModel.isQuizRunning) {
-            binding.startQuizButton.setBackgroundColor(
+            startQuizButton.setBackgroundColor(
                     ContextCompat.getColor(requireContext(), R.color.grey))
-            binding.btnAns1.setOnClickListener { view: View -> pickAnswer(view) }
-            binding.btnAns2.setOnClickListener { view: View -> pickAnswer(view) }
-            binding.btnAns3.setOnClickListener { view: View -> pickAnswer(view) }
-            binding.btnAns4.setOnClickListener { view: View -> pickAnswer(view) }
+            btnAns1.setOnClickListener { view: View -> pickAnswer(view) }
+            btnAns2.setOnClickListener { view: View -> pickAnswer(view) }
+            btnAns3.setOnClickListener { view: View -> pickAnswer(view) }
+            btnAns4.setOnClickListener { view: View -> pickAnswer(view) }
         } else {
-            binding.startQuizButton.setBackgroundColor(
+            startQuizButton.setBackgroundColor(
                     ContextCompat.getColor(requireContext(), R.color.purple_500))
-            binding.btnAns1.setOnClickListener(null)
-            binding.btnAns2.setOnClickListener(null)
-            binding.btnAns3.setOnClickListener(null)
-            binding.btnAns4.setOnClickListener(null)
+            btnAns1.setOnClickListener(null)
+            btnAns2.setOnClickListener(null)
+            btnAns3.setOnClickListener(null)
+            btnAns4.setOnClickListener(null)
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun setScore(score: Int?) {
-            binding.scoreViewNonTime.text = score?.toString()
+        binding.scoreViewNonTime.text = score?.toString()
     }
 
     @Suppress("UNUSED_PARAMETER")
     private fun startQuiz(view: View) {
-            viewModel.startQuiz()
+        viewModel.startQuiz()
     }
 
-    private fun setImageGrid(images: List<Pair<String, Image>>) {
-        binding.btnAns1.setImageDrawable(getImage(images[0].second.full, viewModel.quizType))
-        binding.btnAns2.setImageDrawable(getImage(images[1].second.full, viewModel.quizType))
-        binding.btnAns3.setImageDrawable(getImage(images[2].second.full, viewModel.quizType))
-        binding.btnAns4.setImageDrawable(getImage(images[3].second.full, viewModel.quizType))
+    private fun setImageGrid(images: List<Pair<String, Image>>) = with(binding) {
+        btnAns1.setImageDrawable(getImage(images[0].second.full, viewModel.quizType))
+        btnAns2.setImageDrawable(getImage(images[1].second.full, viewModel.quizType))
+        btnAns3.setImageDrawable(getImage(images[2].second.full, viewModel.quizType))
+        btnAns4.setImageDrawable(getImage(images[3].second.full, viewModel.quizType))
     }
 
-    private fun getImage(endPath: String, quizType: QuizType): Drawable? {
-        var d: Drawable? = null
-        try {
+    private fun getImage(endPath: String, quizType: QuizType) = try {
 
-            val imagePath = when(quizType){
-                QuizType.CHAMPION -> "champion_drawables"
-                QuizType.ABILITY -> "ability_drawables"
-                QuizType.ITEM -> "image_drawables"
-            }
-            val ims: InputStream = requireContext().assets
-                    .open("$imagePath/$endPath", AssetManager.ACCESS_BUFFER)
-            // create drawable from input stream
-            d = Drawable.createFromStream(ims, null)
-            ims.close()
-
-        } catch (ex: IOException) {
-            Timber.e(ex)
+        val imagePath = when (quizType) {
+            QuizType.CHAMPION -> "champion_drawables"
+            QuizType.ABILITY -> "ability_drawables"
+            QuizType.ITEM -> "image_drawables"
         }
-        // return the drawable
-        return d
+        val ims: InputStream = requireContext().assets
+                .open("$imagePath/$endPath", AssetManager.ACCESS_BUFFER)
+        // create drawable from input stream
+        val result = Drawable.createFromStream(ims, null)
+        ims.close()
+        result
+
+    } catch (ex: IOException) {
+        Timber.e(ex)
+        null
     }
 
-    private fun setTimeAttackLineVisibility() {
-            binding.timeAttackLayout.visibility = View.INVISIBLE
+    private fun setTimeAttackLineVisibility() = with(binding) {
+        timeAttackLayout.visibility = View.INVISIBLE
     }
 
-    private fun setScoreLineVisibility() {
-            binding.scoreLineTimeAttack.visibility = View.INVISIBLE
-            binding.scoreLineNonTime.visibility = View.VISIBLE
+    private fun setScoreLineVisibility() = with(binding) {
+        scoreLineTimeAttack.visibility = View.INVISIBLE
+        scoreLineNonTime.visibility = View.VISIBLE
     }
 }
